@@ -34,7 +34,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws ServletException, IOException {
-		String authHeader = request.getHeader(this.tokenHeader);
+		String authHeader = request.getHeader(tokenHeader);
 		if (authHeader != null && authHeader.startsWith(tokenHead)) {
 			final String authToken = authHeader.substring(tokenHead.length()); // The part after "Bearer "
 			String username = jwtTokenUtil.getUsernameFromToken(authToken);
@@ -47,7 +47,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 				// 这种情况下，我们可以不用再查询数据库，而直接采用token中的数据
 				// 本例中，我们还是通过Spring Security的 @UserDetailsService 进行了数据查询
 				// 但简单验证的话，你可以采用直接验证token是否合法来避免昂贵的数据查询
-				UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+				UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
 				if (jwtTokenUtil.validateToken(authToken, userDetails)) {
 					UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

@@ -25,6 +25,11 @@ jwt:
       refresh: refresh
       register: "auth/register"
 
+io:
+  netty:
+    leakDetection:
+      level: advanced
+
 # Logging configuration
 logging:
   level:
@@ -34,6 +39,5 @@ logging:
       security: WARN
 
 # Swagger Enable (true,false)
-swagger:
-  enable: true
+swagger.enable: true
 #spring.boot.admin.url: http://localhost:8080
