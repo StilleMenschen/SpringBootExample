@@ -13,12 +13,16 @@ spring:
     port: 27017
     database: test
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/world?useUnicode=true&characterEncoding=utf8&useSSL=false&useAffectedRows=true&serverTimezone=UTC
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3317/test?useUnicode=true&characterEncoding=utf8&useSSL=false&useAffectedRows=true&serverTimezone=UTC
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: org.mariadb.jdbc.Driver
     username: root
     password: ABC#abc_123
-    hikari:      maximum-pool-size: 5      auto-commit: true
-      minimum-idle: 3
+    hikari:
+      maximum-pool-size: 5
+      auto-commit: true
+      minimum-idle: 3
+
 # JWT
 jwt:
   header: Authorization
