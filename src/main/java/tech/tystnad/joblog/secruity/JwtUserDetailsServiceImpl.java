@@ -1,16 +1,17 @@
 package tech.tystnad.joblog.secruity;
 
-import tech.tystnad.joblog.user.User;
-import tech.tystnad.joblog.user.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import tech.tystnad.joblog.user.User;
+import tech.tystnad.joblog.user.UserRepository;
+
+import javax.annotation.Resource;
 
 @Service
 public class JwtUserDetailsServiceImpl implements UserDetailsService {
-    @Autowired
+    @Resource
     private UserRepository userRepository;
 
     @Override
