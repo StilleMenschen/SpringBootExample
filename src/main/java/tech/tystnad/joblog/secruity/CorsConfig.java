@@ -19,7 +19,7 @@ public class CorsConfig {
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost");
         config.addAllowedOrigin("http://127.0.0.1");
-        config.addAllowedOrigin("http://localhost:8080");
+        config.addAllowedOrigin("http://localhost:8090");
         config.addAllowedOrigin("https://sz.tystnad.tech:81");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
