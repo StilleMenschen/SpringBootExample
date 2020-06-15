@@ -26,11 +26,11 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(method = RequestMethod.POST)
-    User addUser(@RequestBody User addedUser) {
+    public User addUser(@RequestBody User addedUser) {
         return repository.insert(addedUser);
     }
 
-    @PostAuthorize("returnObject.username == principal.username or hasRole('ROLE_ADMIN')")
+    @PostAuthorize("returnObject.username == principal.username or hasRole('ADMIN')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public User getUser(@PathVariable String id) {
         return repository.findById(id).get();
@@ -38,20 +38,20 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    User updateUser(@PathVariable String id, @RequestBody User updatedUser) {
+    public User updateUser(@PathVariable String id, @RequestBody User updatedUser) {
         updatedUser.setId(id);
         return repository.save(updatedUser);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    User removeUser(@PathVariable String id) {
+    public User removeUser(@PathVariable String id) {
         User deletedUser = repository.findById(id).get();
         repository.deleteById(id);
         return deletedUser;
     }
 
-    @PostAuthorize("returnObject.username == principal.username or hasRole('ROLE_ADMIN')")
+    @PostAuthorize("returnObject.username == principal.username or hasRole('ADMIN')")
     @RequestMapping(value = "/",method = RequestMethod.GET)
     public User getUserByUsername(@RequestParam(value="username") String username) {
         return repository.findByUsername(username);
