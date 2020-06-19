@@ -2,8 +2,12 @@ package tech.tystnad.joblog.auth;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import tech.tystnad.joblog.util.IdWorker;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.UUID;
 
 public class AuthTests {
 
@@ -28,33 +32,21 @@ public class AuthTests {
     }
 
     @Test
-    public void id() throws InterruptedException {
+    public void id() {
         final int end = 100;
-        final int bound = Character.MAX_RADIX * Character.MAX_RADIX;
-        final Random random = new Random();
-        Map<String, Long> map = new HashMap<>();
-        long seed, count = 0;
-        String temp;
+        IdWorker idWorker = new IdWorker(0, 0);
         for (int i = 0; i < end; i++) {
-            seed = System.currentTimeMillis();
-            seed = seed + random.nextInt(bound);
-            temp = Long.toString(seed, Character.MAX_RADIX);
-            if (map.containsKey(temp)) {
-//                System.out.println(i + " - " + temp + " exists!");
-                count++;
-            } else {
-                map.put(temp, seed);
-            }
-            Thread.sleep(100);
+            long id = idWorker.nextId();
+            System.out.println(id);
+            System.out.println(Long.toString(id, Character.MAX_RADIX));
         }
-        System.out.println(count);
     }
 
     @Test
     public void uuid() {
         final int end = 100;
         Map<String, Long> map = new HashMap<>();
-        long  count = 0;
+        long count = 0;
         String temp;
         for (int i = 0; i < end; i++) {
             temp = UUID.randomUUID().toString();
