@@ -1,4 +1,4 @@
-package tech.tystnad.joblog.auth;
+package tech.tystnad.joblog.test;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,6 +10,11 @@ import java.util.Map;
 import java.util.UUID;
 
 public class AuthTests {
+
+    @Test
+    public void example(){
+        System.out.println(System.currentTimeMillis());
+    }
 
     @Test
     public void password() {
@@ -40,6 +45,8 @@ public class AuthTests {
             System.out.println(id);
             System.out.println(Long.toString(id, Character.MAX_RADIX));
         }
+        System.out.println(1592530867244L);
+        System.out.println(System.currentTimeMillis());
     }
 
     @Test

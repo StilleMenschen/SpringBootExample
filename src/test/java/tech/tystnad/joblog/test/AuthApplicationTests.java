@@ -1,4 +1,4 @@
-package tech.tystnad.joblog.auth;
+package tech.tystnad.joblog.test;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
