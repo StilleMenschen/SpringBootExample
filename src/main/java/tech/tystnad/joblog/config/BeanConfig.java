@@ -9,9 +9,9 @@ import tech.tystnad.joblog.util.IdWorker;
 
 @Configuration
 public class BeanConfig {
-    @Value("server.workerId")
+    @Value("${server.workerId}")
     private long workerId;
-    @Value("server.dataCenterId")
+    @Value("${server.dataCenterId}")
     private long dataCenterId;
 
     @Bean("idWorker")
