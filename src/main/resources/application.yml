@@ -43,7 +43,7 @@ jwt:
 #logging:
 #  level:
 #    root: WARN
-#    tech.tystnad.joblog: DEBUG
+#    tech.tystnad.works: DEBUG
 #    com.zaxxer.hikari.pool: DEBUG
 #    org:
 #      springframework: INFO

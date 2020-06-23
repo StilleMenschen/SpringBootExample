@@ -9,10 +9,10 @@
         <version>2.3.0.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>tech.tystnad.joblog</groupId>
-    <artifactId>joblog</artifactId>
+    <groupId>tech.tystnad</groupId>
+    <artifactId>works</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>joblog</name>
+    <name>works</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
