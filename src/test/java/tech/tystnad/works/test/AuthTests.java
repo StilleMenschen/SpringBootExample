@@ -13,7 +13,6 @@ public class AuthTests {
 
     @Test
     public void example(){
-        System.out.println(System.currentTimeMillis());
     }
 
     @Test

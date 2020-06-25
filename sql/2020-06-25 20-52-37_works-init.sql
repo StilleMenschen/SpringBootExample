@@ -38,6 +38,19 @@ CREATE TABLE `sys_authority` (
   PRIMARY KEY (`auth_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+/*Table structure for table `sys_log` */
+
+DROP TABLE IF EXISTS `sys_log`;
+
+CREATE TABLE `sys_log` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '日志ID',
+  `operator` bigint(20) DEFAULT NULL COMMENT '操作者',
+  `module` varchar(64) DEFAULT NULL COMMENT '操作模块',
+  `features` int(64) DEFAULT NULL COMMENT '操作功能',
+  `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`log_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 /*Table structure for table `sys_org_user` */
 
 DROP TABLE IF EXISTS `sys_org_user`;
