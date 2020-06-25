@@ -3,6 +3,7 @@ package tech.tystnad.works.config;
 import java.time.Duration;
 
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisPassword;
@@ -13,6 +14,15 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 
 @Configuration
 public class RedisConfig {
+
+    @Value("${spring.redis.host}")
+    private String redis_host;
+
+    @Value("${spring.redis.port}")
+    private int redis_port;
+
+    @Value("${spring.redis.database}")
+    private int redis_database;
 
     @Bean
     public GenericObjectPoolConfig<?> genericObjectPoolConfig() {
@@ -27,9 +37,9 @@ public class RedisConfig {
     public LettuceConnectionFactory lettuceConnectionFactory() {
         LettucePoolingClientConfiguration poolingClientConfiguration = LettucePoolingClientConfiguration.builder()
                 .shutdownTimeout(Duration.ofSeconds(30)).poolConfig(genericObjectPoolConfig()).build();
-        RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration("localhost", 6379);
+        RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration(redis_host, redis_port);
         standaloneConfiguration.setPassword(RedisPassword.none());
-        standaloneConfiguration.setDatabase(0);
+        standaloneConfiguration.setDatabase(redis_database);
         LettuceConnectionFactory factory = new LettuceConnectionFactory(standaloneConfiguration,
                 poolingClientConfiguration);
         factory.setShareNativeConnection(false);

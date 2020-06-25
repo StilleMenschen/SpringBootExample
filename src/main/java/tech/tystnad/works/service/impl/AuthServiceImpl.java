@@ -3,6 +3,8 @@ package tech.tystnad.works.service.impl;
 import java.util.Collections;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +24,8 @@ import tech.tystnad.works.repository.UserRepository;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
   private AuthenticationManager authenticationManager;
   private UserDetailsService userDetailsService;
@@ -58,7 +62,9 @@ public class AuthServiceImpl implements AuthService {
   public String login(String username, String password) {
     UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
     // 进行安全认证
+    logger.debug("开始验证");
     final Authentication authentication = authenticationManager.authenticate(upToken);
+    logger.debug("设置权限上下文");
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
     // 生成token

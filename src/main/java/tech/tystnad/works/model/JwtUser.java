@@ -13,7 +13,6 @@ public class JwtUser implements UserDetails {
   private final String id;
   private final String username;
   private final String password;
-  @SuppressWarnings("unused")
   private final String email;
   private final Collection<? extends GrantedAuthority> authorities;
   private final Date lastPasswordResetDate;
@@ -71,6 +70,10 @@ public class JwtUser implements UserDetails {
   @Override
   public boolean isEnabled() {
     return true;
+  }
+
+  public String getEmail() {
+    return email;
   }
 
   @JsonIgnore

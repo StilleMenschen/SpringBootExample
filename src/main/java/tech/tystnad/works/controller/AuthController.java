@@ -1,5 +1,6 @@
 package tech.tystnad.works.controller;
 
+import org.springframework.web.bind.annotation.*;
 import tech.tystnad.works.model.Auth;
 import tech.tystnad.works.service.AuthService;
 import tech.tystnad.works.model.JwtAuthenticationRequest;
@@ -10,10 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,7 +28,7 @@ public class AuthController {
         this.userRepository = userRepository;
     }
 
-    @RequestMapping(value = "${jwt.route.authentication.login}", method = RequestMethod.POST)
+    @PostMapping(value = "${jwt.route.authentication.login}")
     public Auth createAuthenticationToken(
             @RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException{
         final String token = authService.login(authenticationRequest.getUsername(), authenticationRequest.getPassword());
@@ -40,7 +37,7 @@ public class AuthController {
         return new Auth(token, user);
     }
 
-    @RequestMapping(value = "${jwt.route.authentication.refresh}", method = RequestMethod.GET)
+    @GetMapping(value = "${jwt.route.authentication.refresh}")
     public ResponseEntity<?> refreshAndGetAuthenticationToken(
             HttpServletRequest request) throws AuthenticationException{
         String token = request.getHeader(tokenHeader);
@@ -52,7 +49,7 @@ public class AuthController {
         }
     }
 
-    @RequestMapping(value = "${jwt.route.authentication.register}", method = RequestMethod.POST)
+    @PostMapping(value = "${jwt.route.authentication.register}")
     public User register(@RequestBody User addedUser) throws AuthenticationException{
         return authService.register(addedUser);
     }
