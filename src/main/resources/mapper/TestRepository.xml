@@ -1,0 +1,9 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="tech.tystnad.works.repository.TestRepository">
+    <select id="findByDistrict" resultType="tech.tystnad.works.model.City">
+        SELECT ID, NAME, CountryCode, District, Population FROM world.city WHERE District LIKE CONCAT('%', #{district}) LIMIT 10
+    </select>
+</mapper>

@@ -1,6 +1,5 @@
 package tech.tystnad.works.repository;
 
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
@@ -10,7 +9,6 @@ import tech.tystnad.works.model.Pet;
 import java.util.Date;
 import java.util.List;
 
-@Mapper
 @Repository
 public interface TestRepository {
 
@@ -22,4 +20,6 @@ public interface TestRepository {
 
     @Select("SELECT  name, owner, species, sex, birth, death FROM pet WHERE birth > #{birth}")
     List<Pet> findPetByBirth(@Param("birth") Date birth);
+
+    List<City> findByDistrict(@Param("district") String district);
 }

@@ -31,6 +31,9 @@ spring:
       auto-commit: true
       minimum-idle: 3
 
+mybatis:
+  mapper-locations: classpath*:mapper/**/*.xml
+
 # JWT
 jwt:
   header: Authorization
