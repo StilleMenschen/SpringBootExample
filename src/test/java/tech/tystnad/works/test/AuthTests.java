@@ -13,6 +13,8 @@ public class AuthTests {
 
     @Test
     public void example(){
+        System.out.println(-1L ^ (-1L << 5L));
+        System.out.println(~(-1L << 5L));
     }
 
     @Test

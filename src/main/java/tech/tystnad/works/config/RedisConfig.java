@@ -1,7 +1,5 @@
 package tech.tystnad.works.config;
 
-import java.time.Duration;
-
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +9,8 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.core.StringRedisTemplate;
+
+import java.time.Duration;
 
 @Configuration
 public class RedisConfig {
@@ -48,7 +48,6 @@ public class RedisConfig {
 
     @Bean
     public StringRedisTemplate stringRedisTemplate() {
-        StringRedisTemplate stringRedisTemplate = new StringRedisTemplate(lettuceConnectionFactory());
-        return stringRedisTemplate;
+        return new StringRedisTemplate(lettuceConnectionFactory());
     }
 }

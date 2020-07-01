@@ -17,8 +17,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    @Autowired
     private UserRepository repository;
+
+    @Autowired
+    public UserController(UserRepository repository) {
+        this.repository = repository;
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(method = RequestMethod.GET)
@@ -54,8 +58,8 @@ public class UserController {
     }
 
     @PostAuthorize("returnObject.username == principal.username or hasRole('ADMIN')")
-    @RequestMapping(value = "/",method = RequestMethod.GET)
-    public User getUserByUsername(@RequestParam(value="username") String username) {
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public User getUserByUsername(@RequestParam(value = "username") String username) {
         return repository.findByUsername(username);
     }
 }
