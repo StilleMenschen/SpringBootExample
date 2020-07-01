@@ -1,8 +1,5 @@
 package tech.tystnad.works.service.impl;
 
-import java.util.Collections;
-import java.util.Date;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +12,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import tech.tystnad.works.service.AuthService;
-import tech.tystnad.works.util.JwtTokenUtil;
 import tech.tystnad.works.model.JwtUser;
 import tech.tystnad.works.model.User;
 import tech.tystnad.works.repository.UserRepository;
+import tech.tystnad.works.service.AuthService;
+import tech.tystnad.works.util.JwtTokenUtil;
+
+import java.util.Collections;
+import java.util.Date;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -69,8 +68,7 @@ public class AuthServiceImpl implements AuthService {
 
     // 生成token
     final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-    final String token = jwtTokenUtil.generateToken(userDetails);
-    return token;
+    return jwtTokenUtil.generateToken(userDetails);
   }
 
   @Override
