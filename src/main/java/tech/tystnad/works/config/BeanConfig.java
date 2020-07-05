@@ -15,7 +15,7 @@ public class BeanConfig {
     private long dataCenterId;
 
     @Bean("idWorker")
-    @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    @Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public IdWorker idWorker() {
         return new IdWorker(workerId, dataCenterId);
     }

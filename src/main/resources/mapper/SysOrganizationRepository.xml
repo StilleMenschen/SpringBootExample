@@ -1,0 +1,62 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="tech.tystnad.works.repository.SysOrganizationRepository">
+    <sql id="constraint">
+        WHERE deleted = 0
+        <if test="org.org_id != 0">
+            AND org_id = #{org.org_id}
+        </if>
+        <if test="org.top_id != 0">
+            AND top_id = #{org.top_id}
+        </if>
+        <if test="org.parent_id != 0">
+            AND parent_id = #{org.parent_id}
+        </if>
+        <if test="org.org_level != 0">
+            AND org_level = #{org.org_level}
+        </if>
+        <if test="org.org_name != null">
+            AND org_name = #{org.org_name}
+        </if>
+        <if test="org.enabled != 1">
+            AND enabled = #{org.enabled}
+        </if>
+        <if test="org.updater != 0">
+            AND updater = #{org.updater}
+        </if>
+        <if test="org.creator != 0">
+            AND creator = #{org.creator}
+        </if>
+        <if test="org.update_time != null">
+            AND update_time = #{org.update_time}
+        </if>
+        <if test="org.create_time != null">
+            AND create_time = #{org.create_time}
+        </if>
+    </sql>
+    <sql id="order">
+        ORDER BY create_time DESC
+    </sql>
+    <sql id="page">
+        LIMIT #{page}, #{size}
+    </sql>
+    <select id="countAll" resultType="java.lang.Integer">
+        SELECT COUNT(org_id) FROM sys_organization
+        <include refid="constraint"/>
+    </select>
+    <select id="findAll" resultType="tech.tystnad.works.model.SysOrganization">
+        SELECT org_id, top_id, parent_id, org_level, org_name, enabled, updater, creator, update_time, create_time FROM sys_organization
+        <include refid="constraint"/>
+        <include refid="order"/>
+        <include refid="page"/>
+    </select>
+    <insert id="addOnce" parameterType="tech.tystnad.works.model.SysOrganization">
+        INSERT INTO sys_organization ( org_id, top_id, parent_id, org_level, org_name, updater, creator )
+        VALUES ( #{org_id}, #{top_id}, #{parent_id}, #{org_level}, #{org_name}, #{updater}, #{creator} )
+    </insert>
+    <update id="delById">
+        UPDATE works.sys_organization SET deleted = 1 WHERE org_id = #{org_id}
+    </update>
+</mapper>
