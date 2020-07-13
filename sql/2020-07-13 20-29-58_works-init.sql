@@ -47,7 +47,6 @@ CREATE TABLE `sys_log` (
   `operator` bigint(20) DEFAULT NULL COMMENT '操作者',
   `module` varchar(64) DEFAULT NULL COMMENT '操作模块',
   `features` int(64) DEFAULT NULL COMMENT '操作功能',
-  `top_id` bigint(20) DEFAULT NULL COMMENT '机构ID',
   `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`log_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
