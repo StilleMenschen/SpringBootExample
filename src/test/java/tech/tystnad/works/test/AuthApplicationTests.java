@@ -1,10 +1,10 @@
 package tech.tystnad.works.test;
 
 import org.junit.jupiter.api.Test;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
-import tech.tystnad.works.model.SysOrganization;
-import tech.tystnad.works.repository.SysOrganizationRepository;
+import tech.tystnad.works.repository.domain.SysOrganizationDO;
+import tech.tystnad.works.repository.domain.SysOrganizationDOExample;
+import tech.tystnad.works.repository.mapper.SysOrganizationDOMapper;
 import tech.tystnad.works.util.IdWorker;
 
 import javax.annotation.Resource;
@@ -14,33 +14,29 @@ import java.util.List;
 class AuthApplicationTests {
 
     @Resource
-    private SqlSessionTemplate sqlSessionTemplate;
+    private SysOrganizationDOMapper mapper;
 
     @Resource
     private IdWorker idWorker;
 
     @Test
     void testSysOrganization() {
-        SysOrganization organization = new SysOrganization();
-        SysOrganizationRepository repository = sqlSessionTemplate.getMapper(SysOrganizationRepository.class);
-        organization.setTop_id(0);
-        organization.setParent_id(0);
-        organization.setUpdater(1);
-        organization.setCreator(1);
-        for (int i = 10; i < 21; i++) {
-            long id = idWorker.nextId();
-            organization.setOrg_id(id);
-            organization.setOrg_level(0);
-            organization.setOrg_name("测试机构"+ i);
-            repository.addOnce(organization);
+        for (int i = 1; i <= 10; i++) {
+            SysOrganizationDO organization = new SysOrganizationDO();
+            organization.setOrgId(idWorker.nextId());
+            organization.setOrgLevel((byte) 0);
+            organization.setOrgName("org" + i);
+            mapper.insert(organization);
         }
-        System.out.println(repository.countAll(new SysOrganization()));
-        List<SysOrganization> list = repository.findAll(new SysOrganization(),0,5);
-        list.forEach(e->{
-            System.out.println(e);
-            repository.delById(e.getOrg_id());
+        SysOrganizationDOExample example = new SysOrganizationDOExample();
+        example.setOrderByClause("create_time desc");
+        List<SysOrganizationDO> list = mapper.selectByExample(example);
+        list.forEach(e -> {
+            System.out.println(e.getOrgId() + ":" + e.getOrgName() + ":" + e.getCreateTime());
         });
-        System.out.println(repository.countAll(new SysOrganization()));
+        SysOrganizationDO organization = new SysOrganizationDO();
+        organization.setDeleted(true);
+        System.out.println("deleted " + mapper.updateByExampleSelective(organization, example));
     }
 
 }
