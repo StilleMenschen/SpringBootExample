@@ -26,13 +26,11 @@ public class SwaggerConfig implements WebMvcConfigurer {
     @Value("${swagger.enable}")
     private boolean isEnableSwagger;
 
-    private String basePackage = "com.example.springboot";
+    private String basePackage;
 
     @Bean
     public Docket api() {
-        if (isEnableSwagger) {
-            basePackage = "tech.tystnad.works";
-        }
+        basePackage = isEnableSwagger ? "tech.tystnad.works" : "com.example.springboot";
         return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select()
                 .apis(RequestHandlerSelectors.basePackage(basePackage)).paths(PathSelectors.any()).build();
     }

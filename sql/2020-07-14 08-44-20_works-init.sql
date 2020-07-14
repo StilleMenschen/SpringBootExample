@@ -154,7 +154,7 @@ CREATE TABLE `work_log` (
   `top_id` bigint(20) unsigned DEFAULT NULL COMMENT '顶级机构ID',
   `user_id` bigint(20) unsigned DEFAULT NULL COMMENT '用户ID',
   `project_id` bigint(20) unsigned DEFAULT NULL COMMENT '项目ID',
-  `work_time` float DEFAULT NULL COMMENT '工作时间',
+  `work_time` float unsigned DEFAULT NULL COMMENT '工作时间',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   `log_time` datetime DEFAULT NULL COMMENT '日志时间',
   `updater` bigint(20) unsigned DEFAULT NULL,
