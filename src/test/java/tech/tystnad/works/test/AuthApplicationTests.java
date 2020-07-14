@@ -8,6 +8,7 @@ import tech.tystnad.works.repository.mapper.SysOrganizationDOMapper;
 import tech.tystnad.works.util.IdWorker;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @SpringBootTest
@@ -31,7 +32,8 @@ class AuthApplicationTests {
         SysOrganizationDOExample example = new SysOrganizationDOExample();
         example.setOrderByClause("create_time desc");
         List<SysOrganizationDO> list = mapper.selectByExample(example);
-        list.forEach(e -> System.out.println(e.getOrgId() + ":" + e.getOrgName() + ":" + e.getCreateTime()));
+        SimpleDateFormat format = new SimpleDateFormat("E yyyy年MM月dd日 a h:mm");
+        list.forEach(e -> System.out.println(e.getOrgId() + ":" + e.getOrgName() + ":" + format.format(e.getCreateTime())));
         SysOrganizationDO organization = new SysOrganizationDO();
         organization.setDeleted(true);
         System.out.println("deleted " + mapper.updateByExampleSelective(organization, example));

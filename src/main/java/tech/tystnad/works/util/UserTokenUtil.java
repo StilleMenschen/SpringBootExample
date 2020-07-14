@@ -47,6 +47,15 @@ public class UserTokenUtil {
         stringRedisTemplate.expire(key, Duration.ofSeconds(DEFAULT_TIMEOUT_SECONDS));
     }
 
+    public boolean refreshUser(SysUser user) {
+        final String key = PREFIX.concat(user.getUser_name());
+        if (hasUser(key)) {
+            stringRedisTemplate.expire(key, Duration.ofSeconds(DEFAULT_TIMEOUT_SECONDS));
+            return true;
+        }
+        return false;
+    }
+
     public SysUser getUser(String userName) {
         final String key = PREFIX.concat(userName);
         if (hasUser(key)) {
