@@ -1,4 +1,4 @@
-package tech.tystnad.works.repository;
+package tech.tystnad.works.repository.mapper;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

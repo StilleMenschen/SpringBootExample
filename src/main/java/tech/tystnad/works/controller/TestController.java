@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import tech.tystnad.works.model.City;
 import tech.tystnad.works.model.Pet;
 import tech.tystnad.works.model.User;
-import tech.tystnad.works.repository.TestRepository;
+import tech.tystnad.works.repository.mapper.TestRepository;
 
 import java.time.Duration;
 import java.util.Date;
