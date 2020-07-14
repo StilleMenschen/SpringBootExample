@@ -31,9 +31,7 @@ class AuthApplicationTests {
         SysOrganizationDOExample example = new SysOrganizationDOExample();
         example.setOrderByClause("create_time desc");
         List<SysOrganizationDO> list = mapper.selectByExample(example);
-        list.forEach(e -> {
-            System.out.println(e.getOrgId() + ":" + e.getOrgName() + ":" + e.getCreateTime());
-        });
+        list.forEach(e -> System.out.println(e.getOrgId() + ":" + e.getOrgName() + ":" + e.getCreateTime()));
         SysOrganizationDO organization = new SysOrganizationDO();
         organization.setDeleted(true);
         System.out.println("deleted " + mapper.updateByExampleSelective(organization, example));
