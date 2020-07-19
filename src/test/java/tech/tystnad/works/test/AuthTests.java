@@ -2,6 +2,9 @@ package tech.tystnad.works.test;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import tech.tystnad.works.model.ResponseObjectEntity;
+import tech.tystnad.works.repository.domain.SysUserDO;
+import tech.tystnad.works.service.BaseService;
 import tech.tystnad.works.util.IdWorker;
 
 import java.util.HashMap;
@@ -11,10 +14,17 @@ import java.util.UUID;
 
 public class AuthTests {
 
-    @Test
-    public void example(){
-        System.out.println(java.lang.Number.class);
+    class TestService extends BaseService {
+        public ResponseObjectEntity<SysUserDO> show() {
+            return fail(301, "");
+        }
     }
+
+    @Test
+    public void example() {
+
+    }
+
 
     @Test
     public void password() {

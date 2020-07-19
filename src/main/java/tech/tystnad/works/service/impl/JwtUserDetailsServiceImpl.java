@@ -12,7 +12,7 @@ import tech.tystnad.works.repository.UserRepository;
 
 import javax.annotation.Resource;
 
-@Service
+@Service("userDetailsService")
 public class JwtUserDetailsServiceImpl implements UserDetailsService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -22,7 +22,7 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        logger.debug("查询用户:{}", username);
+        logger.debug("find user:{}", username);
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
