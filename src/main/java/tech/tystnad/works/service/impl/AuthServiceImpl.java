@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import tech.tystnad.works.core.service.BaseService;
 import tech.tystnad.works.model.JwtUser;
 import tech.tystnad.works.model.User;
 import tech.tystnad.works.repository.UserRepository;
@@ -22,7 +23,7 @@ import java.util.Collections;
 import java.util.Date;
 
 @Service
-public class AuthServiceImpl implements AuthService {
+public class AuthServiceImpl extends BaseService implements AuthService {
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
 

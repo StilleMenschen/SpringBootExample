@@ -1,4 +1,4 @@
-package tech.tystnad.works.service;
+package tech.tystnad.works.core.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import tech.tystnad.works.model.ResponseObjectEntity;
 import tech.tystnad.works.repository.domain.SysUserDO;
-import tech.tystnad.works.service.BaseService;
+import tech.tystnad.works.core.service.BaseService;
 import tech.tystnad.works.util.IdWorker;
 
 import java.util.HashMap;
