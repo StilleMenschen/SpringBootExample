@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import tech.tystnad.works.core.BusinessException;
 import tech.tystnad.works.factory.JwtUserFactory;
 import tech.tystnad.works.model.User;
-import tech.tystnad.works.repository.UserRepository;
 import tech.tystnad.works.repository.domain.*;
 import tech.tystnad.works.repository.mapper.RoleAuthorityRelationshipDOMapper;
 import tech.tystnad.works.repository.mapper.SysAuthorityDOMapper;
@@ -26,9 +25,6 @@ import java.util.Map;
 public class JwtUserDetailsServiceImpl implements UserDetailsService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Resource
-    private UserRepository userRepository;
 
     @Resource
     private SysUserDOMapper sysUserDOMapper;
@@ -81,7 +77,7 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
             return null;
         }
         if (sysUserList.size() > 1) {
-            throw new BusinessException("存在重复的用户名");
+            throw new BusinessException("存在重复用户名");
         }
         SysUserDO sysUser = sysUserList.get(0);
         user.setUsername(sysUser.getUserName());
@@ -104,7 +100,7 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
             return null;
         }
         if (sysOrgUserList.size() > 1) {
-            throw new BusinessException("存在重复的用户名");
+            throw new BusinessException("存在重复用户名");
         }
         SysOrgUserDO sysOrgUser = sysOrgUserList.get(0);
         user.setUsername(sysOrgUser.getUserName());
@@ -118,8 +114,7 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        logger.debug("查询用户 {}", username);
-//      User user = userRepository.findByUsername(username);
+        logger.debug("查询用户名 {}", username);
         User user = null;
         try {
             user = getSysUser(username);
