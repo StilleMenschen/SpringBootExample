@@ -379,7 +379,7 @@ public class SysUserVO {
     }
 
     public void setOrgName(String orgName) {
-        this.orgName = orgName;
+        this.orgName = orgName == null ? null : orgName.trim();
     }
 
     public String getRoleName() {
@@ -387,7 +387,7 @@ public class SysUserVO {
     }
 
     public void setRoleName(String roleName) {
-        this.roleName = roleName;
+        this.roleName = roleName == null ? null : roleName.trim();
     }
 
     public String getUpdaterName() {
@@ -395,7 +395,7 @@ public class SysUserVO {
     }
 
     public void setUpdaterName(String updaterName) {
-        this.updaterName = updaterName;
+        this.updaterName = updaterName == null ? null : updaterName.trim();
     }
 
     public String getCreatorName() {
@@ -403,6 +403,6 @@ public class SysUserVO {
     }
 
     public void setCreatorName(String creatorName) {
-        this.creatorName = creatorName;
+        this.creatorName = creatorName == null ? null : creatorName.trim();
     }
 }

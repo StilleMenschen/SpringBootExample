@@ -1,28 +1,24 @@
 package tech.tystnad.works.test;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import tech.tystnad.works.model.ResponseObjectEntity;
-import tech.tystnad.works.repository.domain.SysUserDO;
-import tech.tystnad.works.core.service.BaseService;
+import org.springframework.web.client.RestTemplate;
 import tech.tystnad.works.util.IdWorker;
 
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.UUID;
 
 public class AuthTests {
 
-    class TestService extends BaseService {
-        public ResponseObjectEntity<SysUserDO> show() {
-            return fail(301, "");
-        }
-    }
-
     @Test
-    public void example() {
-
+    public void rest() {
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            ResponseEntity<String> entity = restTemplate.getForEntity("http://192.168.51.192:2160/v2/api-docs?group=OMS-API-MANAGE", String.class);
+            System.out.println(entity.getBody());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -59,21 +55,4 @@ public class AuthTests {
         System.out.println(System.currentTimeMillis());
     }
 
-    @Test
-    public void uuid() {
-        final int end = 100;
-        Map<String, Long> map = new HashMap<>();
-        long count = 0;
-        String temp;
-        for (int i = 0; i < end; i++) {
-            temp = UUID.randomUUID().toString();
-            if (map.containsKey(temp)) {
-//                System.out.println(i + " - " + temp + " exists!");
-                count++;
-            } else {
-                map.put(temp, System.currentTimeMillis());
-            }
-        }
-        System.out.println(count);
-    }
 }
