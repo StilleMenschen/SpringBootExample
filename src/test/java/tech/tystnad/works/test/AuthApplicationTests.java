@@ -65,11 +65,10 @@ class AuthApplicationTests {
     public void testSysUserVO() {
         SysUserVOMapper mapper = sqlSessionTemplate.getMapper(SysUserVOMapper.class);
         SysUserVO example = new SysUserVO();
-        example.setUserName("setUserName");
-        example.setOrgName("setOrgName");
-        example.setTopName("setTopName");
-        example.setNickname("setNickname");
-        example.setRoleName("setRoleName");
+        example.setUserName("UserName");
+        example.setOrgName("OrgName");
+        example.setNickname("Nickname");
+        example.setRoleName("RoleName");
         List<SysUserVO> list = mapper.findSysUserByExample(example);
         System.out.println(list.size());
     }

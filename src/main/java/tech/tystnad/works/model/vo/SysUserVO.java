@@ -31,7 +31,6 @@ public class SysUserVO {
      * This field corresponds to the database column sys_user.top_id
      */
     private Long topId;
-    private String topName;
 
     /**
      * Database Column Remarks:
@@ -381,14 +380,6 @@ public class SysUserVO {
 
     public void setOrgName(String orgName) {
         this.orgName = orgName;
-    }
-
-    public String getTopName() {
-        return topName;
-    }
-
-    public void setTopName(String topName) {
-        this.topName = topName;
     }
 
     public String getRoleName() {

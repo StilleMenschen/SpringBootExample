@@ -2,14 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="tech.tystnad.works.repository.mapper.SysUserVOMapper">
     <select id="findSysUserByExample" parameterType="tech.tystnad.works.model.vo.SysUserVO" resultType="tech.tystnad.works.model.vo.SysUserVO">
-      SELECT su.user_id, su.org_id, su.top_id, su.user_name, su.user_cipher, su.role_id, su.nickname, su.email, su.enabled, su.updater, su.creator, su.update_time, su.create_time, so.org_name, so2.org_name AS top_name, sr.role_name FROM
+      SELECT su.user_id, su.org_id, su.top_id, su.user_name, su.user_cipher, su.role_id, su.nickname, su.email, su.enabled, su.updater, su.creator, su.update_time, su.create_time, so.org_name, sr.role_name FROM
         sys_user AS su
         INNER JOIN sys_role AS sr
           ON (su.role_id = sr.role_id)
         INNER JOIN sys_organization AS so
           ON (so.org_id = su.org_id)
-        INNER JOIN sys_organization AS so2
-          ON (so2.org_id = su.top_id)
       WHERE su.deleted = 0
       <if test="userId != null">
         AND su.user_id = #{userId}
@@ -52,9 +50,6 @@
       </if>
       <if test="orgName != null">
         AND so.org_name LIKE CONCAT(#{orgName},'%')
-      </if>
-      <if test="topName != null">
-        AND so2.org_name LIKE CONCAT(#{topName},'%')
       </if>
       <if test="roleName != null">
         AND sr.role_name LIKE CONCAT(#{roleName},'%')
