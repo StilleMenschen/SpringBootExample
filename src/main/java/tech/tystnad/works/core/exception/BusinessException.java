@@ -1,4 +1,4 @@
-package tech.tystnad.works.core;
+package tech.tystnad.works.core.exception;
 
 public class BusinessException extends Exception {
     public BusinessException() {

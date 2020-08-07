@@ -11,6 +11,13 @@ import java.util.LinkedList;
 public class AuthTests {
 
     @Test
+    public void example() {
+        IdWorker worker = new IdWorker(0, 0);
+        for (int i = 0; i < 10; i++)
+            System.out.println(worker.nextId());
+    }
+
+    @Test
     public void rest() {
         RestTemplate restTemplate = new RestTemplate();
         try {

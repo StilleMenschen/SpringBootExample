@@ -6,13 +6,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import tech.tystnad.works.core.BusinessException;
+import tech.tystnad.works.core.exception.BusinessException;
 import tech.tystnad.works.factory.JwtUserFactory;
 import tech.tystnad.works.model.User;
 import tech.tystnad.works.repository.domain.*;
 import tech.tystnad.works.repository.mapper.RoleAuthorityRelationshipDOMapper;
 import tech.tystnad.works.repository.mapper.SysAuthorityDOMapper;
-import tech.tystnad.works.repository.mapper.SysOrgUserDOMapper;
 import tech.tystnad.works.repository.mapper.SysUserDOMapper;
 
 import javax.annotation.Resource;
@@ -28,9 +27,6 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
 
     @Resource
     private SysUserDOMapper sysUserDOMapper;
-
-    @Resource
-    private SysOrgUserDOMapper sysOrgUserDOMapper;
 
     @Resource
     private RoleAuthorityRelationshipDOMapper roleAuthorityRelationshipDOMapper;
@@ -89,28 +85,6 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
         return user;
     }
 
-    private User getSysOrgUser(String username) throws BusinessException {
-        User user = new User();
-        SysOrgUserDOExample example = new SysOrgUserDOExample();
-        // 用户名或者邮箱
-        example.createCriteria().andDeletedEqualTo(false).andUserNameEqualTo(username);
-        example.or().andDeletedEqualTo(false).andEmailEqualTo(username);
-        List<SysOrgUserDO> sysOrgUserList = sysOrgUserDOMapper.selectByExample(example);
-        if (sysOrgUserList == null || sysOrgUserList.isEmpty()) {
-            return null;
-        }
-        if (sysOrgUserList.size() > 1) {
-            throw new BusinessException("存在重复用户名");
-        }
-        SysOrgUserDO sysOrgUser = sysOrgUserList.get(0);
-        user.setUsername(sysOrgUser.getUserName());
-        user.setPassword(sysOrgUser.getUserCipher());
-        user.setEnabled(sysOrgUser.getEnabled());
-        user.setLastPasswordResetDate(sysOrgUser.getUpdateTime());
-        user.setEmail(sysOrgUser.getEmail());
-        user.setRoles(getRoles(sysOrgUser.getRoleId()));
-        return user;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -118,9 +92,6 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
         User user = null;
         try {
             user = getSysUser(username);
-            if (user == null) {
-                user = getSysOrgUser(username);
-            }
         } catch (BusinessException e) {
             e.printStackTrace();
         }

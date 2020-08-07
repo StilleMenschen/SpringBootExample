@@ -21,7 +21,7 @@ public class IdWorker {
             throw new IllegalArgumentException(
                     String.format("datacenter Id can't be greater than %d or less than 0", maxDataCenterId));
         }
-        System.out.printf("worker starting. timestamp left shift %d, datacenter id bits %d, worker id bits %d, sequence bits %d, workerid %d",
+        System.out.printf("id worker starting. timestamp left shift %d, datacenter id bits %d, worker id bits %d, sequence bits %d, workerid %d\n",
                 timestampLeftShift, dataCenterIdBits, workerIdBits, sequenceBits, workerId);
 
         this.workerId = workerId;
@@ -29,12 +29,15 @@ public class IdWorker {
         this.sequence = sequence;
     }
 
-    private final long twepoch = 1592708961278L;
+    private final long twepoch = 1596770384613L;
 
+    // 工作机器ID,二进制5位
     private final long workerIdBits = 5L;
+    // 数据中心ID,二进制5位
     private final long dataCenterIdBits = 5L;
     private final long maxWorkerId = ~(-1L << workerIdBits);
     private final long maxDataCenterId = ~(-1L << dataCenterIdBits);
+    // 每毫秒序列号,二进制12位
     private final long sequenceBits = 12L;
 
     private final long workerIdShift = sequenceBits;

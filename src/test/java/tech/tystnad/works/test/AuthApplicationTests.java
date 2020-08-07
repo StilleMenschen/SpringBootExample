@@ -3,14 +3,12 @@ package tech.tystnad.works.test;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
-import tech.tystnad.works.model.vo.SysUserVO;
 import tech.tystnad.works.repository.domain.SysOrgUserDO;
 import tech.tystnad.works.repository.domain.SysOrgUserDOExample;
 import tech.tystnad.works.repository.domain.SysOrganizationDO;
 import tech.tystnad.works.repository.domain.SysOrganizationDOExample;
 import tech.tystnad.works.repository.mapper.SysOrgUserDOMapper;
 import tech.tystnad.works.repository.mapper.SysOrganizationDOMapper;
-import tech.tystnad.works.repository.mapper.SysUserVOMapper;
 import tech.tystnad.works.util.IdWorker;
 
 import javax.annotation.Resource;
@@ -59,17 +57,5 @@ class AuthApplicationTests {
         example.or().andDeletedEqualTo(false).andEmailEqualTo(username);
         List<SysOrgUserDO> sysOrgUserDOList = sysOrgUserDOMapper.selectByExample(example);
         System.out.println(sysOrgUserDOList);
-    }
-
-    @Test
-    public void testSysUserVO() {
-        SysUserVOMapper mapper = sqlSessionTemplate.getMapper(SysUserVOMapper.class);
-        SysUserVO example = new SysUserVO();
-        example.setUserName("UserName");
-        example.setOrgName("OrgName");
-        example.setNickname("Nickname");
-        example.setRoleName("RoleName");
-        List<SysUserVO> list = mapper.findSysUserByExample(example);
-        System.out.println(list.size());
     }
 }

@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
+    <!--Maven 命令为: mybatis-generator:generate -e-->
     <classPathEntry
             location="D:\APPS\apache-maven-3.6.0\repository\org\mariadb\jdbc\mariadb-java-client\2.6.0\mariadb-java-client-2.6.0.jar"/>
 
@@ -57,16 +58,13 @@
             <columnOverride column="deleted" javaType="java.lang.Boolean"/>
             <columnOverride column="enabled" javaType="java.lang.Boolean"/>
         </table>
-        <table tableName="sys_org_user" domainObjectName="SysOrgUserDO">
-            <columnOverride column="deleted" javaType="java.lang.Boolean"/>
-            <columnOverride column="enabled" javaType="java.lang.Boolean"/>
-        </table>
         <table tableName="sys_role" domainObjectName="SysRoleDO">
             <columnOverride column="deleted" javaType="java.lang.Boolean"/>
         </table>
         <table tableName="sys_user" domainObjectName="SysUserDO">
             <columnOverride column="deleted" javaType="java.lang.Boolean"/>
             <columnOverride column="enabled" javaType="java.lang.Boolean"/>
+            <columnOverride column="user_type" javaType="java.lang.Byte"/>
         </table>
         <table tableName="work_log" domainObjectName="WorkLogDO"/>
         <table tableName="work_next_plan" domainObjectName="WorkNextPlanDO"/>
