@@ -57,29 +57,6 @@ CREATE TABLE `sys_log` (
 
 /*Data for the table `sys_log` */
 
-/*Table structure for table `sys_org_user` */
-
-DROP TABLE IF EXISTS `sys_org_user`;
-
-CREATE TABLE `sys_org_user` (
-  `user_id` bigint(20) unsigned NOT NULL COMMENT '机构用户ID',
-  `top_id` bigint(20) unsigned DEFAULT NULL COMMENT '顶级机构ID',
-  `user_name` varchar(32) DEFAULT NULL COMMENT '机构用户名称',
-  `user_cipher` varchar(64) DEFAULT NULL COMMENT '密码',
-  `role_id` bigint(20) unsigned DEFAULT NULL COMMENT '角色ID',
-  `nickname` varchar(64) DEFAULT NULL COMMENT '昵称',
-  `email` varchar(64) DEFAULT NULL COMMENT '邮箱',
-  `enabled` tinyint(1) unsigned DEFAULT 1 COMMENT '状态(1-启用,0-禁用)',
-  `deleted` tinyint(1) unsigned DEFAULT 0 COMMENT '是否删除(1-删除,0-未删除)',
-  `updater` bigint(20) unsigned DEFAULT NULL,
-  `creator` bigint(20) unsigned DEFAULT NULL,
-  `update_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-/*Data for the table `sys_org_user` */
-
 /*Table structure for table `sys_organization` */
 
 DROP TABLE IF EXISTS `sys_organization`;
@@ -133,6 +110,7 @@ CREATE TABLE `sys_user` (
   `role_id` bigint(20) unsigned DEFAULT NULL COMMENT '角色ID',
   `nickname` varchar(64) DEFAULT NULL COMMENT '昵称',
   `email` varchar(64) DEFAULT NULL COMMENT '邮箱',
+  `user_type` tinyint(4) unsigned DEFAULT NULL COMMENT '用户类型(0-超级管理员,1-机构管理员,2-普通用户)',
   `enabled` tinyint(1) unsigned DEFAULT 1 COMMENT '状态(1-启用,0-禁用)',
   `deleted` tinyint(1) unsigned DEFAULT 0 COMMENT '是否删除(1-删除,0-未删除)',
   `updater` bigint(20) unsigned DEFAULT NULL,
@@ -143,6 +121,9 @@ CREATE TABLE `sys_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `sys_user` */
+
+insert  into `sys_user`(`user_id`,`org_id`,`top_id`,`user_name`,`user_cipher`,`role_id`,`nickname`,`email`,`user_type`,`enabled`,`deleted`,`updater`,`creator`,`update_time`,`create_time`) values 
+(332123,NULL,NULL,'aaaa',NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL,'2020-08-07 10:14:15','2020-08-07 10:14:15');
 
 /*Table structure for table `work_log` */
 
