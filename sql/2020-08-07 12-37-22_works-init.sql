@@ -122,9 +122,6 @@ CREATE TABLE `sys_user` (
 
 /*Data for the table `sys_user` */
 
-insert  into `sys_user`(`user_id`,`org_id`,`top_id`,`user_name`,`user_cipher`,`role_id`,`nickname`,`email`,`user_type`,`enabled`,`deleted`,`updater`,`creator`,`update_time`,`create_time`) values 
-(332123,NULL,NULL,'aaaa',NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL,'2020-08-07 10:14:15','2020-08-07 10:14:15');
-
 /*Table structure for table `work_log` */
 
 DROP TABLE IF EXISTS `work_log`;

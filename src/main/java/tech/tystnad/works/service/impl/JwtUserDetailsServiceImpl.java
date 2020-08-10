@@ -62,6 +62,12 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
         return roles;
     }
 
+    /**
+     * 获取系统用户
+     * @param username 用户名,也可以是邮箱地址
+     * @return
+     * @throws BusinessException 可能会出现重复的用户名
+     */
     private User getSysUser(String username) throws BusinessException {
         User user = new User();
         SysUserDOExample sysUserDOExample = new SysUserDOExample();
@@ -76,12 +82,13 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
             throw new BusinessException("存在重复用户名");
         }
         SysUserDO sysUser = sysUserList.get(0);
+        List<String> roles = getRoles(sysUser.getRoleId());
         user.setUsername(sysUser.getUserName());
         user.setPassword(sysUser.getUserCipher());
         user.setEnabled(sysUser.getEnabled());
         user.setLastPasswordResetDate(sysUser.getUpdateTime());
         user.setEmail(sysUser.getEmail());
-        user.setRoles(getRoles(sysUser.getRoleId()));
+        user.setRoles(roles);
         return user;
     }
 
