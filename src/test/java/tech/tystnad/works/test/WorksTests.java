@@ -10,7 +10,7 @@ import tech.tystnad.works.util.IdWorker;
 
 import java.util.LinkedList;
 
-public class AuthTests {
+public class WorksTests {
 
     @Test
     public void example() {

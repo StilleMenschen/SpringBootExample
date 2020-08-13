@@ -10,8 +10,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @MapperScan("tech.tystnad.works.repository.mapper")
 @SpringBootApplication
-public class Application {
+public class WorksApplication {
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(WorksApplication.class, args);
     }
 }

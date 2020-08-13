@@ -18,7 +18,7 @@ import java.util.Calendar;
 import java.util.List;
 
 @SpringBootTest
-class AuthApplicationTests {
+class WorksApplicationTests {
 
     @Resource
     private SysOrganizationDOMapper sysOrganizationDOMapper;
