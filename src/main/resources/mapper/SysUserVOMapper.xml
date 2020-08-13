@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="tech.tystnad.works.repository.mapper.SysUserVOMapper">
     <select id="findByExample" parameterType="tech.tystnad.works.model.dto.SysUserDTO" resultType="tech.tystnad.works.model.vo.SysUserVO">
-        SELECT su.user_id, su.org_id, su.top_id, su.user_name, su.role_id, su.nickname, su.email, su.user_type, su.enabled, su.create_time, csu.user_name AS creator_name, usu.user_name AS updater_name, so.org_name
+        SELECT su.user_id, su.org_id, su.top_id, su.user_name, su.role_id, su.nickname, su.email, su.telephone_number, su.user_type, su.enabled, su.create_time, csu.user_name AS creator_name, usu.user_name AS updater_name, so.org_name
         FROM sys_user AS su INNER JOIN sys_organization AS so ON (su.org_id = so.org_id) INNER JOIN sys_user AS usu ON (su.updater = usu.user_id) INNER JOIN sys_user AS csu ON (csu.user_id = su.creator)
         WHERE su.deleted = 0
         <if test="userId != null">
@@ -25,6 +25,9 @@
         </if>
         <if test="email != null">
             AND su.email = #{email}
+        </if>
+        <if test="telephoneNumber != null">
+            AND su.telephone_number = #{telephoneNumber}
         </if>
         <if test="userType != null">
             AND su.user_type = #{userType}

@@ -1,5 +1,7 @@
 package tech.tystnad.works.test;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,17 +14,22 @@ public class AuthTests {
 
     @Test
     public void example() {
-        IdWorker worker = new IdWorker(0, 0);
-        for (int i = 0; i < 10; i++)
-            System.out.println(worker.nextId());
+        String s = "aaa";
+        if (s!=null && !"aa".equals(s)){
+            System.out.println(111);
+        }else {
+            System.out.println(222);
+        }
     }
 
     @Test
     public void rest() {
         RestTemplate restTemplate = new RestTemplate();
         try {
-            ResponseEntity<String> entity = restTemplate.getForEntity("http://192.168.51.192:2160/v2/api-docs?group=OMS-API-MANAGE", String.class);
-            System.out.println(entity.getBody());
+            ResponseEntity<String> entity = restTemplate.getForEntity("http://localhost/test.json", String.class);
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readTree(entity.getBody());
+            System.out.println(node.toPrettyString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -36,7 +43,8 @@ public class AuthTests {
                 "123456",
                 "654321",
                 "712587623457652798365",
-                "beautiful"
+                "beautiful",
+                "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
         };
         LinkedList<String> cipherText = new LinkedList<>();
         for (String s : credentials) {

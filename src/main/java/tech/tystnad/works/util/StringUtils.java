@@ -1,28 +1,11 @@
 package tech.tystnad.works.util;
 
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StreamUtils;
-
-import java.io.ByteArrayOutputStream;
-import java.nio.charset.Charset;
 import java.util.*;
 
 public abstract class StringUtils {
 
-    private static final String[] EMPTY_STRING_ARRAY = {};
-
     private static final String FOLDER_SEPARATOR = "/";
-
-    private static final String WINDOWS_FOLDER_SEPARATOR = "\\";
-
-    private static final String TOP_PATH = "..";
-
-    private static final String CURRENT_PATH = ".";
-
     private static final char EXTENSION_SEPARATOR = '.';
-
 
     //---------------------------------------------------------------------
     // General convenience methods for working with Strings
@@ -449,7 +432,7 @@ public abstract class StringUtils {
      * @return the quoted {@code String} (e.g. "'myString'"),
      * or {@code null} if the input was {@code null}
      */
-    
+
     public static String quote(String str) {
         return (str != null ? "'" + str + "'" : null);
     }
@@ -462,7 +445,7 @@ public abstract class StringUtils {
      * @return the quoted {@code String} (e.g. "'myString'"),
      * or the input object as-is if not a {@code String}
      */
-    
+
     public static Object quoteIfString(Object obj) {
         return (obj instanceof String ? quote((String) obj) : obj);
     }
@@ -540,7 +523,7 @@ public abstract class StringUtils {
      * @param path the file path (may be {@code null})
      * @return the extracted filename, or {@code null} if none
      */
-    
+
     public static String getFilename(String path) {
         if (path == null) {
             return null;
@@ -557,7 +540,7 @@ public abstract class StringUtils {
      * @param path the file path (may be {@code null})
      * @return the extracted filename extension, or {@code null} if none
      */
-    
+
     public static String getFilenameExtension(String path) {
         if (path == null) {
             return null;
@@ -619,195 +602,6 @@ public abstract class StringUtils {
         }
     }
 
-    /**
-     * Normalize the path by suppressing sequences like "path/.." and
-     * inner simple dots.
-     * <p>The result is convenient for path comparison. For other uses,
-     * notice that Windows separators ("\") are replaced by simple slashes.
-     *
-     * @param path the original path
-     * @return the normalized path
-     */
-    public static String cleanPath(String path) {
-        if (!hasLength(path)) {
-            return path;
-        }
-        String pathToUse = replace(path, WINDOWS_FOLDER_SEPARATOR, FOLDER_SEPARATOR);
-
-        // Shortcut if there is no work to do
-        if (pathToUse.indexOf('.') == -1) {
-            return pathToUse;
-        }
-
-        // Strip prefix from path to analyze, to not treat it as part of the
-        // first path element. This is necessary to correctly parse paths like
-        // "file:core/../core/io/Resource.class", where the ".." should just
-        // strip the first "core" directory while keeping the "file:" prefix.
-        int prefixIndex = pathToUse.indexOf(':');
-        String prefix = "";
-        if (prefixIndex != -1) {
-            prefix = pathToUse.substring(0, prefixIndex + 1);
-            if (prefix.contains(FOLDER_SEPARATOR)) {
-                prefix = "";
-            } else {
-                pathToUse = pathToUse.substring(prefixIndex + 1);
-            }
-        }
-        if (pathToUse.startsWith(FOLDER_SEPARATOR)) {
-            prefix = prefix + FOLDER_SEPARATOR;
-            pathToUse = pathToUse.substring(1);
-        }
-
-        String[] pathArray = delimitedListToStringArray(pathToUse, FOLDER_SEPARATOR);
-        LinkedList<String> pathElements = new LinkedList<>();
-        int tops = 0;
-
-        for (int i = pathArray.length - 1; i >= 0; i--) {
-            String element = pathArray[i];
-            if (CURRENT_PATH.equals(element)) {
-                // Points to current directory - drop it.
-            } else if (TOP_PATH.equals(element)) {
-                // Registering top path found.
-                tops++;
-            } else {
-                if (tops > 0) {
-                    // Merging path element with element corresponding to top path.
-                    tops--;
-                } else {
-                    // Normal path element found.
-                    pathElements.add(0, element);
-                }
-            }
-        }
-
-        // All path elements stayed the same - shortcut
-        if (pathArray.length == pathElements.size()) {
-            return prefix + pathToUse;
-        }
-        // Remaining top paths need to be retained.
-        for (int i = 0; i < tops; i++) {
-            pathElements.add(0, TOP_PATH);
-        }
-        // If nothing else left, at least explicitly point to current path.
-        if (pathElements.size() == 1 && "".equals(pathElements.getLast()) && !prefix.endsWith(FOLDER_SEPARATOR)) {
-            pathElements.add(0, CURRENT_PATH);
-        }
-
-        return prefix + collectionToDelimitedString(pathElements, FOLDER_SEPARATOR);
-    }
-
-    /**
-     * Compare two paths after normalization of them.
-     *
-     * @param path1 first path for comparison
-     * @param path2 second path for comparison
-     * @return whether the two paths are equivalent after normalization
-     */
-    public static boolean pathEquals(String path1, String path2) {
-        return cleanPath(path1).equals(cleanPath(path2));
-    }
-
-    /**
-     * Decode the given encoded URI component value. Based on the following rules:
-     * <ul>
-     * <li>Alphanumeric characters {@code "a"} through {@code "z"}, {@code "A"} through {@code "Z"},
-     * and {@code "0"} through {@code "9"} stay the same.</li>
-     * <li>Special characters {@code "-"}, {@code "_"}, {@code "."}, and {@code "*"} stay the same.</li>
-     * <li>A sequence "{@code %<i>xy</i>}" is interpreted as a hexadecimal representation of the character.</li>
-     * </ul>
-     *
-     * @param source  the encoded String
-     * @param charset the character set
-     * @return the decoded value
-     * @throws IllegalArgumentException when the given source contains invalid encoded sequences
-     * @see java.net.URLDecoder#decode(String, String)
-     * @since 5.0
-     */
-    public static String uriDecode(String source, Charset charset) {
-        int length = source.length();
-        if (length == 0) {
-            return source;
-        }
-        Assert.notNull(charset, "Charset must not be null");
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(length);
-        boolean changed = false;
-        for (int i = 0; i < length; i++) {
-            int ch = source.charAt(i);
-            if (ch == '%') {
-                if (i + 2 < length) {
-                    char hex1 = source.charAt(i + 1);
-                    char hex2 = source.charAt(i + 2);
-                    int u = Character.digit(hex1, 16);
-                    int l = Character.digit(hex2, 16);
-                    if (u == -1 || l == -1) {
-                        throw new IllegalArgumentException("Invalid encoded sequence \"" + source.substring(i) + "\"");
-                    }
-                    baos.write((char) ((u << 4) + l));
-                    i += 2;
-                    changed = true;
-                } else {
-                    throw new IllegalArgumentException("Invalid encoded sequence \"" + source.substring(i) + "\"");
-                }
-            } else {
-                baos.write(ch);
-            }
-        }
-        return (changed ? StreamUtils.copyToString(baos, charset) : source);
-    }
-
-    /**
-     * Parse the given {@code String} value into a {@link Locale}, accepting
-     * the {@link Locale#toString} format as well as BCP 47 language tags.
-     *
-     * @param localeValue the locale value: following either {@code Locale's}
-     *                    {@code toString()} format ("en", "en_UK", etc), also accepting spaces as
-     *                    separators (as an alternative to underscores), or BCP 47 (e.g. "en-UK")
-     *                    as specified by {@link Locale#forLanguageTag} on Java 7+
-     * @return a corresponding {@code Locale} instance, or {@code null} if none
-     * @throws IllegalArgumentException in case of an invalid locale specification
-     * @see #parseLocaleString
-     * @see Locale#forLanguageTag
-     * @since 5.0.4
-     */
-    
-    public static Locale parseLocale(String localeValue) {
-        String[] tokens = tokenizeLocaleSource(localeValue);
-        if (tokens.length == 1) {
-            validateLocalePart(localeValue);
-            Locale resolved = Locale.forLanguageTag(localeValue);
-            if (resolved.getLanguage().length() > 0) {
-                return resolved;
-            }
-        }
-        return parseLocaleTokens(localeValue, tokens);
-    }
-
-    /**
-     * Parse the given {@code String} representation into a {@link Locale}.
-     * <p>For many parsing scenarios, this is an inverse operation of
-     * {@link Locale#toString Locale's toString}, in a lenient sense.
-     * This method does not aim for strict {@code Locale} design compliance;
-     * it is rather specifically tailored for typical Spring parsing needs.
-     * <p><b>Note: This delegate does not accept the BCP 47 language tag format.
-     * Please use {@link #parseLocale} for lenient parsing of both formats.</b>
-     *
-     * @param localeString the locale {@code String}: following {@code Locale's}
-     *                     {@code toString()} format ("en", "en_UK", etc), also accepting spaces as
-     *                     separators (as an alternative to underscores)
-     * @return a corresponding {@code Locale} instance, or {@code null} if none
-     * @throws IllegalArgumentException in case of an invalid locale specification
-     */
-    
-    public static Locale parseLocaleString(String localeString) {
-        return parseLocaleTokens(localeString, tokenizeLocaleSource(localeString));
-    }
-
-    private static String[] tokenizeLocaleSource(String localeSource) {
-        return tokenizeToStringArray(localeSource, "_ ", false, false);
-    }
-
-    
     private static Locale parseLocaleTokens(String localeString, String[] tokens) {
         String language = (tokens.length > 0 ? tokens[0] : "");
         String country = (tokens.length > 1 ? tokens[1] : "");
@@ -880,157 +674,6 @@ public abstract class StringUtils {
     //---------------------------------------------------------------------
 
     /**
-     * Copy the given {@link Collection} into a {@code String} array.
-     * <p>The {@code Collection} must contain {@code String} elements only.
-     *
-     * @param collection the {@code Collection} to copy
-     *                   (potentially {@code null} or empty)
-     * @return the resulting {@code String} array
-     */
-    public static String[] toStringArray(Collection<String> collection) {
-        return (!CollectionUtils.isEmpty(collection) ? collection.toArray(EMPTY_STRING_ARRAY) : EMPTY_STRING_ARRAY);
-    }
-
-    /**
-     * Copy the given {@link Enumeration} into a {@code String} array.
-     * <p>The {@code Enumeration} must contain {@code String} elements only.
-     *
-     * @param enumeration the {@code Enumeration} to copy
-     *                    (potentially {@code null} or empty)
-     * @return the resulting {@code String} array
-     */
-    public static String[] toStringArray(Enumeration<String> enumeration) {
-        return (enumeration != null ? toStringArray(Collections.list(enumeration)) : EMPTY_STRING_ARRAY);
-    }
-
-    /**
-     * Append the given {@code String} to the given {@code String} array,
-     * returning a new array consisting of the input array contents plus
-     * the given {@code String}.
-     *
-     * @param array the array to append to (can be {@code null})
-     * @param str   the {@code String} to append
-     * @return the new array (never {@code null})
-     */
-    public static String[] addStringToArray(String[] array, String str) {
-        if (ObjectUtils.isEmpty(array)) {
-            return new String[]{str};
-        }
-
-        String[] newArr = new String[array.length + 1];
-        System.arraycopy(array, 0, newArr, 0, array.length);
-        newArr[array.length] = str;
-        return newArr;
-    }
-
-    /**
-     * Concatenate the given {@code String} arrays into one,
-     * with overlapping array elements included twice.
-     * <p>The order of elements in the original arrays is preserved.
-     *
-     * @param array1 the first array (can be {@code null})
-     * @param array2 the second array (can be {@code null})
-     * @return the new array ({@code null} if both given arrays were {@code null})
-     */
-    
-    public static String[] concatenateStringArrays(String[] array1, String[] array2) {
-        if (ObjectUtils.isEmpty(array1)) {
-            return array2;
-        }
-        if (ObjectUtils.isEmpty(array2)) {
-            return array1;
-        }
-
-        String[] newArr = new String[array1.length + array2.length];
-        System.arraycopy(array1, 0, newArr, 0, array1.length);
-        System.arraycopy(array2, 0, newArr, array1.length, array2.length);
-        return newArr;
-    }
-
-    /**
-     * Merge the given {@code String} arrays into one, with overlapping
-     * array elements only included once.
-     * <p>The order of elements in the original arrays is preserved
-     * (with the exception of overlapping elements, which are only
-     * included on their first occurrence).
-     *
-     * @param array1 the first array (can be {@code null})
-     * @param array2 the second array (can be {@code null})
-     * @return the new array ({@code null} if both given arrays were {@code null})
-     * @deprecated as of 4.3.15, in favor of manual merging via {@link LinkedHashSet}
-     * (with every entry included at most once, even entries within the first array)
-     */
-    @Deprecated
-    
-    public static String[] mergeStringArrays(String[] array1, String[] array2) {
-        if (ObjectUtils.isEmpty(array1)) {
-            return array2;
-        }
-        if (ObjectUtils.isEmpty(array2)) {
-            return array1;
-        }
-
-        List<String> result = new ArrayList<>(Arrays.asList(array1));
-        for (String str : array2) {
-            if (!result.contains(str)) {
-                result.add(str);
-            }
-        }
-        return toStringArray(result);
-    }
-
-    /**
-     * Sort the given {@code String} array if necessary.
-     *
-     * @param array the original array (potentially empty)
-     * @return the array in sorted form (never {@code null})
-     */
-    public static String[] sortStringArray(String[] array) {
-        if (ObjectUtils.isEmpty(array)) {
-            return array;
-        }
-
-        Arrays.sort(array);
-        return array;
-    }
-
-    /**
-     * Trim the elements of the given {@code String} array, calling
-     * {@code String.trim()} on each non-null element.
-     *
-     * @param array the original {@code String} array (potentially empty)
-     * @return the resulting array (of the same size) with trimmed elements
-     */
-    public static String[] trimArrayElements(String[] array) {
-        if (ObjectUtils.isEmpty(array)) {
-            return array;
-        }
-
-        String[] result = new String[array.length];
-        for (int i = 0; i < array.length; i++) {
-            String element = array[i];
-            result[i] = (element != null ? element.trim() : null);
-        }
-        return result;
-    }
-
-    /**
-     * Remove duplicate strings from the given array.
-     * <p>As of 4.2, it preserves the original order, as it uses a {@link LinkedHashSet}.
-     *
-     * @param array the {@code String} array (potentially empty)
-     * @return an array without duplicates, in natural sort order
-     */
-    public static String[] removeDuplicateStrings(String[] array) {
-        if (ObjectUtils.isEmpty(array)) {
-            return array;
-        }
-
-        Set<String> set = new LinkedHashSet<>(Arrays.asList(array));
-        return toStringArray(set);
-    }
-
-    /**
      * Split a {@code String} at the first occurrence of the delimiter.
      * Does not include the delimiter in the result.
      *
@@ -1040,7 +683,7 @@ public abstract class StringUtils {
      * index 1 being after the delimiter (neither element includes the delimiter);
      * or {@code null} if the delimiter wasn't found in the given input {@code String}
      */
-    
+
     public static String[] split(String toSplit, String delimiter) {
         if (!hasLength(toSplit) || !hasLength(delimiter)) {
             return null;
@@ -1053,296 +696,6 @@ public abstract class StringUtils {
         String beforeDelimiter = toSplit.substring(0, offset);
         String afterDelimiter = toSplit.substring(offset + delimiter.length());
         return new String[]{beforeDelimiter, afterDelimiter};
-    }
-
-    /**
-     * Take an array of strings and split each element based on the given delimiter.
-     * A {@code Properties} instance is then generated, with the left of the delimiter
-     * providing the key, and the right of the delimiter providing the value.
-     * <p>Will trim both the key and value before adding them to the {@code Properties}.
-     *
-     * @param array     the array to process
-     * @param delimiter to split each element using (typically the equals symbol)
-     * @return a {@code Properties} instance representing the array contents,
-     * or {@code null} if the array to process was {@code null} or empty
-     */
-    
-    public static Properties splitArrayElementsIntoProperties(String[] array, String delimiter) {
-        return splitArrayElementsIntoProperties(array, delimiter, null);
-    }
-
-    /**
-     * Take an array of strings and split each element based on the given delimiter.
-     * A {@code Properties} instance is then generated, with the left of the
-     * delimiter providing the key, and the right of the delimiter providing the value.
-     * <p>Will trim both the key and value before adding them to the
-     * {@code Properties} instance.
-     *
-     * @param array         the array to process
-     * @param delimiter     to split each element using (typically the equals symbol)
-     * @param charsToDelete one or more characters to remove from each element
-     *                      prior to attempting the split operation (typically the quotation mark
-     *                      symbol), or {@code null} if no removal should occur
-     * @return a {@code Properties} instance representing the array contents,
-     * or {@code null} if the array to process was {@code null} or empty
-     */
-    
-    public static Properties splitArrayElementsIntoProperties(
-            String[] array, String delimiter, String charsToDelete) {
-
-        if (ObjectUtils.isEmpty(array)) {
-            return null;
-        }
-
-        Properties result = new Properties();
-        for (String element : array) {
-            if (charsToDelete != null) {
-                element = deleteAny(element, charsToDelete);
-            }
-            String[] splittedElement = split(element, delimiter);
-            if (splittedElement == null) {
-                continue;
-            }
-            result.setProperty(splittedElement[0].trim(), splittedElement[1].trim());
-        }
-        return result;
-    }
-
-    /**
-     * Tokenize the given {@code String} into a {@code String} array via a
-     * {@link StringTokenizer}.
-     * <p>Trims tokens and omits empty tokens.
-     * <p>The given {@code delimiters} string can consist of any number of
-     * delimiter characters. Each of those characters can be used to separate
-     * tokens. A delimiter is always a single character; for multi-character
-     * delimiters, consider using {@link #delimitedListToStringArray}.
-     *
-     * @param str        the {@code String} to tokenize (potentially {@code null} or empty)
-     * @param delimiters the delimiter characters, assembled as a {@code String}
-     *                   (each of the characters is individually considered as a delimiter)
-     * @return an array of the tokens
-     * @see java.util.StringTokenizer
-     * @see String#trim()
-     * @see #delimitedListToStringArray
-     */
-    public static String[] tokenizeToStringArray(String str, String delimiters) {
-        return tokenizeToStringArray(str, delimiters, true, true);
-    }
-
-    /**
-     * Tokenize the given {@code String} into a {@code String} array via a
-     * {@link StringTokenizer}.
-     * <p>The given {@code delimiters} string can consist of any number of
-     * delimiter characters. Each of those characters can be used to separate
-     * tokens. A delimiter is always a single character; for multi-character
-     * delimiters, consider using {@link #delimitedListToStringArray}.
-     *
-     * @param str               the {@code String} to tokenize (potentially {@code null} or empty)
-     * @param delimiters        the delimiter characters, assembled as a {@code String}
-     *                          (each of the characters is individually considered as a delimiter)
-     * @param trimTokens        trim the tokens via {@link String#trim()}
-     * @param ignoreEmptyTokens omit empty tokens from the result array
-     *                          (only applies to tokens that are empty after trimming; StringTokenizer
-     *                          will not consider subsequent delimiters as token in the first place).
-     * @return an array of the tokens
-     * @see java.util.StringTokenizer
-     * @see String#trim()
-     * @see #delimitedListToStringArray
-     */
-    public static String[] tokenizeToStringArray(
-            String str, String delimiters, boolean trimTokens, boolean ignoreEmptyTokens) {
-
-        if (str == null) {
-            return EMPTY_STRING_ARRAY;
-        }
-
-        StringTokenizer st = new StringTokenizer(str, delimiters);
-        List<String> tokens = new ArrayList<>();
-        while (st.hasMoreTokens()) {
-            String token = st.nextToken();
-            if (trimTokens) {
-                token = token.trim();
-            }
-            if (!ignoreEmptyTokens || token.length() > 0) {
-                tokens.add(token);
-            }
-        }
-        return toStringArray(tokens);
-    }
-
-    /**
-     * Take a {@code String} that is a delimited list and convert it into a
-     * {@code String} array.
-     * <p>A single {@code delimiter} may consist of more than one character,
-     * but it will still be considered as a single delimiter string, rather
-     * than as bunch of potential delimiter characters, in contrast to
-     * {@link #tokenizeToStringArray}.
-     *
-     * @param str       the input {@code String} (potentially {@code null} or empty)
-     * @param delimiter the delimiter between elements (this is a single delimiter,
-     *                  rather than a bunch individual delimiter characters)
-     * @return an array of the tokens in the list
-     * @see #tokenizeToStringArray
-     */
-    public static String[] delimitedListToStringArray(String str, String delimiter) {
-        return delimitedListToStringArray(str, delimiter, null);
-    }
-
-    /**
-     * Take a {@code String} that is a delimited list and convert it into
-     * a {@code String} array.
-     * <p>A single {@code delimiter} may consist of more than one character,
-     * but it will still be considered as a single delimiter string, rather
-     * than as bunch of potential delimiter characters, in contrast to
-     * {@link #tokenizeToStringArray}.
-     *
-     * @param str           the input {@code String} (potentially {@code null} or empty)
-     * @param delimiter     the delimiter between elements (this is a single delimiter,
-     *                      rather than a bunch individual delimiter characters)
-     * @param charsToDelete a set of characters to delete; useful for deleting unwanted
-     *                      line breaks: e.g. "\r\n\f" will delete all new lines and line feeds in a {@code String}
-     * @return an array of the tokens in the list
-     * @see #tokenizeToStringArray
-     */
-    public static String[] delimitedListToStringArray(
-            String str, String delimiter, String charsToDelete) {
-
-        if (str == null) {
-            return EMPTY_STRING_ARRAY;
-        }
-        if (delimiter == null) {
-            return new String[]{str};
-        }
-
-        List<String> result = new ArrayList<>();
-        if (delimiter.isEmpty()) {
-            for (int i = 0; i < str.length(); i++) {
-                result.add(deleteAny(str.substring(i, i + 1), charsToDelete));
-            }
-        } else {
-            int pos = 0;
-            int delPos;
-            while ((delPos = str.indexOf(delimiter, pos)) != -1) {
-                result.add(deleteAny(str.substring(pos, delPos), charsToDelete));
-                pos = delPos + delimiter.length();
-            }
-            if (str.length() > 0 && pos <= str.length()) {
-                // Add rest of String, but not in case of empty input.
-                result.add(deleteAny(str.substring(pos), charsToDelete));
-            }
-        }
-        return toStringArray(result);
-    }
-
-    /**
-     * Convert a comma delimited list (e.g., a row from a CSV file) into an
-     * array of strings.
-     *
-     * @param str the input {@code String} (potentially {@code null} or empty)
-     * @return an array of strings, or the empty array in case of empty input
-     */
-    public static String[] commaDelimitedListToStringArray(String str) {
-        return delimitedListToStringArray(str, ",");
-    }
-
-    /**
-     * Convert a comma delimited list (e.g., a row from a CSV file) into a set.
-     * <p>Note that this will suppress duplicates, and as of 4.2, the elements in
-     * the returned set will preserve the original order in a {@link LinkedHashSet}.
-     *
-     * @param str the input {@code String} (potentially {@code null} or empty)
-     * @return a set of {@code String} entries in the list
-     * @see #removeDuplicateStrings(String[])
-     */
-    public static Set<String> commaDelimitedListToSet(String str) {
-        String[] tokens = commaDelimitedListToStringArray(str);
-        return new LinkedHashSet<>(Arrays.asList(tokens));
-    }
-
-    /**
-     * Convert a {@link Collection} to a delimited {@code String} (e.g. CSV).
-     * <p>Useful for {@code toString()} implementations.
-     *
-     * @param coll   the {@code Collection} to convert (potentially {@code null} or empty)
-     * @param delim  the delimiter to use (typically a ",")
-     * @param prefix the {@code String} to start each element with
-     * @param suffix the {@code String} to end each element with
-     * @return the delimited {@code String}
-     */
-    public static String collectionToDelimitedString(
-            Collection<?> coll, String delim, String prefix, String suffix) {
-
-        if (CollectionUtils.isEmpty(coll)) {
-            return "";
-        }
-
-        StringBuilder sb = new StringBuilder();
-        Iterator<?> it = coll.iterator();
-        while (it.hasNext()) {
-            sb.append(prefix).append(it.next()).append(suffix);
-            if (it.hasNext()) {
-                sb.append(delim);
-            }
-        }
-        return sb.toString();
-    }
-
-    /**
-     * Convert a {@code Collection} into a delimited {@code String} (e.g. CSV).
-     * <p>Useful for {@code toString()} implementations.
-     *
-     * @param coll  the {@code Collection} to convert (potentially {@code null} or empty)
-     * @param delim the delimiter to use (typically a ",")
-     * @return the delimited {@code String}
-     */
-    public static String collectionToDelimitedString(Collection<?> coll, String delim) {
-        return collectionToDelimitedString(coll, delim, "", "");
-    }
-
-    /**
-     * Convert a {@code Collection} into a delimited {@code String} (e.g., CSV).
-     * <p>Useful for {@code toString()} implementations.
-     *
-     * @param coll the {@code Collection} to convert (potentially {@code null} or empty)
-     * @return the delimited {@code String}
-     */
-    public static String collectionToCommaDelimitedString(Collection<?> coll) {
-        return collectionToDelimitedString(coll, ",");
-    }
-
-    /**
-     * Convert a {@code String} array into a delimited {@code String} (e.g. CSV).
-     * <p>Useful for {@code toString()} implementations.
-     *
-     * @param arr   the array to display (potentially {@code null} or empty)
-     * @param delim the delimiter to use (typically a ",")
-     * @return the delimited {@code String}
-     */
-    public static String arrayToDelimitedString(Object[] arr, String delim) {
-        if (ObjectUtils.isEmpty(arr)) {
-            return "";
-        }
-        if (arr.length == 1) {
-            return ObjectUtils.nullSafeToString(arr[0]);
-        }
-
-        StringJoiner sj = new StringJoiner(delim);
-        for (Object o : arr) {
-            sj.add(String.valueOf(o));
-        }
-        return sj.toString();
-    }
-
-    /**
-     * Convert a {@code String} array into a comma delimited {@code String}
-     * (i.e., CSV).
-     * <p>Useful for {@code toString()} implementations.
-     *
-     * @param arr the array to display (potentially {@code null} or empty)
-     * @return the delimited {@code String}
-     */
-    public static String arrayToCommaDelimitedString(Object[] arr) {
-        return arrayToDelimitedString(arr, ",");
     }
 
 }

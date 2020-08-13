@@ -11,6 +11,7 @@ public class SysUserVO {
     private Long roleId;
     private String nickname;
     private String email;
+    private String telephoneNumber;
     private Byte userType;
     private Boolean enabled;
     private String updaterName;
@@ -71,6 +72,14 @@ public class SysUserVO {
 
     public String getEmail() {
         return this.email;
+    }
+
+    public String getTelephoneNumber() {
+        return telephoneNumber;
+    }
+
+    public void setTelephoneNumber(String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
     }
 
     public void setUserType(Byte userType) {
