@@ -110,6 +110,12 @@ public class AuthServiceImpl extends BaseService implements AuthService {
                 return ResponseMessage.MSG1004;
             }
         }
+        if (!StringUtils.isEmpty(sysUserDO.getNickname())) {
+            String nickname = sysUserDO.getNickname();
+            if (!nickname.matches(rec.userNickname) || nickname.length() > 32) {
+                return ResponseMessage.MSG1005;
+            }
+        }
         return null;
     }
 }

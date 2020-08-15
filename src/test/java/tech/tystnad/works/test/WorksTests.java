@@ -14,11 +14,11 @@ public class WorksTests {
 
     @Test
     public void example() {
-        String s = "aaa";
-        if (s!=null && !"aa".equals(s)){
-            System.out.println(111);
+        String s = "啊啊  a,a a";
+        if (s.matches("^\\S+(\\s?\\S)*")){
+            System.out.println(true);
         }else {
-            System.out.println(222);
+            System.out.println(false);
         }
     }
 

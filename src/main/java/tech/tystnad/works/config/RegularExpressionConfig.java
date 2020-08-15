@@ -11,4 +11,6 @@ public class RegularExpressionConfig {
     public String userPassword;
     @Value("${regexp.user-email}")
     public String userEmail;
+    @Value("${regexp.user-nickname}")
+    public String userNickname;
 }
