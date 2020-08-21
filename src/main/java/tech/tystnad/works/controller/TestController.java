@@ -10,12 +10,15 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.tystnad.works.model.City;
 import tech.tystnad.works.model.Pet;
 import tech.tystnad.works.model.User;
+import tech.tystnad.works.model.dto.SysUserDTO;
 import tech.tystnad.works.repository.mapper.TestRepository;
 
+import javax.validation.Valid;
 import java.time.Duration;
 import java.util.Date;
 import java.util.List;
@@ -68,5 +71,11 @@ public class TestController {
             @RequestParam("birth") Date birth) {
         logger.warn("findPetByBirth");
         return testRepository.findPetByBirth(birth);
+    }
+
+    @PostMapping("/validator")
+    public ResponseEntity<SysUserDTO> testValidator(@RequestBody @Valid SysUserDTO sysUserDTO) {
+        System.out.println(sysUserDTO.toString());
+        return ResponseEntity.ok().body(sysUserDTO);
     }
 }

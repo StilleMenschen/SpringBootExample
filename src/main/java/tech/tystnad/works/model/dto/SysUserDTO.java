@@ -1,15 +1,26 @@
 package tech.tystnad.works.model.dto;
 
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 public class SysUserDTO {
+    @NotNull(message = "用户ID不能为空")
     private Long userId;
+    @NotNull(message = "机构ID不能为空")
     private Long orgId;
     private String orgName;
     private Long topId;
+    @NotBlank(message = "用户名不能为空")
+    @Pattern(regexp = "^[a-zA-Z]\\w{1,15}$", message = "用户名为字母开头,1到16位字母数字或下划线组成")
     private String userName;
     private Long roleId;
+    @Pattern(regexp = "^\\S+(\\s*\\S+)*$", message = "昵称不能为空")
     private String nickname;
+    @Email(regexp = "^[a-z0-9]+([.-_]?[a-z0-9]+)+@[a-z]+(\\.?[a-z0-9]+)*\\.[a-z]+$", message = "请输入正确的邮箱")
     private String email;
     private String telephoneNumber;
     private Byte userType;
@@ -137,5 +148,26 @@ public class SysUserDTO {
 
     public void setCreateTimeEnd(Date createTimeEnd) {
         this.createTimeEnd = createTimeEnd;
+    }
+
+    @Override
+    public String toString() {
+        return "SysUserDTO{" +
+                "userId=" + userId +
+                ", orgId=" + orgId +
+                ", orgName='" + orgName + '\'' +
+                ", topId=" + topId +
+                ", userName='" + userName + '\'' +
+                ", roleId=" + roleId +
+                ", nickname='" + nickname + '\'' +
+                ", email='" + email + '\'' +
+                ", telephoneNumber='" + telephoneNumber + '\'' +
+                ", userType=" + userType +
+                ", enabled=" + enabled +
+                ", updaterName='" + updaterName + '\'' +
+                ", creatorName='" + creatorName + '\'' +
+                ", createTimeStart=" + createTimeStart +
+                ", createTimeEnd=" + createTimeEnd +
+                '}';
     }
 }
