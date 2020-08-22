@@ -16,8 +16,8 @@ public class SysUserDTO {
     private Long orgId;
     private String orgName;
     private Long topId;
-    @NotBlank(message = "用户名不能为空", groups = {deleteGroup.class})
-    @Pattern(regexp = "^[a-zA-Z]\\w{1,15}$", message = "用户名为字母开头,1到16位字母数字或下划线组成", groups = {deleteGroup.class})
+    @NotBlank(message = "{user.username.not-null}", groups = {deleteGroup.class})
+    @Pattern(regexp = "^[a-zA-Z]\\w{1,15}$", message = "{user.username.not-validated}", groups = {deleteGroup.class})
     private String userName;
     private Long roleId;
     @Pattern(regexp = "^\\S+(\\s*\\S+)*$", message = "昵称不能为空", groups = {deleteGroup.class})

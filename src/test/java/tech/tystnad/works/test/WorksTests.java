@@ -14,12 +14,30 @@ public class WorksTests {
 
     @Test
     public void example() {
-        String s = "啊啊  a,a a";
-        if (s.matches("^\\S+(\\s?\\S)*")){
-            System.out.println(true);
-        }else {
-            System.out.println(false);
+        System.out.println(chinese2encoding("用户名不能为空"));
+    }
+
+    public String chinese2encoding(final String gbString) {
+        char[] utfBytes = gbString.toCharArray();
+        String unicodeBytes = "";
+        int charCode = 0;
+        for (int i = 0; i < utfBytes.length; i++) {
+            /* 只转换中文*/
+            charCode = (int) utfBytes[i];
+            if (charCode >= 0x4e00 && charCode <= 0x9fef) {
+                String hexB = Integer.toHexString(utfBytes[i]);
+                if (hexB.length() <= 2) {
+                    hexB = "00" + hexB;
+                }
+                unicodeBytes = unicodeBytes + "\\u" + hexB;
+            }
+            /* 其它字符保留*/
+            else {
+                unicodeBytes = unicodeBytes + utfBytes[i];
+            }
+
         }
+        return unicodeBytes;
     }
 
     @Test

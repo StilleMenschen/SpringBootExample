@@ -75,7 +75,7 @@ public class TestController {
     }
 
     @PostMapping("/validator")
-    public ResponseEntity<SysUserDTO> testValidator(@RequestBody @Validated({addGroup.class}) SysUserDTO sysUserDTO) {
+    public ResponseEntity<SysUserDTO> testValidator(@RequestBody @Validated({deleteGroup.class}) SysUserDTO sysUserDTO) {
         System.out.println(sysUserDTO.toString());
         return ResponseEntity.ok().body(sysUserDTO);
     }
