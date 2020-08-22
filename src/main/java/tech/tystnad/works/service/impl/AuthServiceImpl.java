@@ -11,7 +11,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import tech.tystnad.works.config.RegularExpressionConfig;
 import tech.tystnad.works.converter.SysUserConverter;
 import tech.tystnad.works.core.service.BaseService;
 import tech.tystnad.works.enums.ResponseMessage;
@@ -22,7 +21,6 @@ import tech.tystnad.works.model.vo.SysUserVO;
 import tech.tystnad.works.repository.domain.SysUserDO;
 import tech.tystnad.works.service.AuthService;
 import tech.tystnad.works.util.JwtTokenUtil;
-import tech.tystnad.works.util.StringUtils;
 
 @Service
 public class AuthServiceImpl extends BaseService implements AuthService {
@@ -32,18 +30,16 @@ public class AuthServiceImpl extends BaseService implements AuthService {
     private AuthenticationManager authenticationManager;
     private UserDetailsService userDetailsService;
     private JwtTokenUtil jwtTokenUtil;
-    private RegularExpressionConfig rec;
 
     @Value("${jwt.tokenHead}")
     private String tokenHead;
 
     @Autowired
     public AuthServiceImpl(AuthenticationManager authenticationManager, UserDetailsService userDetailsService,
-                           JwtTokenUtil jwtTokenUtil, RegularExpressionConfig rec) {
+                           JwtTokenUtil jwtTokenUtil) {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;
-        this.rec = rec;
     }
 
     @Override
@@ -92,29 +88,6 @@ public class AuthServiceImpl extends BaseService implements AuthService {
     private ResponseMessage checkSysUser(SysUserDO sysUserDO) {
         if (sysUserDO == null) {
             return ResponseMessage.MSG1001;
-        }
-        String userName = sysUserDO.getUserName();
-        String userPassword = sysUserDO.getUserCipher();
-        if (StringUtils.isEmpty(userName) || StringUtils.isEmpty(userPassword)) {
-            return ResponseMessage.MSG1001;
-        }
-        if (!userName.matches(rec.userName)) {
-            return ResponseMessage.MSG1002;
-        }
-        if (!userPassword.matches(rec.userPassword)) {
-            return ResponseMessage.MSG1003;
-        }
-        if (!StringUtils.isEmpty(sysUserDO.getEmail())) {
-            String email = sysUserDO.getEmail();
-            if (!email.matches(rec.userEmail)) {
-                return ResponseMessage.MSG1004;
-            }
-        }
-        if (!StringUtils.isEmpty(sysUserDO.getNickname())) {
-            String nickname = sysUserDO.getNickname();
-            if (!nickname.matches(rec.userNickname) || nickname.length() > 32) {
-                return ResponseMessage.MSG1005;
-            }
         }
         return null;
     }

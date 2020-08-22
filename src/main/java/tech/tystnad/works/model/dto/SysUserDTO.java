@@ -1,6 +1,8 @@
 package tech.tystnad.works.model.dto;
 
 
+import tech.tystnad.works.core.validator.groups.SysUserValidatorGroups.*;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -8,19 +10,19 @@ import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 public class SysUserDTO {
-    @NotNull(message = "用户ID不能为空")
+    @NotNull(message = "用户ID不能为空", groups = {addGroup.class})
     private Long userId;
-    @NotNull(message = "机构ID不能为空")
+    @NotNull(message = "机构ID不能为空", groups = {addGroup.class})
     private Long orgId;
     private String orgName;
     private Long topId;
-    @NotBlank(message = "用户名不能为空")
-    @Pattern(regexp = "^[a-zA-Z]\\w{1,15}$", message = "用户名为字母开头,1到16位字母数字或下划线组成")
+    @NotBlank(message = "用户名不能为空", groups = {deleteGroup.class})
+    @Pattern(regexp = "^[a-zA-Z]\\w{1,15}$", message = "用户名为字母开头,1到16位字母数字或下划线组成", groups = {deleteGroup.class})
     private String userName;
     private Long roleId;
-    @Pattern(regexp = "^\\S+(\\s*\\S+)*$", message = "昵称不能为空")
+    @Pattern(regexp = "^\\S+(\\s*\\S+)*$", message = "昵称不能为空", groups = {deleteGroup.class})
     private String nickname;
-    @Email(regexp = "^[a-z0-9]+([.-_]?[a-z0-9]+)+@[a-z]+(\\.?[a-z0-9]+)*\\.[a-z]+$", message = "请输入正确的邮箱")
+    @Email(regexp = "^[a-z0-9]+([.-_]?[a-z0-9]+)*@[a-z]+(\\.?[a-z0-9]+)*\\.[a-z]+$", message = "请输入正确的邮箱", groups = {addGroup.class})
     private String email;
     private String telephoneNumber;
     private Byte userType;
