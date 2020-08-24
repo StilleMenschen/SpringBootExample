@@ -1,7 +1,8 @@
 package tech.tystnad.works.model.dto;
 
 
-import tech.tystnad.works.core.validator.groups.SysUserValidatorGroups.*;
+import tech.tystnad.works.core.validator.groups.SysUserValidatorGroups.addGroup;
+import tech.tystnad.works.core.validator.groups.SysUserValidatorGroups.deleteGroup;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -19,10 +20,11 @@ public class SysUserDTO {
     @NotBlank(message = "{user.username.not-null}", groups = {deleteGroup.class})
     @Pattern(regexp = "^[a-zA-Z]\\w{1,15}$", message = "{user.username.not-validated}", groups = {deleteGroup.class})
     private String userName;
+    @NotNull(message = "{user.roleid.not-null}", groups = {addGroup.class})
     private Long roleId;
     @Pattern(regexp = "^\\S+(\\s*\\S+)*$", message = "昵称不能为空", groups = {deleteGroup.class})
     private String nickname;
-    @Email(regexp = "^[a-z0-9]+([.-_]?[a-z0-9]+)*@[a-z]+(\\.?[a-z0-9]+)*\\.[a-z]+$", message = "请输入正确的邮箱", groups = {addGroup.class})
+    @Email(regexp = "^[a-z0-9]+([.-_]?[a-z0-9]+)*@[a-z]+(\\.?[a-z0-9]+)*\\.[a-z]+$", message = "{user.email.not-validated}", groups = {addGroup.class})
     private String email;
     private String telephoneNumber;
     private Byte userType;
@@ -150,26 +152,5 @@ public class SysUserDTO {
 
     public void setCreateTimeEnd(Date createTimeEnd) {
         this.createTimeEnd = createTimeEnd;
-    }
-
-    @Override
-    public String toString() {
-        return "SysUserDTO{" +
-                "userId=" + userId +
-                ", orgId=" + orgId +
-                ", orgName='" + orgName + '\'' +
-                ", topId=" + topId +
-                ", userName='" + userName + '\'' +
-                ", roleId=" + roleId +
-                ", nickname='" + nickname + '\'' +
-                ", email='" + email + '\'' +
-                ", telephoneNumber='" + telephoneNumber + '\'' +
-                ", userType=" + userType +
-                ", enabled=" + enabled +
-                ", updaterName='" + updaterName + '\'' +
-                ", creatorName='" + creatorName + '\'' +
-                ", createTimeStart=" + createTimeStart +
-                ", createTimeEnd=" + createTimeEnd +
-                '}';
     }
 }
