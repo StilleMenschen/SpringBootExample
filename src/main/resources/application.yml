@@ -23,7 +23,7 @@ spring:
     port: 27017
     database: test
   datasource:
-    url: jdbc:mysql://127.0.0.1:3317/works?useUnicode=true&characterEncoding=utf8&useSSL=false&useAffectedRows=true&serverTimezone=UTC
+    url: jdbc:mysql://127.0.0.1:3317/works?useUnicode=true&characterEncoding=utf8&useSSL=false&useAffectedRows=true&serverTimezone=Asia/Shanghai
 #    driver-class-name: com.mysql.cj.jdbc.Driver
     driver-class-name: org.mariadb.jdbc.Driver
     username: root

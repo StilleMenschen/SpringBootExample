@@ -12,13 +12,13 @@ import java.util.List;
 @Repository
 public interface TestRepository {
 
-    @Select("SELECT id, name, countryCode, district, population FROM city LIMIT #{size}")
+    @Select("SELECT id, name, countryCode, district, population FROM world.city LIMIT #{size}")
     List<City> findAllCity(@Param("size") int size);
 
-    @Select("SELECT  name, owner, species, sex, birth, death FROM pet LIMIT #{size}")
+    @Select("SELECT  name, owner, species, sex, birth, death FROM test.pet LIMIT #{size}")
     List<Pet> findAllPet(@Param("size") int size);
 
-    @Select("SELECT  name, owner, species, sex, birth, death FROM pet WHERE birth > #{birth}")
+    @Select("SELECT  name, owner, species, sex, birth, death FROM test.pet WHERE birth > #{birth}")
     List<Pet> findPetByBirth(@Param("birth") Date birth);
 
     List<City> findByDistrict(@Param("district") String district);
