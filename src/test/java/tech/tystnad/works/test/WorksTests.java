@@ -14,8 +14,9 @@ public class WorksTests {
 
     @Test
     public void example() {
-        System.out.println(chinese2encoding("角色ID不能为空"));
+        System.out.println(chinese2encoding("用户ID不能为空"));
     }
+
 
     public String chinese2encoding(final String gbString) {
         char[] utfBytes = gbString.toCharArray();

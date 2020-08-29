@@ -6,4 +6,7 @@ public class SysUserValidatorGroups {
 
     public interface deleteGroup {
     }
+
+    public interface queryGroup {
+    }
 }

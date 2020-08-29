@@ -34,18 +34,18 @@ class WorksApplicationTests {
 
     @Test
     public void testSysOrganization() {
-        for (int i = 1; i <= 10; i++) {
+        for (int i = 1; i <= 1; i++) {
             SysOrganizationDO organization = new SysOrganizationDO();
             organization.setOrgId(idWorker.nextId());
             organization.setOrgLevel((byte) 0);
-            organization.setOrgName("org" + i);
+            organization.setOrgName("啊啊啊啊啊啊啊");
             sysOrganizationDOMapper.insert(organization);
         }
         SysOrganizationDOExample example = new SysOrganizationDOExample();
         example.setOrderByClause("create_time desc");
         List<SysOrganizationDO> list = sysOrganizationDOMapper.selectByExample(example);
         SimpleDateFormat format = new SimpleDateFormat("E yyyy年MM月dd日 a h:mm");
-        list.forEach(e -> System.out.println(e.getOrgId() + ":" + e.getOrgName() + ":" + format.format(e.getCreateTime())));
+        list.forEach(e -> System.out.println(e.getOrgId() + ":" + e.getOrgName().length() + ":" + format.format(e.getCreateTime())));
         SysOrganizationDO organization = new SysOrganizationDO();
         organization.setDeleted(true);
         System.out.println("deleted " + sysOrganizationDOMapper.updateByExampleSelective(organization, example));

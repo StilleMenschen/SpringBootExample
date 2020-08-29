@@ -2,6 +2,7 @@ package tech.tystnad.works.core.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -9,7 +10,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import tech.tystnad.works.core.exception.BusinessException;
 import tech.tystnad.works.model.ResponseObjectEntity;
+
+import java.sql.SQLException;
 
 @ControllerAdvice
 @ResponseBody
@@ -37,6 +41,26 @@ public class ExceptionHandlerController {
             entity.setCode(400);
             entity.setMsg(message);
         }
+        return entity;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({SQLException.class, DataAccessException.class})
+    public ResponseObjectEntity<Object> sqlHandler(SQLException e) {
+        logger.error(e.toString(), e);
+        ResponseObjectEntity<Object> entity = new ResponseObjectEntity<>();
+        entity.setCode(400);
+        entity.setMsg("执行数据操作有误");
+        return entity;
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(BusinessException.class)
+    public ResponseObjectEntity<Object> businessHandler(BusinessException e) {
+        logger.error(e.toString(), e);
+        ResponseObjectEntity<Object> entity = new ResponseObjectEntity<>();
+        entity.setCode(-1);
+        entity.setMsg(e.getMessage());
         return entity;
     }
 
