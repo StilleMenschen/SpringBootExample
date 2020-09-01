@@ -35,7 +35,6 @@ spring:
 
 mybatis:
   mapper-locations: classpath*:mapper/**/*.xml
-  type-handlers-package: tech
 
 # JWT
 jwt:
