@@ -2,7 +2,6 @@ package tech.tystnad.works.core.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tech.tystnad.works.enums.ResponseMessage;
 import tech.tystnad.works.model.PageEntity;
 import tech.tystnad.works.model.ResponseObjectEntity;
 
@@ -36,9 +35,5 @@ public class BaseService {
         responseObjectEntity.setCode(code);
         responseObjectEntity.setMsg(message);
         return responseObjectEntity;
-    }
-
-    protected <T> ResponseObjectEntity<T> fail(ResponseMessage message) {
-        return fail(message.getCode(), message.getMsg());
     }
 }

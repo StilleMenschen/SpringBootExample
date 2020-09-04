@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import tech.tystnad.works.converter.SysUserConverter;
 import tech.tystnad.works.core.service.BaseService;
-import tech.tystnad.works.enums.ResponseMessage;
 import tech.tystnad.works.model.JwtUser;
 import tech.tystnad.works.model.ResponseObjectEntity;
 import tech.tystnad.works.model.dto.SysUserDTO;
@@ -45,10 +44,6 @@ public class AuthServiceImpl extends BaseService implements AuthService {
     @Override
     public ResponseObjectEntity<SysUserVO> register(SysUserDTO sysUserDTO) {
         SysUserDO sysUserDO = SysUserConverter.dto2do(sysUserDTO);
-        ResponseMessage message = checkSysUser(sysUserDO);
-        if (message != null) {
-            return fail(message);
-        }
         SysUserVO vo = new SysUserVO();
         vo.setUserName(sysUserDO.getUserName());
         return ok(vo);
@@ -75,19 +70,6 @@ public class AuthServiceImpl extends BaseService implements AuthService {
         JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
         if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
             return jwtTokenUtil.refreshToken(token);
-        }
-        return null;
-    }
-
-    /**
-     * 检查用户信息
-     *
-     * @param sysUserDO 用户信息
-     * @return 错误信息
-     */
-    private ResponseMessage checkSysUser(SysUserDO sysUserDO) {
-        if (sysUserDO == null) {
-            return ResponseMessage.MSG1001;
         }
         return null;
     }

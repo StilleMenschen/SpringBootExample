@@ -2,6 +2,7 @@ package tech.tystnad.works.model.dto;
 
 
 import org.hibernate.validator.constraints.Length;
+import tech.tystnad.works.core.validator.annotation.EnumCheck;
 import tech.tystnad.works.core.validator.groups.SysUserValidatorGroups.queryGroup;
 import tech.tystnad.works.core.validator.groups.SysUserValidatorGroups.addGroup;
 import tech.tystnad.works.core.validator.groups.SysUserValidatorGroups.deleteGroup;
@@ -33,6 +34,7 @@ public class SysUserDTO {
     private String email;
     @Pattern(regexp = "^(\\d{11}|(0[0-9]{2,3}/-)?([2-9][0-9]{6,7})+(/-[0-9]{1,4})?)$", message = "{user.telephone.not-validated}")
     private String telephoneNumber;
+    @EnumCheck(enums = {0, 1, 2}, message = "{user.type.not-validated}", groups = {addGroup.class})
     private Byte userType;
     private Boolean enabled;
     private String updaterName;

@@ -1,11 +1,13 @@
 package tech.tystnad.works.test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.client.RestTemplate;
+import tech.tystnad.works.model.dto.SysUserDTO;
 import tech.tystnad.works.util.IdWorker;
 
 import java.util.LinkedList;
@@ -14,9 +16,28 @@ public class WorksTests {
 
     @Test
     public void example() {
-        System.out.println(chinese2encoding("用户ID不能为空"));
+        System.out.println(chinese2encoding("用户类型不存在"));
     }
 
+    @Test
+    public void convert2json() {
+        ObjectMapper mapper = new ObjectMapper();
+        SysUserDTO dto = new SysUserDTO();
+        dto.setUserId(123L);
+        dto.setOrgId(123L);
+        dto.setOrgName("aaa");
+        dto.setUserName("aaa");
+        dto.setRoleId(123L);
+        dto.setNickname("aaa");
+        dto.setEmail("aa@aa.com");
+        dto.setTelephoneNumber("123123");
+        dto.setUserType((byte) 2);
+        try {
+            System.out.println(mapper.writeValueAsString(dto));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
 
     public String chinese2encoding(final String gbString) {
         char[] utfBytes = gbString.toCharArray();

@@ -13,13 +13,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import tech.tystnad.works.core.validator.groups.SysUserValidatorGroups.addGroup;
+import tech.tystnad.works.core.validator.groups.SysUserValidatorGroups.deleteGroup;
 import tech.tystnad.works.model.City;
 import tech.tystnad.works.model.Pet;
 import tech.tystnad.works.model.User;
 import tech.tystnad.works.model.dto.SysUserDTO;
 import tech.tystnad.works.repository.mapper.TestRepository;
-import tech.tystnad.works.core.validator.groups.SysUserValidatorGroups.*;
 
+import javax.validation.groups.Default;
 import java.time.Duration;
 import java.util.Date;
 import java.util.List;
@@ -75,8 +77,8 @@ public class TestController {
     }
 
     @PostMapping("/validator")
-    public ResponseEntity<SysUserDTO> testValidator(@RequestBody @Validated({deleteGroup.class}) SysUserDTO sysUserDTO) {
-        System.out.println(sysUserDTO.toString());
+    public ResponseEntity<SysUserDTO> testValidator(@RequestBody @Validated({addGroup.class, deleteGroup.class, Default.class}) SysUserDTO sysUserDTO) {
+        logger.info(sysUserDTO.toString());
         return ResponseEntity.ok().body(sysUserDTO);
     }
 }

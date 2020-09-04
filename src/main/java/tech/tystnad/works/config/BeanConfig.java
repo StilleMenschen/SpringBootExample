@@ -27,6 +27,8 @@ public class BeanConfig {
 
     @Bean
     public Validator validator() {
+        // 当使用@Validated注解时,只会对配置了分组校验注解的字段生效
+        // 不指定分组的情况下javax.validation.groups.Default是默认的校验分组
         ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class)
                 .configure()
                 .failFast(true)
