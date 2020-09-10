@@ -28,14 +28,14 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
     private String basePackage;
 
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder().title("API").description("Swagger Spring Boot").version("0.0.1").build();
+    }
+
     @Bean
     public Docket api() {
         basePackage = isEnableSwagger ? "tech.tystnad.works" : "com.example.springboot";
         return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select()
                 .apis(RequestHandlerSelectors.basePackage(basePackage)).paths(PathSelectors.any()).build();
-    }
-
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("API").description("Swagger Spring Boot").version("0.0.1").build();
     }
 }

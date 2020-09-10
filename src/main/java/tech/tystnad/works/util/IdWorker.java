@@ -29,21 +29,21 @@ public class IdWorker {
         this.sequence = sequence;
     }
 
-    private final long twepoch = 1596770384613L;
+    private static final long twepoch = 1596770384613L;
 
     // 工作机器ID,二进制5位
-    private final long workerIdBits = 5L;
+    private static final long workerIdBits = 5L;
     // 数据中心ID,二进制5位
-    private final long dataCenterIdBits = 5L;
-    private final long maxWorkerId = ~(-1L << workerIdBits);
-    private final long maxDataCenterId = ~(-1L << dataCenterIdBits);
+    private static final long dataCenterIdBits = 5L;
+    private static final long maxWorkerId = ~(-1L << workerIdBits);
+    private static final long maxDataCenterId = ~(-1L << dataCenterIdBits);
     // 每毫秒序列号,二进制12位
-    private final long sequenceBits = 12L;
+    private static final long sequenceBits = 12L;
 
-    private final long workerIdShift = sequenceBits;
-    private final long dataCenterIdShift = sequenceBits + workerIdBits;
-    private final long timestampLeftShift = sequenceBits + workerIdBits + dataCenterIdBits;
-    private final long sequenceMask = ~(-1L << sequenceBits);
+    private static final long workerIdShift = sequenceBits;
+    private static final long dataCenterIdShift = sequenceBits + workerIdBits;
+    private static final long timestampLeftShift = sequenceBits + workerIdBits + dataCenterIdBits;
+    private static final long sequenceMask = ~(-1L << sequenceBits);
 
     public synchronized long nextId() {
         long timestamp = timeGen();

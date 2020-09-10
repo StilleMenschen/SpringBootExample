@@ -24,19 +24,14 @@ public class RedisConfig {
     @Value("${spring.redis.database}")
     private int redis_database;
 
-    @Bean
-    public GenericObjectPoolConfig<?> genericObjectPoolConfig() {
+    @Bean(destroyMethod = "destroy")
+    public LettuceConnectionFactory lettuceConnectionFactory() {
         GenericObjectPoolConfig<?> poolConfig = new GenericObjectPoolConfig<>();
         poolConfig.setMaxWaitMillis(3000);
         poolConfig.setTestOnReturn(true);
         poolConfig.setTestWhileIdle(true);
-        return poolConfig;
-    }
-
-    @Bean(destroyMethod = "destroy")
-    public LettuceConnectionFactory lettuceConnectionFactory() {
         LettucePoolingClientConfiguration poolingClientConfiguration = LettucePoolingClientConfiguration.builder()
-                .shutdownTimeout(Duration.ofSeconds(30)).poolConfig(genericObjectPoolConfig()).build();
+                .shutdownTimeout(Duration.ofSeconds(30)).poolConfig(poolConfig).build();
         RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration(redis_host, redis_port);
         standaloneConfiguration.setPassword(RedisPassword.none());
         standaloneConfiguration.setDatabase(redis_database);

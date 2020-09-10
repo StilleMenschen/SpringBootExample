@@ -60,18 +60,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity
-                // 由于使用的是JWT，我们这里不需要csrf
+                // 由于使用的是JWT,我们这里不需要csrf
                 .csrf().disable()
-
+                // 用户无效,校验不通过
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
+                // 无权限,拒绝访问
                 .accessDeniedHandler(deniedHandler).and()
-
                 // 基于token，所以不需要session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-
                 .authorizeRequests()
-                // .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
+                // 跨域访问的预检请求
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 // 允许对于网站静态资源的无授权访问
                 .antMatchers(HttpMethod.GET, "/", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js")
                 .permitAll()

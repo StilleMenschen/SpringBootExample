@@ -33,19 +33,19 @@ public class TestController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private StringRedisTemplate redisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
     private TestRepository testRepository;
 
     @Autowired
-    public TestController(StringRedisTemplate redisTemplate, TestRepository testRepository) {
-        this.redisTemplate = redisTemplate;
+    public TestController(StringRedisTemplate stringRedisTemplate, TestRepository testRepository) {
+        this.stringRedisTemplate = stringRedisTemplate;
         this.testRepository = testRepository;
         logger.debug("Created TestController");
     }
 
     @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST})
     public Object index() {
-        ValueOperations<String, String> operations = redisTemplate.opsForValue();
+        ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
         operations.set("user:blackson", "0123456789", Duration.ofMinutes(1));
         logger.debug("reids value is {}", operations.get("user:blackson"));
         return new User();
