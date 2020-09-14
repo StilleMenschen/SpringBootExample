@@ -27,7 +27,7 @@ public class RedisConfig {
     @Bean(destroyMethod = "destroy")
     public LettuceConnectionFactory lettuceConnectionFactory() {
         GenericObjectPoolConfig<?> poolConfig = new GenericObjectPoolConfig<>();
-        poolConfig.setMaxWaitMillis(3000);
+        poolConfig.setMaxWaitMillis(3000); // 获取连接时的最大等待毫秒数
         poolConfig.setTestOnReturn(true);
         poolConfig.setTestWhileIdle(true);
         LettucePoolingClientConfiguration poolingClientConfiguration = LettucePoolingClientConfiguration.builder()
@@ -41,6 +41,11 @@ public class RedisConfig {
         return factory;
     }
 
+    /**
+     * 使用的是StringRedisSerializer来序列化,并使用UTF-8字符编码
+     *
+     * @return StringRedisTemplate
+     */
     @Bean
     public StringRedisTemplate stringRedisTemplate() {
         return new StringRedisTemplate(lettuceConnectionFactory());

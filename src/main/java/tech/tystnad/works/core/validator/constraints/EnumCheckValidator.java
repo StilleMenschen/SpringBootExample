@@ -11,6 +11,9 @@ public class EnumCheckValidator implements ConstraintValidator<EnumCheck, Byte> 
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    /**
+     * 由于使用byte类型来映射数据库的枚举类数据,此处也使用byte类型来校验
+     */
     private byte[] enums;
 
     @Override
@@ -25,6 +28,7 @@ public class EnumCheckValidator implements ConstraintValidator<EnumCheck, Byte> 
             return Boolean.FALSE;
         }
         logger.info("{}", value);
+        // 检查数据是否在指定的枚举列表中
         for (Byte e : enums) {
             if (e.equals(value)) {
                 return Boolean.TRUE;

@@ -34,16 +34,23 @@ public class ExceptionHandlerController {
         String message = error.getDefaultMessage();
         ResponseObjectEntity<Object> entity = new ResponseObjectEntity<>();
         if (message.contains(MESSAGE_SPLIT)) {
+            // 根据拆分标志符来拆分响应代码和消息
             String[] code_message = message.split(MESSAGE_SPLIT);
             entity.setCode(Integer.valueOf(code_message[0]));
             entity.setMsg(code_message[1]);
         } else {
+            // 无分隔符默认的返回
             entity.setCode(400);
             entity.setMsg(message);
         }
         return entity;
     }
 
+    /**
+     * 数据库访问错误
+     * @param e
+     * @return
+     */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({SQLException.class, DataAccessException.class})
     public ResponseObjectEntity<Object> sqlHandler(SQLException e) {
@@ -54,6 +61,11 @@ public class ExceptionHandlerController {
         return entity;
     }
 
+    /**
+     * 业务异常
+     * @param e
+     * @return
+     */
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(BusinessException.class)
     public ResponseObjectEntity<Object> businessHandler(BusinessException e) {
@@ -64,6 +76,11 @@ public class ExceptionHandlerController {
         return entity;
     }
 
+    /**
+     * 通用错误异常,当spring检测不到具体的ExceptionHandler时,才会默认使用这个ExceptionHandler进行处理
+     * @param e
+     * @return
+     */
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ResponseObjectEntity<Object> defaultHandler(Exception e) {

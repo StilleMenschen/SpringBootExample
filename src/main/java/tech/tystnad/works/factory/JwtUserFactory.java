@@ -18,6 +18,11 @@ public final class JwtUserFactory {
                 mapToGrantedAuthorities(user.getRoles()), user.getLastPasswordResetDate());
     }
 
+    /**
+     * 简单地将字符串转为权限
+     * @param authorities
+     * @return
+     */
     private static List<GrantedAuthority> mapToGrantedAuthorities(List<String> authorities) {
         return authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }

@@ -1,5 +1,8 @@
 package tech.tystnad.works.enums;
 
+/**
+ * 用户类型
+ */
 public enum SysUserType {
 
     SUPER_ADMIN((byte) 0, "超级管理员"),
