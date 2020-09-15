@@ -10,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 import tech.tystnad.works.model.dto.SysUserDTO;
 import tech.tystnad.works.util.IdWorker;
 
-import java.time.Duration;
 import java.util.LinkedList;
 
 public class WorksTests {
@@ -18,7 +17,6 @@ public class WorksTests {
     @Test
     public void example() {
         System.out.println(chinese2encoding("用户类型不存在"));
-        System.out.println(Duration.ofHours(24).getSeconds());
     }
 
     @Test
