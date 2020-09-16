@@ -1,6 +1,10 @@
 # Server configuration
 server:
   port: 8080
+  max-http-header-size: 64KB
+  tomcat:
+    max-http-form-post-size: 320MB
+    max-swallow-size: 320MB
   workerId: 0
   dataCenterId: 0
   error:
@@ -9,6 +13,10 @@ server:
 
 # Spring configuration
 spring:
+  servlet:
+    multipart:
+      max-file-size: 64MB
+      max-request-size: 320MB
   redis:
     host: localhost
     port: 6379
@@ -24,7 +32,7 @@ spring:
     database: test
   datasource:
     url: jdbc:mysql://127.0.0.1:3317/works?useUnicode=true&characterEncoding=utf8&useSSL=false&useAffectedRows=true&serverTimezone=Asia/Shanghai
-#    driver-class-name: com.mysql.cj.jdbc.Driver
+#   driver-class-name: com.mysql.cj.jdbc.Driver
     driver-class-name: org.mariadb.jdbc.Driver
     username: root
     password: ABC#abc_123
@@ -41,7 +49,7 @@ jwt:
   header: Authorization
   secret: ow9ycVTT
   expiration: 3600
-  tokenHead: "Bearer "
+  tokenHead: Bearer
   route:
     authentication:
       login: auth
@@ -61,4 +69,3 @@ jwt:
 # Swagger Config (true,false)
 swagger:
   enable: true
-#spring.boot.admin.url: http://localhost:8080
