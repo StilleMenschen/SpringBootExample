@@ -8,15 +8,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 import tech.tystnad.works.model.dto.SysUserDTO;
+import tech.tystnad.works.util.HttpUtils;
 import tech.tystnad.works.util.IdWorker;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class WorksTests {
 
     @Test
     public void example() {
-        System.out.println(chinese2encoding("用户类型不存在"));
+//        System.out.println(chinese2encoding("用户类型不存在"));
+        Map<String, String> urlParameters = new LinkedHashMap<>();
+        Map<String, String> bodyParameters = new LinkedHashMap<>();
+        urlParameters.put("user", "Jack");
+        urlParameters.put("useR", "Jack");
+        String r = HttpUtils.doGet("http://localhost:5000/hello", null, urlParameters);
+        System.out.println(r);
+        bodyParameters.put("user", "Jack");
+        r = HttpUtils.doFormPost("http://localhost:5000/hello", null, null, bodyParameters);
+        System.out.println(r);
     }
 
     @Test
