@@ -1,0 +1,15 @@
+# Spring Boot Demo
+- Security
+    - User authorization
+    - Access control 
+- Web
+    - Restful api
+    - Hibernate Validator
+- Database
+    - MariaDB
+    - Redis
+    - MongoDB
+- HttpClient
+    - File upload
+    - Multipart form
+- Swagger 2
