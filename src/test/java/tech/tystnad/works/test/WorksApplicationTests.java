@@ -3,11 +3,8 @@ package tech.tystnad.works.test;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import tech.tystnad.works.model.dto.SysUserDTO;
-import tech.tystnad.works.repository.domain.SysOrgUserDO;
-import tech.tystnad.works.repository.domain.SysOrgUserDOExample;
 import tech.tystnad.works.repository.domain.SysOrganizationDO;
 import tech.tystnad.works.repository.domain.SysOrganizationDOExample;
-import tech.tystnad.works.repository.mapper.SysOrgUserDOMapper;
 import tech.tystnad.works.repository.mapper.SysOrganizationDOMapper;
 import tech.tystnad.works.repository.mapper.SysUserVOMapper;
 import tech.tystnad.works.util.IdWorker;
@@ -22,9 +19,6 @@ class WorksApplicationTests {
 
     @Resource
     private SysOrganizationDOMapper sysOrganizationDOMapper;
-
-    @Resource
-    private SysOrgUserDOMapper sysOrgUserDOMapper;
 
     @Resource
     private SysUserVOMapper sysUserVOMapper;
@@ -49,16 +43,6 @@ class WorksApplicationTests {
         SysOrganizationDO organization = new SysOrganizationDO();
         organization.setDeleted(true);
         System.out.println("deleted " + sysOrganizationDOMapper.updateByExampleSelective(organization, example));
-    }
-
-    @Test
-    public void testSysUser() {
-        String username = "aaa";
-        SysOrgUserDOExample example = new SysOrgUserDOExample();
-        example.createCriteria().andDeletedEqualTo(false).andUserNameEqualTo(username);
-        example.or().andDeletedEqualTo(false).andEmailEqualTo(username);
-        List<SysOrgUserDO> sysOrgUserDOList = sysOrgUserDOMapper.selectByExample(example);
-        System.out.println(sysOrgUserDOList);
     }
 
     @Test

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tech.tystnad.works.repository.mapper.SysOrganizationDOMapper">
+  <select id="findByExample" parameterType="tech.tystnad.works.model.dto.SysOrganizationDTO" resultType="tech.tystnad.works.model.vo.SysOrganizationVO">
+    SELECT so.org_id, so.top_id, so.parent_id, so.org_level, so.org_name, so.enabled, so.updater, so.creator, csu.user_name AS creator_name, usu.user_name AS updater_name
+    FROM sys_organization AS so INNER JOIN sys_user AS csu ON (so.creator = csu.user_id) INNER JOIN sys_user AS usu ON (so.updater = usu.user_id)
+    WHERE so.deleted = 0
+  </select>
+</mapper>

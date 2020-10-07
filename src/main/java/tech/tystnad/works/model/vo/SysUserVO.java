@@ -14,6 +14,8 @@ public class SysUserVO {
     private String telephoneNumber;
     private Byte userType;
     private Boolean enabled;
+    private Long updater;
+    private Long creator;
     private String updaterName;
     private String creatorName;
     private Date createTime;
@@ -112,6 +114,22 @@ public class SysUserVO {
 
     public void setOrgName(String orgName) {
         this.orgName = orgName;
+    }
+
+    public Long getUpdater() {
+        return updater;
+    }
+
+    public void setUpdater(Long updater) {
+        this.updater = updater;
+    }
+
+    public Long getCreator() {
+        return creator;
+    }
+
+    public void setCreator(Long creator) {
+        this.creator = creator;
     }
 
     public String getUpdaterName() {
