@@ -48,6 +48,20 @@ public class HttpUtils {
     }
 
     /**
+     * 发送GET请求,获得字节数据
+     *
+     * @param url           请求地址
+     * @param headers       请求头,可以为null
+     * @param urlParameters 请求url参数,可以为null
+     * @return 响应的请求体字节数据
+     */
+    public static byte[] doGetToByte(String url, Map<String, String> headers, Map<String, String> urlParameters) {
+        HttpGet httpGet = new HttpGet(buildUri(url, urlParameters));
+        fillHeaders(httpGet, headers);
+        return executeRequestToByte(httpGet);
+    }
+
+    /**
      * 发送一般POST请求
      *
      * @param url           请求地址
@@ -197,6 +211,23 @@ public class HttpUtils {
         try {
             CloseableHttpResponse response = httpClient.execute(request);
             return EntityUtils.toString(response.getEntity());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 执行请求并获取响应字节数据
+     *
+     * @param request
+     * @return 响应体字节数据
+     */
+    private static byte[] executeRequestToByte(HttpUriRequest request) {
+        try {
+            CloseableHttpResponse response = httpClient.execute(request);
+            byte[] buffers = EntityUtils.toByteArray(response.getEntity());
+            return buffers;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
