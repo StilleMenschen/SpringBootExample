@@ -65,12 +65,12 @@ public class HttpUtils {
      * 发送一般POST请求
      *
      * @param url           请求地址
-     * @param body          请求体字符串,可以为null
      * @param headers       请求头,可以为null
      * @param urlParameters 请求url参数,可以为null
+     * @param body          请求体字符串,可以为null
      * @return 响应的请求体字符串
      */
-    public static String doPost(String url, String body, Map<String, String> headers, Map<String, String> urlParameters) {
+    public static String doPost(String url, Map<String, String> headers, Map<String, String> urlParameters, String body) {
         HttpPost httpPost = new HttpPost(buildUri(url, urlParameters));
         fillHeaders(httpPost, headers);
         if (body != null && !"".equals(body.trim())) {
@@ -111,7 +111,7 @@ public class HttpUtils {
      * 发送多媒体表单(multipart/form-data)请求
      *
      * @param url            请求地址
-     * @param headers        请求体,可以为null
+     * @param headers        请求头,可以为null
      * @param urlParameters  请求url参数,可以为null
      * @param fileParameters 请求文件参数,可以为null
      * @param bodyParameters 请求表单参数,可以为null
