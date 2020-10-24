@@ -8,27 +8,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 import tech.tystnad.works.model.dto.SysUserDTO;
-import tech.tystnad.works.util.HttpUtils;
 import tech.tystnad.works.util.IdWorker;
 
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.Map;
 
 public class WorksTests {
 
     @Test
     public void example() {
-//        System.out.println(chinese2encoding("用户类型不存在"));
-        Map<String, String> urlParameters = new LinkedHashMap<>();
-        Map<String, String> bodyParameters = new LinkedHashMap<>();
-        urlParameters.put("user", "Jack");
-        urlParameters.put("useR", "Jack");
-        String r = HttpUtils.doGet("http://localhost:5000/hello", null, urlParameters);
-        System.out.println(r);
-        bodyParameters.put("user", "Jack");
-        r = HttpUtils.doFormPost("http://localhost:5000/hello", null, null, bodyParameters);
-        System.out.println(r);
+        System.out.println(chinese2encoding("机构层级最大5级"));
     }
 
     @Test
@@ -53,25 +41,22 @@ public class WorksTests {
 
     public String chinese2encoding(final String gbString) {
         char[] utfBytes = gbString.toCharArray();
-        String unicodeBytes = "";
-        int charCode = 0;
-        for (int i = 0; i < utfBytes.length; i++) {
+        StringBuilder unicodeBytes = new StringBuilder();
+        for (int charCode : utfBytes) {
             /* 只转换中文*/
-            charCode = (int) utfBytes[i];
             if (charCode >= 0x4e00 && charCode <= 0x9fef) {
-                String hexB = Integer.toHexString(utfBytes[i]);
+                String hexB = Integer.toHexString(charCode);
                 if (hexB.length() <= 2) {
                     hexB = "00" + hexB;
                 }
-                unicodeBytes = unicodeBytes + "\\u" + hexB;
+                unicodeBytes.append("\\u".concat(hexB));
             }
             /* 其它字符保留*/
             else {
-                unicodeBytes = unicodeBytes + utfBytes[i];
+                unicodeBytes.append(charCode);
             }
-
         }
-        return unicodeBytes;
+        return unicodeBytes.toString();
     }
 
     @Test

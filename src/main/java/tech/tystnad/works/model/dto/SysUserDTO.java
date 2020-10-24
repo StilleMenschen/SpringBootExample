@@ -3,9 +3,9 @@ package tech.tystnad.works.model.dto;
 
 import org.hibernate.validator.constraints.Length;
 import tech.tystnad.works.core.validator.annotation.EnumCheck;
-import tech.tystnad.works.core.validator.groups.SysUserValidatorGroups.queryGroup;
 import tech.tystnad.works.core.validator.groups.SysUserValidatorGroups.addGroup;
-import tech.tystnad.works.core.validator.groups.SysUserValidatorGroups.deleteGroup;
+import tech.tystnad.works.core.validator.groups.SysUserValidatorGroups.queryGroup;
+import tech.tystnad.works.core.validator.groups.SysUserValidatorGroups.updateGroup;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -19,20 +19,20 @@ public class SysUserDTO {
     @NotNull(message = "{org.id.notnull}", groups = addGroup.class)
     private Long orgId;
     @Length(min = 1, max = 16, message = "{org.name.not-validated}")
-    @Pattern(regexp = "^\\S+(\\s*\\S+)*$", message = "{org.name.not-validated}", groups = queryGroup.class)
+    @Pattern(regexp = "^\\S+(\\s*\\S+)*$", message = "{org.name.notnull}", groups = queryGroup.class)
     private String orgName;
     private Long topId;
-    @NotBlank(message = "{user.username.notnull}", groups = {deleteGroup.class})
-    @Pattern(regexp = "^[a-zA-Z]\\w{1,15}$", message = "{user.username.not-validated}", groups = deleteGroup.class)
+    @NotBlank(message = "{user.username.notnull}", groups = {addGroup.class, updateGroup.class})
+    @Pattern(regexp = "^[a-zA-Z]\\w{1,15}$", message = "{user.username.not-validated}", groups = {addGroup.class, updateGroup.class})
     private String userName;
     @NotNull(message = "{role.id.notnull}", groups = {addGroup.class})
     private Long roleId;
     @Length(min = 1, max = 32, message = "{user.nickname.not-validated}")
-    @Pattern(regexp = "^\\S+(\\s*\\S+)*$", message = "{user.nickname.notnull}", groups = deleteGroup.class)
+    @Pattern(regexp = "^\\S+(\\s*\\S+)*$", message = "{user.nickname.notnull}", groups = updateGroup.class)
     private String nickname;
     @Email(regexp = "^[a-z0-9]+([.-_]?[a-z0-9]+)*@[a-z]+(\\.?[a-z0-9]+)*\\.[a-z]+$", message = "{user.email.not-validated}", groups = addGroup.class)
     private String email;
-    @Pattern(regexp = "^(\\d{11}|(0[0-9]{2,3}/-)?([2-9][0-9]{6,7})+(/-[0-9]{1,4})?)$", message = "{user.telephone.not-validated}")
+    @Pattern(regexp = "^(\\d{11}|(0[0-9]{2,3}/-)?([2-9][0-9]{6,7})+(/-[0-9]{1,4})?)$", message = "{user.telephone.not-validated}", groups = {addGroup.class, updateGroup.class})
     private String telephoneNumber;
     @EnumCheck(enums = {0, 1, 2}, message = "{user.type.not-validated}", groups = {addGroup.class})
     private Byte userType;

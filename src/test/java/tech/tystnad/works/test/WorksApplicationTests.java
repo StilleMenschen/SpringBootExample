@@ -1,21 +1,31 @@
 package tech.tystnad.works.test;
 
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
+import tech.tystnad.works.model.dto.SysOrganizationDTO;
 import tech.tystnad.works.model.dto.SysUserDTO;
 import tech.tystnad.works.repository.domain.SysOrganizationDO;
 import tech.tystnad.works.repository.domain.SysOrganizationDOExample;
 import tech.tystnad.works.repository.mapper.SysOrganizationDOMapper;
 import tech.tystnad.works.repository.mapper.SysUserVOMapper;
 import tech.tystnad.works.util.IdWorker;
+import tech.tystnad.works.core.validator.groups.SysOrganizationGroups.*;
 
 import javax.annotation.Resource;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 @SpringBootTest
 class WorksApplicationTests {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
     private SysOrganizationDOMapper sysOrganizationDOMapper;
@@ -26,23 +36,46 @@ class WorksApplicationTests {
     @Resource
     private IdWorker idWorker;
 
+    @Resource
+    private Validator validator;
+
+    @Test
+    public void testValidator() {
+        SysOrganizationDTO dto = new SysOrganizationDTO();
+        dto.setOrgId(idWorker.nextId());
+        dto.setTopId(idWorker.nextId());
+        dto.setParentId(idWorker.nextId());
+        dto.setOrgName("   jack  ");
+        dto.setOrgLevel((byte) 7);
+        Set<ConstraintViolation<SysOrganizationDTO>> constraintViolationSet = validator.validate(dto, updateGroup.class);
+        constraintViolationSet.forEach(e -> logger.debug(e.toString()));
+        logger.debug("----");
+        dto.setOrgName("     ");
+        constraintViolationSet = validator.validate(dto, queryGroup.class);
+        constraintViolationSet.forEach(e -> logger.debug(e.toString()));
+    }
+
     @Test
     public void testSysOrganization() {
-        for (int i = 1; i <= 1; i++) {
+        List<Long> organizationIds = new LinkedList<>();
+        for (int i = 0; i < 10; i++) {
             SysOrganizationDO organization = new SysOrganizationDO();
-            organization.setOrgId(idWorker.nextId());
+            organizationIds.add(idWorker.nextId());
+            organization.setOrgId(organizationIds.get(i));
             organization.setOrgLevel((byte) 0);
-            organization.setOrgName("啊啊啊啊啊啊啊");
-            sysOrganizationDOMapper.insert(organization);
+            organization.setOrgName("啊啊啊啊啊啊啊" + i);
+            sysOrganizationDOMapper.insertSelective(organization);
         }
         SysOrganizationDOExample example = new SysOrganizationDOExample();
         example.setOrderByClause("create_time desc");
         List<SysOrganizationDO> list = sysOrganizationDOMapper.selectByExample(example);
         SimpleDateFormat format = new SimpleDateFormat("E yyyy年MM月dd日 a h:mm");
-        list.forEach(e -> System.out.println(e.getOrgId() + ":" + e.getOrgName().length() + ":" + format.format(e.getCreateTime())));
+        list.forEach(e -> logger.debug(e.getOrgId() + ":" + e.getOrgName().length() + ":" + format.format(e.getCreateTime())));
         SysOrganizationDO organization = new SysOrganizationDO();
         organization.setDeleted(true);
-        System.out.println("deleted " + sysOrganizationDOMapper.updateByExampleSelective(organization, example));
+        example.clear();
+        example.createCriteria().andOrgIdIn(organizationIds.subList(0, 5)).andDeletedEqualTo(false);
+        logger.debug("deleted " + sysOrganizationDOMapper.updateByExampleSelective(organization, example));
     }
 
     @Test

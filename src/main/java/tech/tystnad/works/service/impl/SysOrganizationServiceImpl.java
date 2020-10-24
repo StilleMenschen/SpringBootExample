@@ -8,6 +8,7 @@ import tech.tystnad.works.model.ResponseObjectEntity;
 import tech.tystnad.works.model.dto.SysOrganizationDTO;
 import tech.tystnad.works.model.vo.SysOrganizationVO;
 import tech.tystnad.works.repository.domain.SysOrganizationDO;
+import tech.tystnad.works.repository.domain.SysOrganizationDOExample;
 import tech.tystnad.works.repository.mapper.SysOrganizationDOMapper;
 import tech.tystnad.works.service.SysOrganizationService;
 import tech.tystnad.works.util.IdWorker;
@@ -26,13 +27,33 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
     }
 
     @Override
-    public ResponseObjectEntity<SysOrganizationVO> add(@RequestBody SysOrganizationDTO sysOrganizationDTO) {
-        if (sysOrganizationDTO == null){
-            fail(400, "机构信息不能为空");
+    public ResponseObjectEntity<SysOrganizationVO> add(@RequestBody SysOrganizationDTO dto) {
+        if (dto == null) {
+            return fail(400, "机构信息不能为空");
+        }
+        SysOrganizationDOExample example = new SysOrganizationDOExample();
+        List<SysOrganizationDO> list;
+        example.createCriteria().andDeletedEqualTo(false).andTopIdEqualTo(dto.getTopId());
+        list = sysOrganizationDOMapper.selectByExample(example);
+        if (list.size() != 1) {
+            return fail(400, "顶级机构不存在");
+        }
+        example.clear();
+        example.createCriteria().andDeletedEqualTo(false).andParentIdEqualTo(dto.getParentId());
+        list = sysOrganizationDOMapper.selectByExample(example);
+        if (list.size() != 1) {
+            return fail(400, "父级机构不存在");
+        }
+        example.clear();
+        example.createCriteria().andDeletedEqualTo(false).andOrgNameEqualTo(dto.getOrgName());
+        list = sysOrganizationDOMapper.selectByExample(example);
+        if (list.size() > 0) {
+            return fail(400, "机构名称重复");
         }
         SysOrganizationDO sysOrganizationDO = new SysOrganizationDO();
         sysOrganizationDO.setOrgId(idWorker.nextId());
-        return null;
+        sysOrganizationDOMapper.insertSelective(sysOrganizationDO);
+        return ok(null);
     }
 
     @Override

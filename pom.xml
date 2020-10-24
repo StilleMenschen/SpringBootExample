@@ -24,7 +24,7 @@
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>6.1.5.Final</version>
+            <version>6.1.6.Final</version>
         </dependency>
         <!-- MongoDB -->
         <dependency>
@@ -101,11 +101,11 @@
             <artifactId>httpasyncclient</artifactId>
         </dependency>
         <!-- Debug & Test -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

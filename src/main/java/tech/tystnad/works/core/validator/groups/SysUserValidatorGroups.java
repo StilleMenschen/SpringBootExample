@@ -11,6 +11,12 @@ public class SysUserValidatorGroups {
     }
 
     /**
+     * 修改数据的校验分组
+     */
+    public interface updateGroup {
+    }
+
+    /**
      * 删除数据的校验分组
      */
     public interface deleteGroup {

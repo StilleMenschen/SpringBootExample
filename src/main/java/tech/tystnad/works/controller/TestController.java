@@ -80,12 +80,18 @@ public class TestController {
     @PostMapping("/validator")
     public ResponseEntity<SysUserDTO> testValidator(@RequestBody @Validated({addGroup.class, deleteGroup.class, Default.class}) SysUserDTO sysUserDTO) {
         logger.info(sysUserDTO.toString());
-        return ResponseEntity.ok().body(sysUserDTO);
+        return ResponseEntity.ok(sysUserDTO);
     }
 
     @PostMapping("/list")
-    public ResponseEntity<List> emptyList(@RequestBody String id) {
-        logger.info(id);
-        return ResponseEntity.ok().body(Collections.EMPTY_LIST);
+    public ResponseEntity<Object> emptyList(@RequestBody String id) {
+        logger.debug(id);
+        return ResponseEntity.ok(Collections.EMPTY_LIST);
+    }
+
+    @DeleteMapping("/del")
+    public ResponseEntity<String> batchDelete(@RequestBody List<String> body) {
+        body.forEach(logger::debug);
+        return ResponseEntity.ok("delete all complete");
     }
 }
