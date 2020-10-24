@@ -6,6 +6,8 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.time.Duration;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by wangpeng on 2017/4/19.
@@ -41,12 +43,17 @@ public class CorsConfig implements WebMvcConfigurer {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
+                List<String> allowedOriginList = new LinkedList<>();
+                allowedOriginList.add("http://localhost");
+                allowedOriginList.add("http://127.0.0.1");
+                allowedOriginList.add("http://localhost:8080");
+                allowedOriginList.add("http://localhost:3000");
+                allowedOriginList.add("chrome-extension://aejoelaoggembcahagimdiliamlcdmfm");
                 registry
                         .addMapping("/**")
                         .allowCredentials(true) // 允许跨域的Cookie
                         .allowedHeaders("*") // 允许所有请求头
-                        .allowedOrigins("http://localhost", "http://127.0.0.1", "http://localhost:8080",
-                                "http://localhost:3000", "chrome-extension://aejoelaoggembcahagimdiliamlcdmfm")
+                        .allowedOrigins(allowedOriginList.toArray(new String[0]))
                         .allowedMethods("HEAD", "POST", "GET", "PUT", "DELETE", "OPTIONS")
                         .maxAge(Duration.ofDays(1).getSeconds());
             }

@@ -1,8 +1,10 @@
 package tech.tystnad.works.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
+import tech.tystnad.works.model.ResponseObjectEntity;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,7 +18,13 @@ public class JwtAuthenticationAccessDeniedHandler implements AccessDeniedHandler
             HttpServletRequest request,
             HttpServletResponse response,
             AccessDeniedException exc) throws IOException {
-
-        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied");
+//        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied");
+        ObjectMapper mapper = new ObjectMapper();
+        ResponseObjectEntity<Object> entity = new ResponseObjectEntity<>();
+        entity.setCode(HttpServletResponse.SC_FORBIDDEN);
+        entity.setMsg("Access denied");
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        response.setContentType("application/json");
+        response.getWriter().append(mapper.writeValueAsString(entity)).flush();
     }
 }

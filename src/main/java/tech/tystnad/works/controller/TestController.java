@@ -23,6 +23,7 @@ import tech.tystnad.works.repository.mapper.TestRepository;
 
 import javax.validation.groups.Default;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -80,5 +81,11 @@ public class TestController {
     public ResponseEntity<SysUserDTO> testValidator(@RequestBody @Validated({addGroup.class, deleteGroup.class, Default.class}) SysUserDTO sysUserDTO) {
         logger.info(sysUserDTO.toString());
         return ResponseEntity.ok().body(sysUserDTO);
+    }
+
+    @PostMapping("/list")
+    public ResponseEntity<List> emptyList(@RequestBody String id) {
+        logger.info(id);
+        return ResponseEntity.ok().body(Collections.EMPTY_LIST);
     }
 }

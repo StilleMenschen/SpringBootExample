@@ -4,7 +4,7 @@ import tech.tystnad.works.model.dto.SysUserDTO;
 import tech.tystnad.works.repository.domain.SysUserDO;
 
 public class SysUserConverter {
-    public static SysUserDO dto2do(SysUserDTO dto) {
+    public static SysUserDO dto2do(final SysUserDTO dto) {
         if (dto == null) {
             return null;
         }

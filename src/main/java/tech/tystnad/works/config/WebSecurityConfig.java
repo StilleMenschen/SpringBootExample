@@ -73,8 +73,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 跨域访问的预检请求
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 // 允许对于网站静态资源的无授权访问
-                .antMatchers(HttpMethod.GET, "/", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js")
+                .antMatchers(HttpMethod.GET, "/", "/*.html", "/favicon.ico",
+                        "/**/*.html", "/**/*.css", "/**/*.js")
                 .permitAll()
+                .antMatchers("/test/**").permitAll()
                 // 对于获取token的rest api要允许匿名访问
                 .antMatchers("/auth/**").permitAll()
                 // 除上面外的所有请求全部需要鉴权认证
@@ -89,7 +91,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/test/**").antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources",
+        web.ignoring().antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources",
                 "/configuration/security", "/swagger-ui.html", "/webjars/**", "/swagger-resources/configuration/ui");
     }
 }
