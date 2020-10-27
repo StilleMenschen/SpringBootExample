@@ -47,13 +47,15 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
         example.clear();
         example.createCriteria().andDeletedEqualTo(false).andOrgNameEqualTo(dto.getOrgName());
         list = sysOrganizationDOMapper.selectByExample(example);
-        if (list.size() > 0) {
+        if (!list.isEmpty()) {
             return fail(400, "机构名称重复");
         }
         SysOrganizationDO sysOrganizationDO = new SysOrganizationDO();
         sysOrganizationDO.setOrgId(idWorker.nextId());
-        sysOrganizationDOMapper.insertSelective(sysOrganizationDO);
-        return ok(null);
+        if (sysOrganizationDOMapper.insertSelective(sysOrganizationDO) > 1) {
+            return ok(null);
+        }
+        return fail(500, "数据异常,请稍后再试");
     }
 
     @Override
