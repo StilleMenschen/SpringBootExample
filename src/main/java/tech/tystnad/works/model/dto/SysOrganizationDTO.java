@@ -6,9 +6,7 @@ import tech.tystnad.works.core.validator.groups.SysOrganizationGroups.addGroup;
 import tech.tystnad.works.core.validator.groups.SysOrganizationGroups.queryGroup;
 import tech.tystnad.works.core.validator.groups.SysOrganizationGroups.updateGroup;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.util.Date;
 
 

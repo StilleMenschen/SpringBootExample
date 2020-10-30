@@ -5,7 +5,7 @@ import tech.tystnad.works.repository.domain.SysOrganizationDO;
 
 public class SysOrganizationConverter {
 
-    public SysOrganizationDO dto2do(final SysOrganizationDTO dto){
+    public static SysOrganizationDO dto2do(final SysOrganizationDTO dto){
         if (dto == null){
             return null;
         }

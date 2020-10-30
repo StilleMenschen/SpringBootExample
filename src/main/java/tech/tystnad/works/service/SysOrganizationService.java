@@ -7,9 +7,7 @@ import tech.tystnad.works.model.vo.SysOrganizationVO;
 import java.util.List;
 
 public interface SysOrganizationService {
-    ResponseObjectEntity<SysOrganizationVO> add(SysOrganizationDTO sysOrganizationDTO);
-
-    ResponseObjectEntity<SysOrganizationVO> update(SysOrganizationDTO sysOrganizationDTO);
+    ResponseObjectEntity<SysOrganizationVO> save(SysOrganizationDTO sysOrganizationDTO);
 
     ResponseObjectEntity<SysOrganizationVO> delete(String sysOrganizationId);
 

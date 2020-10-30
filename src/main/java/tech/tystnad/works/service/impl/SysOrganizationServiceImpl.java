@@ -2,6 +2,7 @@ package tech.tystnad.works.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tech.tystnad.works.converter.SysOrganizationConverter;
 import tech.tystnad.works.core.service.BaseService;
 import tech.tystnad.works.model.ResponseObjectEntity;
 import tech.tystnad.works.model.dto.SysOrganizationDTO;
@@ -26,7 +27,7 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
     }
 
     @Override
-    public ResponseObjectEntity<SysOrganizationVO> add(SysOrganizationDTO dto) {
+    public ResponseObjectEntity<SysOrganizationVO> save(SysOrganizationDTO dto) {
         if (dto == null) {
             return fail(400, "机构信息不能为空");
         }
@@ -49,24 +50,25 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
         if (list.size() != 1) {
             return fail(400, "父级机构不存在");
         } else {
+            SysOrganizationDO sysOrganizationDO = SysOrganizationConverter.dto2do(dto);
             final byte plus = 1;
             final int orgLevel = list.get(0).getOrgLevel() + plus;
             if (orgLevel > 5) {
-                fail(400, "机构层级最大为5级");
+                return fail(400, "机构层级最大为5级");
             }
-            SysOrganizationDO sysOrganizationDO = new SysOrganizationDO();
-            sysOrganizationDO.setOrgId(idWorker.nextId());
             sysOrganizationDO.setOrgLevel((byte) orgLevel);
-            if (sysOrganizationDOMapper.insertSelective(sysOrganizationDO) > 1) {
-                return ok(null);
+            if (sysOrganizationDO.getOrgId() != null) {
+                if (sysOrganizationDOMapper.updateByPrimaryKeySelective(sysOrganizationDO) > 1) {
+                    return ok(null);
+                }
+            } else {
+                sysOrganizationDO.setOrgId(idWorker.nextId());
+                if (sysOrganizationDOMapper.insertSelective(sysOrganizationDO) > 1) {
+                    return ok(null);
+                }
             }
         }
         return fail(500, "数据异常,请稍后再试");
-    }
-
-    @Override
-    public ResponseObjectEntity<SysOrganizationVO> update(SysOrganizationDTO sysOrganizationDTO) {
-        return null;
     }
 
     @Override
