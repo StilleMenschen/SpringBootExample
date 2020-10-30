@@ -57,14 +57,9 @@ jwt:
       register: "auth/register"
 
 # Logging configuration
-#logging:
-#  level:
-#    root: WARN
-#    tech.tystnad.works: DEBUG
-#    com.zaxxer.hikari.pool: DEBUG
-#    org:
-#      springframework: INFO
-#      mybatis: INFO
+logging:
+  file:
+    path: /opt/logs
 
 # Swagger Config (true,false)
 swagger:

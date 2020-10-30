@@ -9,9 +9,9 @@ import java.util.List;
 public interface SysOrganizationService {
     ResponseObjectEntity<SysOrganizationVO> save(SysOrganizationDTO sysOrganizationDTO);
 
-    ResponseObjectEntity<SysOrganizationVO> delete(String sysOrganizationId);
+    ResponseObjectEntity<SysOrganizationVO> delete(Long sysOrganizationId);
 
-    ResponseObjectEntity<SysOrganizationVO> delete(List<String> sysOrganizationIds);
+    ResponseObjectEntity<SysOrganizationVO> delete(List<Long> sysOrganizationIds);
 
     ResponseObjectEntity<List<SysOrganizationVO>> search(String sysOrganizationId);
 

@@ -1,5 +1,7 @@
 package tech.tystnad.works.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.tystnad.works.converter.SysOrganizationConverter;
@@ -17,6 +19,9 @@ import java.util.List;
 
 @Service
 public class SysOrganizationServiceImpl extends BaseService implements SysOrganizationService {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     private final SysOrganizationDOMapper sysOrganizationDOMapper;
     private final IdWorker idWorker;
 
@@ -72,13 +77,28 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
     }
 
     @Override
-    public ResponseObjectEntity<SysOrganizationVO> delete(String sysOrganizationId) {
-        return null;
+    public ResponseObjectEntity<SysOrganizationVO> delete(Long sysOrganizationId) {
+        if (sysOrganizationId != null) {
+            SysOrganizationDO sysOrganizationDO = new SysOrganizationDO();
+            sysOrganizationDO.setOrgId(sysOrganizationId);
+            sysOrganizationDO.setDeleted(true);
+            int c = sysOrganizationDOMapper.updateByPrimaryKeySelective(sysOrganizationDO);
+            logger.info("delete SysOrganizationDO {}", c);
+        }
+        return fail(500, "操作失败,请稍后再试");
     }
 
     @Override
-    public ResponseObjectEntity<SysOrganizationVO> delete(List<String> sysOrganizationIds) {
-        return null;
+    public ResponseObjectEntity<SysOrganizationVO> delete(List<Long> sysOrganizationIds) {
+        if (sysOrganizationIds != null && sysOrganizationIds.size() > 0) {
+            SysOrganizationDOExample example = new SysOrganizationDOExample();
+            SysOrganizationDO sysOrganizationDO = new SysOrganizationDO();
+            sysOrganizationDO.setDeleted(true);
+            example.createCriteria().andOrgIdIn(sysOrganizationIds).andDeletedEqualTo(false);
+            int c = sysOrganizationDOMapper.updateByExampleSelective(sysOrganizationDO, example);
+            logger.info("delete SysOrganizationDO {}", c);
+        }
+        return ok(null);
     }
 
     @Override

@@ -89,7 +89,7 @@ public class SysOrganizationVO {
      * @mbg.generated
      */
     private Long creator;
-    private String creatorNamw;
+    private String creatorName;
 
     /**
      *
@@ -309,11 +309,11 @@ public class SysOrganizationVO {
         this.updaterName = updaterName == null ? null : updaterName.trim();
     }
 
-    public String getCreatorNamw() {
-        return creatorNamw;
+    public String getCreatorName() {
+        return creatorName;
     }
 
-    public void setCreatorNamw(String creatorNamw) {
-        this.creatorNamw = creatorNamw == null ? null : creatorNamw.trim();
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName == null ? null : creatorName.trim();
     }
 }

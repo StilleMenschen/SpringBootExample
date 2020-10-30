@@ -15,6 +15,7 @@ public class SysOrganizationConverter {
         sysOrganizationDO.setParentId(dto.getParentId());
         sysOrganizationDO.setOrgLevel(dto.getOrgLevel());
         sysOrganizationDO.setOrgName(dto.getOrgName());
+        sysOrganizationDO.setEnabled(dto.getEnabled());
         return sysOrganizationDO;
     }
 }

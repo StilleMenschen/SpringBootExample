@@ -1,6 +1,11 @@
 package tech.tystnad.works.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class IdWorker {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private long workerId;
     private long dataCenterId;
@@ -15,13 +20,13 @@ public class IdWorker {
         // sanity check for workerId
         if (workerId > maxWorkerId || workerId < 0) {
             throw new IllegalArgumentException(
-                    String.format("worker Id can't be greater than %d or less than 0", maxWorkerId));
+                    String.format("worker id can't be greater than %d or less than 0", maxWorkerId));
         }
         if (dataCenterId > maxDataCenterId || dataCenterId < 0) {
             throw new IllegalArgumentException(
-                    String.format("datacenter Id can't be greater than %d or less than 0", maxDataCenterId));
+                    String.format("datacenter id can't be greater than %d or less than 0", maxDataCenterId));
         }
-        System.out.printf("id worker starting. timestamp left shift %d, datacenter id bits %d, worker id bits %d, sequence bits %d, workerid %d\n",
+        logger.debug("id worker starting. timestamp left shift {}, datacenter id bits {}, worker id bits {}, sequence bits {}, workerid {}",
                 timestampLeftShift, dataCenterIdBits, workerIdBits, sequenceBits, workerId);
 
         this.workerId = workerId;
@@ -29,7 +34,7 @@ public class IdWorker {
         this.sequence = sequence;
     }
 
-    private static final long twepoch = 1596770384613L;
+    private static final long works_epoch = 1604067624344L;
 
     // 工作机器ID,二进制5位
     private static final long workerIdBits = 5L;
@@ -49,9 +54,9 @@ public class IdWorker {
         long timestamp = timeGen();
 
         if (timestamp < lastTimestamp) {
-            System.err.printf("clock is moving backwards.  Rejecting requests until %d.", lastTimestamp);
+            logger.error("Clock is moving backwards. Rejecting requests until {}.", lastTimestamp);
             throw new RuntimeException(
-                    String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds",
+                    String.format("Clock moved backwards. Refusing to generate id for %d milliseconds",
                             lastTimestamp - timestamp));
         }
 
@@ -65,10 +70,12 @@ public class IdWorker {
         }
 
         lastTimestamp = timestamp;
-        return ((timestamp - twepoch) << timestampLeftShift) |
+        final long ID = ((timestamp - works_epoch) << timestampLeftShift) |
                 (dataCenterId << dataCenterIdShift) |
                 (workerId << workerIdShift) |
                 sequence;
+        logger.debug("Next ID {}, lastTimestamp {}", ID, lastTimestamp);
+        return ID;
     }
 
     private long tilNextMillis(long lastTimestamp) {
