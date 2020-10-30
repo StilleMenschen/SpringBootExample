@@ -17,10 +17,7 @@ import javax.annotation.Resource;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @SpringBootTest
 class WorksApplicationTests {
@@ -64,7 +61,7 @@ class WorksApplicationTests {
             organization.setOrgId(organizationIds.get(i));
             organization.setOrgLevel((byte) 0);
             organization.setOrgName("啊啊啊啊啊啊啊" + i);
-            sysOrganizationDOMapper.insertSelective(organization);
+            logger.debug("count {}", sysOrganizationDOMapper.insertSelective(organization));
         }
         SysOrganizationDOExample example = new SysOrganizationDOExample();
         example.setOrderByClause("create_time desc");
