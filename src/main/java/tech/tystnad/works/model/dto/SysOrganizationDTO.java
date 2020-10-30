@@ -19,7 +19,6 @@ public class SysOrganizationDTO {
     private Long topId;
     @NotNull(message = "{org.parent-id.notnull}", groups = {addGroup.class, updateGroup.class})
     private Long parentId;
-    @NotNull(message = "{org.level.not-validated}", groups = {addGroup.class, updateGroup.class})
     @Range(min = 0, max = 5, message = "{org.level.not-validated}", groups = {addGroup.class, updateGroup.class})
     private Byte orgLevel;
     @NotBlank(message = "{org.name.not-validated}", groups = {addGroup.class, updateGroup.class})

@@ -2,7 +2,6 @@ package tech.tystnad.works.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import tech.tystnad.works.core.service.BaseService;
 import tech.tystnad.works.model.ResponseObjectEntity;
 import tech.tystnad.works.model.dto.SysOrganizationDTO;
@@ -27,7 +26,7 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
     }
 
     @Override
-    public ResponseObjectEntity<SysOrganizationVO> add(@RequestBody SysOrganizationDTO dto) {
+    public ResponseObjectEntity<SysOrganizationVO> add(SysOrganizationDTO dto) {
         if (dto == null) {
             return fail(400, "机构信息不能为空");
         }
@@ -39,21 +38,28 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
             return fail(400, "顶级机构不存在");
         }
         example.clear();
-        example.createCriteria().andDeletedEqualTo(false).andParentIdEqualTo(dto.getParentId());
-        list = sysOrganizationDOMapper.selectByExample(example);
-        if (list.size() != 1) {
-            return fail(400, "父级机构不存在");
-        }
-        example.clear();
         example.createCriteria().andDeletedEqualTo(false).andOrgNameEqualTo(dto.getOrgName());
         list = sysOrganizationDOMapper.selectByExample(example);
         if (!list.isEmpty()) {
             return fail(400, "机构名称重复");
         }
-        SysOrganizationDO sysOrganizationDO = new SysOrganizationDO();
-        sysOrganizationDO.setOrgId(idWorker.nextId());
-        if (sysOrganizationDOMapper.insertSelective(sysOrganizationDO) > 1) {
-            return ok(null);
+        example.clear();
+        example.createCriteria().andDeletedEqualTo(false).andParentIdEqualTo(dto.getParentId());
+        list = sysOrganizationDOMapper.selectByExample(example);
+        if (list.size() != 1) {
+            return fail(400, "父级机构不存在");
+        } else {
+            final byte plus = 1;
+            final int orgLevel = list.get(0).getOrgLevel() + plus;
+            if (orgLevel > 5) {
+                fail(400, "机构层级最大为5级");
+            }
+            SysOrganizationDO sysOrganizationDO = new SysOrganizationDO();
+            sysOrganizationDO.setOrgId(idWorker.nextId());
+            sysOrganizationDO.setOrgLevel((byte) orgLevel);
+            if (sysOrganizationDOMapper.insertSelective(sysOrganizationDO) > 1) {
+                return ok(null);
+            }
         }
         return fail(500, "数据异常,请稍后再试");
     }
