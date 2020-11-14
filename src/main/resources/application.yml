@@ -7,9 +7,6 @@ server:
     max-swallow-size: 320MB
   workerId: 0
   dataCenterId: 0
-  error:
-    include-stacktrace: never
-#  contextPath:
 
 # Spring configuration
 spring:
@@ -61,6 +58,8 @@ logging:
   file:
     path: /opt/logs
 
-# Swagger Config (true,false)
-swagger:
-  enable: true
+# Swagger Config
+springfox:
+  documentation:
+    swagger-ui:
+      enabled: true
