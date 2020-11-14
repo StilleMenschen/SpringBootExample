@@ -2,16 +2,19 @@ package tech.tystnad.works.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import tech.tystnad.works.model.*;
 import tech.tystnad.works.model.dto.SysUserDTO;
 import tech.tystnad.works.model.vo.SysUserVO;
-import tech.tystnad.works.service.AuthService;
+import tech.tystnad.works.properties.JwtProperties;
 import tech.tystnad.works.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
+import tech.tystnad.works.service.AuthService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,14 +23,13 @@ public class AuthController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Value("${jwt.header}")
-    private String tokenHeader;
-
+    private JwtProperties jwtProperties;
     private AuthService authService;
     private UserRepository userRepository;
 
     @Autowired
-    public AuthController(AuthService authService, UserRepository userRepository) {
+    public AuthController(JwtProperties jwtProperties, AuthService authService, UserRepository userRepository) {
+        this.jwtProperties = jwtProperties;
         this.authService = authService;
         this.userRepository = userRepository;
         logger.info(this.authService.toString());
@@ -45,7 +47,7 @@ public class AuthController {
     @GetMapping(value = "${jwt.route.authentication.refresh}")
     public ResponseEntity<?> refreshAndGetAuthenticationToken(
             HttpServletRequest request) throws AuthenticationException {
-        String token = request.getHeader(tokenHeader);
+        String token = request.getHeader(jwtProperties.getHeader());
         String refreshedToken = authService.refresh(token);
         if (refreshedToken == null) {
             return ResponseEntity.badRequest().body(null);

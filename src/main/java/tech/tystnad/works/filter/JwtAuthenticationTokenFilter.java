@@ -1,6 +1,5 @@
 package tech.tystnad.works.filter;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import tech.tystnad.works.properties.JwtProperties;
 import tech.tystnad.works.util.JwtTokenUtil;
 
 import javax.annotation.Resource;
@@ -26,23 +26,21 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Resource
     private JwtTokenUtil jwtTokenUtil;
 
-    @Value("${jwt.header}")
-    private String tokenHeader;
-
-    @Value("${jwt.tokenHead}")
-    private String tokenHead;
+    @Resource
+    private JwtProperties jwtProperties;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        String authHeader = request.getHeader(tokenHeader);
-        if (authHeader != null && authHeader.startsWith(tokenHead)) {
-            final String authToken = authHeader.substring(tokenHead.length()); // The part after Bearer
+        String authHeader = request.getHeader(jwtProperties.getHeader());
+        if (authHeader != null && authHeader.startsWith(jwtProperties.getTokenHead())) {
+            final String authToken = authHeader.substring(jwtProperties.getTokenHead().length()); // The part after Bearer
             String username = jwtTokenUtil.getUsernameFromToken(authToken);
 
-            logger.info("checking authentication " + username);
-
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (username == null || "".equals(username.trim())) {
+                logger.info("username is null");
+            } else if (SecurityContextHolder.getContext().getAuthentication() == null) {
+                logger.info("checking authentication: " + username);
 
                 // 如果我们足够相信token中的数据，也就是我们足够相信签名token的secret的机制足够好
                 // 这种情况下，我们可以不用再查询数据库，而直接采用token中的数据
@@ -54,7 +52,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    logger.info("authenticated user " + username + ", setting security context");
+                    logger.info("authenticated user '" + username + "', setting security context");
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }

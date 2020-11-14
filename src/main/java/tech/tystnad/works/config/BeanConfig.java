@@ -1,29 +1,28 @@
 package tech.tystnad.works.config;
 
 import org.hibernate.validator.HibernateValidator;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import tech.tystnad.works.properties.IdWorkerProperties;
 import tech.tystnad.works.util.IdWorker;
 
+import javax.annotation.Resource;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 @Configuration
 public class BeanConfig {
-    @Value("${server.workerId}")
-    private long workerId;
-    @Value("${server.dataCenterId}")
-    private long dataCenterId;
+    @Resource
+    private IdWorkerProperties idWorkerProperties;
 
     @Bean("idWorker")
     @Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public IdWorker idWorker() {
         // 雪花算法的ID生成器,指定工作ID和数据中心ID,最大值为31(五位二进制数都为1,0b11111)
-        return new IdWorker(workerId, dataCenterId);
+        return new IdWorker(idWorkerProperties.getWorkerId(), idWorkerProperties.getDataCenterId());
     }
 
     @Bean
@@ -36,7 +35,6 @@ public class BeanConfig {
                 .configure()
                 .failFast(true) // 快速失败,遇到第一个校验不通过直接抛出异常
                 .buildValidatorFactory();
-        Validator validator = validatorFactory.getValidator();
-        return validator;
+        return validatorFactory.getValidator();
     }
 }

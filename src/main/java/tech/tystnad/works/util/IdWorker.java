@@ -34,7 +34,7 @@ public class IdWorker {
         this.sequence = sequence;
     }
 
-    private static final long works_epoch = 1604067624344L;
+    private static final long works_epoch = 1605334663654L;
 
     // 工作机器ID,二进制5位
     private static final long workerIdBits = 5L;
