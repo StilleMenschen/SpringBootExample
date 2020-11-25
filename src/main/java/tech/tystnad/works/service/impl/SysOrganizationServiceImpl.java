@@ -84,6 +84,7 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
             sysOrganizationDO.setDeleted(true);
             int c = sysOrganizationDOMapper.updateByPrimaryKeySelective(sysOrganizationDO);
             logger.info("delete SysOrganizationDO {}", c);
+            return ok(null);
         }
         return fail(500, "操作失败,请稍后再试");
     }
@@ -97,8 +98,9 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
             example.createCriteria().andOrgIdIn(sysOrganizationIds).andDeletedEqualTo(false);
             int c = sysOrganizationDOMapper.updateByExampleSelective(sysOrganizationDO, example);
             logger.info("delete SysOrganizationDO {}", c);
+            return ok(null);
         }
-        return ok(null);
+        return fail(500, "操作失败,请稍后再试");
     }
 
     @Override
