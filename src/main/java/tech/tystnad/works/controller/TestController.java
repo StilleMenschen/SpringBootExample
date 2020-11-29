@@ -19,11 +19,13 @@ import tech.tystnad.works.model.City;
 import tech.tystnad.works.model.Pet;
 import tech.tystnad.works.model.User;
 import tech.tystnad.works.model.dto.SysUserDTO;
+import tech.tystnad.works.model.vo.SysUserVO;
+import tech.tystnad.works.repository.mapper.SysUserVOMapper;
 import tech.tystnad.works.repository.mapper.TestRepository;
 
 import javax.validation.groups.Default;
 import java.time.Duration;
-import java.util.Collections;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -34,13 +36,15 @@ public class TestController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private StringRedisTemplate stringRedisTemplate;
-    private TestRepository testRepository;
+    private final StringRedisTemplate stringRedisTemplate;
+    private final TestRepository testRepository;
+    private final SysUserVOMapper sysUserVOMapper;
 
     @Autowired
-    public TestController(StringRedisTemplate stringRedisTemplate, TestRepository testRepository) {
+    public TestController(StringRedisTemplate stringRedisTemplate, TestRepository testRepository, SysUserVOMapper sysUserVOMapper) {
         this.stringRedisTemplate = stringRedisTemplate;
         this.testRepository = testRepository;
+        this.sysUserVOMapper = sysUserVOMapper;
         logger.debug("Created TestController");
     }
 
@@ -86,7 +90,24 @@ public class TestController {
     @PostMapping("/list")
     public ResponseEntity<Object> emptyList(@RequestBody String id) {
         logger.debug(id);
-        return ResponseEntity.ok(Collections.EMPTY_LIST);
+        SysUserDTO sysUserDTO = new SysUserDTO();
+        sysUserDTO.setUserName("伞兵一号lbw准备就绪");
+        sysUserDTO.setOrgName("伞兵一号lbw准备就绪");
+        sysUserDTO.setUpdaterName("伞兵一号lbw准备就绪");
+        sysUserDTO.setCreatorName("伞兵一号lbw准备就绪");
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        sysUserDTO.setCreateTimeStart(calendar.getTime());
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        sysUserDTO.setCreateTimeEnd(calendar.getTime());
+        List<SysUserVO> list = sysUserVOMapper.findByExample(sysUserDTO);
+        return ResponseEntity.ok(list);
     }
 
     @DeleteMapping("/del")

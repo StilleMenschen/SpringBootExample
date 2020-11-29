@@ -16,7 +16,7 @@ public interface SysOrganizationService {
 
     ResponseObjectEntity<Map<String, Object>> tree(Long topId, Long parentId);
 
-    ResponseObjectEntity<List<SysOrganizationVO>> search(String sysOrganizationId);
+    ResponseObjectEntity<List<SysOrganizationVO>> search(Long sysOrganizationId);
 
     ResponseObjectEntity<List<SysOrganizationVO>> search(SysOrganizationDTO sysOrganizationDTO);
 }

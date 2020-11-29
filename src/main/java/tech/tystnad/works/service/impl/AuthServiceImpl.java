@@ -3,7 +3,6 @@ package tech.tystnad.works.service.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,12 +10,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.tystnad.works.converter.SysUserConverter;
 import tech.tystnad.works.core.service.BaseService;
 import tech.tystnad.works.model.JwtUser;
 import tech.tystnad.works.model.ResponseObjectEntity;
 import tech.tystnad.works.model.dto.SysUserDTO;
 import tech.tystnad.works.model.vo.SysUserVO;
+import tech.tystnad.works.properties.JwtProperties;
 import tech.tystnad.works.repository.domain.SysUserDO;
 import tech.tystnad.works.service.AuthService;
 import tech.tystnad.works.util.JwtTokenUtil;
@@ -29,19 +30,18 @@ public class AuthServiceImpl extends BaseService implements AuthService {
     private AuthenticationManager authenticationManager;
     private UserDetailsService userDetailsService;
     private JwtTokenUtil jwtTokenUtil;
-
-    @Value("${jwt.tokenHead}")
-    private String tokenHead;
+    private JwtProperties jwtProperties;
 
     @Autowired
-    public AuthServiceImpl(AuthenticationManager authenticationManager, UserDetailsService userDetailsService,
-                           JwtTokenUtil jwtTokenUtil) {
+    public AuthServiceImpl(AuthenticationManager authenticationManager, UserDetailsService userDetailsService, JwtTokenUtil jwtTokenUtil, JwtProperties jwtProperties) {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.jwtProperties = jwtProperties;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseObjectEntity<SysUserVO> register(SysUserDTO sysUserDTO) {
         SysUserDO sysUserDO = SysUserConverter.dto2do(sysUserDTO);
         SysUserVO vo = new SysUserVO();
@@ -65,7 +65,7 @@ public class AuthServiceImpl extends BaseService implements AuthService {
 
     @Override
     public String refresh(String oldToken) {
-        final String token = oldToken.substring(tokenHead.length());
+        final String token = oldToken.substring(jwtProperties.getTokenHead().length());
         String username = jwtTokenUtil.getUsernameFromToken(token);
         JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
         if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {

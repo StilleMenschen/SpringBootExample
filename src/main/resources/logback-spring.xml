@@ -25,7 +25,12 @@
               value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
     <!-- 控制台日志 -->
     <property name="FILE_LOG_PATTERN"
-              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{39} %msg%n" />
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{39} %msg%n"/>
+
+    <!-- 单个日志文件大小 -->
+    <property name="LOG_FILE_MAX_SIZE" value="64MB"/>
+    <!-- 日志文件保留天数 -->
+    <property name="LOG_FILE_MAX_HISTORY" value="15"/>
 
     <!--输出到控制台 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -55,9 +60,9 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- 日志归档 -->
             <fileNamePattern>${log.path}/DEBUG/works-debug-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>64MB</maxFileSize>
+            <maxFileSize>${LOG_FILE_MAX_SIZE}</maxFileSize>
             <!--日志文件保留天数 -->
-            <maxHistory>15</maxHistory>
+            <maxHistory>${LOG_FILE_MAX_HISTORY}</maxHistory>
         </rollingPolicy>
         <!-- 此日志文件只记录debug级别的 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -80,9 +85,9 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- 每天日志归档路径以及格式 -->
             <fileNamePattern>${log.path}/INFO/works-info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>64MB</maxFileSize>
+            <maxFileSize>${LOG_FILE_MAX_SIZE}</maxFileSize>
             <!--日志文件保留天数 -->
-            <maxHistory>15</maxHistory>
+            <maxHistory>${LOG_FILE_MAX_HISTORY}</maxHistory>
         </rollingPolicy>
         <!-- 此日志文件只记录info级别的 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -104,9 +109,9 @@
         <!-- 日志记录器的滚动策略，按日期，按大小记录 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${log.path}/WARN/works-warn-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>64MB</maxFileSize>
+            <maxFileSize>${LOG_FILE_MAX_SIZE}</maxFileSize>
             <!--日志文件保留天数 -->
-            <maxHistory>15</maxHistory>
+            <maxHistory>${LOG_FILE_MAX_HISTORY}</maxHistory>
         </rollingPolicy>
         <!-- 此日志文件只记录warn级别的 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -129,9 +134,9 @@
         <!-- 日志记录器的滚动策略，按日期，按大小记录 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${log.path}/ERROR/works-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>64MB</maxFileSize>
+            <maxFileSize>${LOG_FILE_MAX_SIZE}</maxFileSize>
             <!--日志文件保留天数 -->
-            <maxHistory>15</maxHistory>
+            <maxHistory>${LOG_FILE_MAX_HISTORY}</maxHistory>
         </rollingPolicy>
         <!-- 此日志文件只记录ERROR级别的 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">

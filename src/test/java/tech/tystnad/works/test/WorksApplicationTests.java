@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
+import tech.tystnad.works.core.validator.groups.SysOrganizationGroups.queryGroup;
+import tech.tystnad.works.core.validator.groups.SysOrganizationGroups.updateGroup;
 import tech.tystnad.works.model.dto.SysOrganizationDTO;
 import tech.tystnad.works.model.dto.SysUserDTO;
 import tech.tystnad.works.repository.domain.SysOrganizationDO;
@@ -11,13 +13,15 @@ import tech.tystnad.works.repository.domain.SysOrganizationDOExample;
 import tech.tystnad.works.repository.mapper.SysOrganizationDOMapper;
 import tech.tystnad.works.repository.mapper.SysUserVOMapper;
 import tech.tystnad.works.util.IdWorker;
-import tech.tystnad.works.core.validator.groups.SysOrganizationGroups.*;
 
 import javax.annotation.Resource;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 @SpringBootTest
 class WorksApplicationTests {

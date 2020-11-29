@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.tystnad.works.converter.SysOrganizationConverter;
 import tech.tystnad.works.core.service.BaseService;
 import tech.tystnad.works.model.ResponseObjectEntity;
@@ -38,6 +39,7 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseObjectEntity<SysOrganizationVO> save(SysOrganizationDTO dto) {
         if (dto == null) {
             return fail(400, "机构信息不能为空");
@@ -83,6 +85,7 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseObjectEntity<SysOrganizationVO> delete(Long sysOrganizationId) {
         if (sysOrganizationId != null) {
             SysOrganizationDO sysOrganizationDO = new SysOrganizationDO();
@@ -96,6 +99,7 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseObjectEntity<SysOrganizationVO> delete(List<Long> sysOrganizationIds) {
         if (sysOrganizationIds != null && sysOrganizationIds.size() > 0) {
             SysOrganizationDOExample example = new SysOrganizationDOExample();
@@ -129,12 +133,17 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
     }
 
     @Override
-    public ResponseObjectEntity<List<SysOrganizationVO>> search(String sysOrganizationId) {
-        return null;
+    public ResponseObjectEntity<List<SysOrganizationVO>> search(Long sysOrganizationId) {
+        SysOrganizationDO sysOrganizationDO = sysOrganizationDOMapper.selectByPrimaryKey(sysOrganizationId);
+        if (sysOrganizationDO == null || !sysOrganizationDO.getOrgId().equals(sysOrganizationId)) {
+            return fail(400, "机构不存在");
+        }
+        SysOrganizationVO sysOrganizationVO = SysOrganizationConverter.do2vo(sysOrganizationDO);
+        return ok(Arrays.asList(sysOrganizationVO));
     }
 
     @Override
     public ResponseObjectEntity<List<SysOrganizationVO>> search(SysOrganizationDTO sysOrganizationDTO) {
-        return null;
+        return ok(sysOrganizationVOMapper.findByDTO(sysOrganizationDTO));
     }
 }
