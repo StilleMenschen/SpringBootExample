@@ -12,10 +12,14 @@ import tech.tystnad.works.model.vo.SysOrganizationVO;
 import tech.tystnad.works.repository.domain.SysOrganizationDO;
 import tech.tystnad.works.repository.domain.SysOrganizationDOExample;
 import tech.tystnad.works.repository.mapper.SysOrganizationDOMapper;
+import tech.tystnad.works.repository.mapper.SysOrganizationVOMapper;
 import tech.tystnad.works.service.SysOrganizationService;
 import tech.tystnad.works.util.IdWorker;
 
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SysOrganizationServiceImpl extends BaseService implements SysOrganizationService {
@@ -23,11 +27,13 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final SysOrganizationDOMapper sysOrganizationDOMapper;
+    private final SysOrganizationVOMapper sysOrganizationVOMapper;
     private final IdWorker idWorker;
 
     @Autowired
-    public SysOrganizationServiceImpl(SysOrganizationDOMapper sysOrganizationDOMapper, IdWorker idWorker) {
+    public SysOrganizationServiceImpl(SysOrganizationDOMapper sysOrganizationDOMapper, SysOrganizationVOMapper sysOrganizationVOMapper, IdWorker idWorker) {
         this.sysOrganizationDOMapper = sysOrganizationDOMapper;
+        this.sysOrganizationVOMapper = sysOrganizationVOMapper;
         this.idWorker = idWorker;
     }
 
@@ -101,6 +107,25 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
             return ok(null);
         }
         return fail(500, "操作失败,请稍后再试");
+    }
+
+    @Override
+    public ResponseObjectEntity<Map<String, Object>> tree(Long topId, Long parentId) {
+        if (topId == null || parentId == null) {
+            return fail(400, "机构ID不能为空");
+        } else {
+            SysOrganizationDOExample example = new SysOrganizationDOExample();
+            example.createCriteria().andOrgIdIn(Arrays.asList(topId, parentId));
+            long count = sysOrganizationDOMapper.countByExample(example);
+            if (count <= 0) {
+                return fail(400, "机构ID不存在");
+            }
+            Map<String, Object> map = new LinkedHashMap<>();
+            map.put("topId", topId);
+            map.put("parentId", parentId);
+            map.put("children", sysOrganizationVOMapper.findByParentId(topId, parentId));
+            return ok(map);
+        }
     }
 
     @Override

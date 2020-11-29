@@ -6,4 +6,7 @@
     FROM sys_organization AS so INNER JOIN sys_user AS csu ON (so.creator = csu.user_id) INNER JOIN sys_user AS usu ON (so.updater = usu.user_id)
     WHERE so.deleted = 0
   </select>
+  <select id="findByParentId" parameterType="int" resultType="tech.tystnad.works.model.vo.SysOrganizationTreeVO">
+    SELECT top_id, org_id, org_level, org_name FROM sys_organization WHERE top_id = #{top_id} AND parent_id = #{parent_id};
+  </select>
 </mapper>

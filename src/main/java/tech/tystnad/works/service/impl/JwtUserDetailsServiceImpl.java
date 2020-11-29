@@ -20,7 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-@Service("userDetailsService")
+@Service
 public class JwtUserDetailsServiceImpl implements UserDetailsService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -65,7 +65,7 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
     /**
      * 获取系统用户
      * @param username 用户名,也可以是邮箱地址
-     * @return
+     * @return 用户信息
      * @throws BusinessException 可能会出现重复的用户名
      */
     private User getSysUser(String username) throws BusinessException {
