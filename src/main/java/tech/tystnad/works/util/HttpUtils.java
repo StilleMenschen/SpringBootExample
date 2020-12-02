@@ -4,6 +4,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -118,21 +119,25 @@ public class HttpUtils {
      * @return
      */
     public static String doMultipartPost(String url, Map<String, String> headers, Map<String, String> urlParameters,
-                                         Map<String, File> fileParameters, Map<String, String> bodyParameters) {
+                                         Map<String, List<File>> fileParameters, Map<String, String> bodyParameters) {
         HttpPost httpPost = new HttpPost(buildUri(url, urlParameters));
         fillHeaders(httpPost, headers);
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        builder.setCharset(Charset.forName("UTF-8"));
         if (fileParameters != null && fileParameters.size() > 0) {
             fileParameters.forEach((k, v) -> {
-                FileBody fileBody = new FileBody(v);
-                builder.addPart(k, fileBody);  //addPart上传文件
+                v.forEach(e -> {
+                    builder.addBinaryBody(k, e);
+                });
             });
         }
         if (bodyParameters != null && bodyParameters.size() > 0) {
-            bodyParameters.forEach(builder::addTextBody);
+            final ContentType contentType = ContentType.create("text/plain", "UTF-8");
+            bodyParameters.forEach((k, v) -> {
+                builder.addTextBody(k, v, contentType);
+            });
         }
-        builder.setCharset(Charset.forName("UTF-8"));
         httpPost.setEntity(builder.build());
         return executeRequest(httpPost);
     }
