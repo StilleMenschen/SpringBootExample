@@ -186,6 +186,12 @@
                         <artifactId>mybatis-generator-core</artifactId>
                         <version>1.4.0</version>
                     </dependency>
+                    <!-- 必须指明数据库驱动包 -->
+                    <dependency>
+                        <groupId>org.mariadb.jdbc</groupId>
+                        <artifactId>mariadb-java-client</artifactId>
+                        <version>2.6.2</version>
+                    </dependency>
                 </dependencies>
             </plugin>
         </plugins>

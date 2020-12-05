@@ -86,7 +86,8 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
         user.setUsername(sysUser.getUserName());
         user.setPassword(sysUser.getUserCipher());
         user.setEnabled(sysUser.getEnabled());
-        user.setLastPasswordResetDate(sysUser.getUpdateTime());
+        // 只有用户修改密码后此属性才会更新,首次新增用户时取新增时间作为初始时间
+        user.setLastPasswordResetDate(sysUser.getPasswordResetTime());
         user.setEmail(sysUser.getEmail());
         user.setRoles(roles);
         return user;

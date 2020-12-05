@@ -965,6 +965,66 @@ public class SysUserDOExample {
             return (Criteria) this;
         }
 
+        public Criteria andPasswordResetTimeIsNull() {
+            addCriterion("password_reset_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordResetTimeIsNotNull() {
+            addCriterion("password_reset_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordResetTimeEqualTo(Date value) {
+            addCriterion("password_reset_time =", value, "passwordResetTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordResetTimeNotEqualTo(Date value) {
+            addCriterion("password_reset_time <>", value, "passwordResetTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordResetTimeGreaterThan(Date value) {
+            addCriterion("password_reset_time >", value, "passwordResetTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordResetTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("password_reset_time >=", value, "passwordResetTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordResetTimeLessThan(Date value) {
+            addCriterion("password_reset_time <", value, "passwordResetTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordResetTimeLessThanOrEqualTo(Date value) {
+            addCriterion("password_reset_time <=", value, "passwordResetTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordResetTimeIn(List<Date> values) {
+            addCriterion("password_reset_time in", values, "passwordResetTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordResetTimeNotIn(List<Date> values) {
+            addCriterion("password_reset_time not in", values, "passwordResetTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordResetTimeBetween(Date value1, Date value2) {
+            addCriterion("password_reset_time between", value1, value2, "passwordResetTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPasswordResetTimeNotBetween(Date value1, Date value2) {
+            addCriterion("password_reset_time not between", value1, value2, "passwordResetTime");
+            return (Criteria) this;
+        }
+
         public Criteria andUpdaterIsNull() {
             addCriterion("updater is null");
             return (Criteria) this;

@@ -22,6 +22,8 @@ import tech.tystnad.works.repository.domain.SysUserDO;
 import tech.tystnad.works.service.AuthService;
 import tech.tystnad.works.util.JwtTokenUtil;
 
+import java.util.Date;
+
 @Service
 public class AuthServiceImpl extends BaseService implements AuthService {
 
@@ -44,6 +46,7 @@ public class AuthServiceImpl extends BaseService implements AuthService {
     @Transactional(rollbackFor = Exception.class)
     public ResponseObjectEntity<SysUserVO> register(SysUserDTO sysUserDTO) {
         SysUserDO sysUserDO = SysUserConverter.dto2do(sysUserDTO);
+        sysUserDO.setPasswordResetTime(new Date(System.currentTimeMillis()));
         SysUserVO vo = new SysUserVO();
         vo.setUserName(sysUserDO.getUserName());
         return ok(vo);

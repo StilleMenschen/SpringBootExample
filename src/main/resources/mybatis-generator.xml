@@ -4,8 +4,7 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
     <!--Maven 命令为: mybatis-generator:generate -e-->
-    <classPathEntry
-            location="D:\APPS\apache-maven-3.6.0\repository\org\mariadb\jdbc\mariadb-java-client\2.6.0\mariadb-java-client-2.6.0.jar"/>
+<!-- <classPathEntry location="${M2_HOME}\repository\org\mariadb\jdbc\mariadb-java-client\2.6.2\mariadb-java-client-2.6.2.jar"/>-->
 
     <context id="MysqlTables" targetRuntime="MyBatis3">
         <property name="javaFileEncoding" value="UTF-8"/>
