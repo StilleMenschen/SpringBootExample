@@ -4,12 +4,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 import tech.tystnad.works.model.dto.SysUserDTO;
 import tech.tystnad.works.util.IdWorker;
 
+import java.io.File;
 import java.util.LinkedList;
 
 public class WorksTests {
@@ -61,11 +68,31 @@ public class WorksTests {
 
     @Test
     public void rest() {
-        RestTemplate restTemplate = new RestTemplate();
+        final RestTemplate restTemplate = new RestTemplate();
+        final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        final MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        final HttpHeaders headers = new HttpHeaders();
+        final File file = new File("e:/tmp.txt");
+        final FileSystemResource resource = new FileSystemResource(file);
+        params.set("size", "1");
+        final String url = UriComponentsBuilder.newInstance()
+                .scheme("http").host("localhost").port("8080")
+                .path("/test/template").queryParams(params)
+                .encode().build().toUriString();
+        headers.set("Platform", "MOBILE");
+        body.set("id", 1);
+        body.set("name", "圣彼得堡");
+        body.set("countryCode", "45889");
+        body.set("district", "俄罗斯");
+        body.set("population", 19865);
+        body.add("file", resource);
+        body.add("file", resource);
+
+        final HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
         try {
-            ResponseEntity<String> entity = restTemplate.getForEntity("http://localhost/test.json", String.class);
+            ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, requestEntity, String.class);
             ObjectMapper mapper = new ObjectMapper();
-            JsonNode node = mapper.readTree(entity.getBody());
+            JsonNode node = mapper.readTree(responseEntity.getBody());
             System.out.println(node.toPrettyString());
         } catch (Exception e) {
             e.printStackTrace();

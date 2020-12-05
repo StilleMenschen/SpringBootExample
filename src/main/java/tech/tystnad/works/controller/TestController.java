@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import tech.tystnad.works.core.validator.groups.SysUserValidatorGroups.addGroup;
 import tech.tystnad.works.core.validator.groups.SysUserValidatorGroups.deleteGroup;
 import tech.tystnad.works.model.City;
@@ -25,9 +26,7 @@ import tech.tystnad.works.repository.mapper.TestRepository;
 
 import javax.validation.groups.Default;
 import java.time.Duration;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/test")
@@ -114,5 +113,22 @@ public class TestController {
     public ResponseEntity<String> batchDelete(@RequestBody List<String> body) {
         body.forEach(logger::debug);
         return ResponseEntity.ok("delete all complete");
+    }
+
+    @PostMapping(value = "/template")
+    public ResponseEntity<Map> template(@RequestHeader("Platform") String platform, @RequestPart("file") List<MultipartFile> files,
+                                        @RequestParam("size") Integer size, City city) {
+        if (platform == null || files == null || files.isEmpty() || size == null || city == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        List<String> fs = new LinkedList<>();
+        files.forEach(e -> fs.add(e.getOriginalFilename()));
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("code", "201");
+        result.put("platform", platform);
+        result.put("files", fs);
+        result.put("value", city);
+        result.put("size", size);
+        return ResponseEntity.ok(result);
     }
 }
