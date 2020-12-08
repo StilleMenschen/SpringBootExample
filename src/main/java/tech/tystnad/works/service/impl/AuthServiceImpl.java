@@ -27,7 +27,7 @@ import java.util.Date;
 @Service
 public class AuthServiceImpl extends BaseService implements AuthService {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
 
     private AuthenticationManager authenticationManager;
     private UserDetailsService userDetailsService;

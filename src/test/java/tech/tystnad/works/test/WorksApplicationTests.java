@@ -26,7 +26,7 @@ import java.util.Set;
 @SpringBootTest
 class WorksApplicationTests {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(WorksApplicationTests.class);
 
     @Resource
     private SysOrganizationDOMapper sysOrganizationDOMapper;

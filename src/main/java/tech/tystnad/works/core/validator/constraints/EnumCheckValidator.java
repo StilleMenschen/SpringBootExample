@@ -9,7 +9,7 @@ import javax.validation.ConstraintValidatorContext;
 
 public class EnumCheckValidator implements ConstraintValidator<EnumCheck, Byte> {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(EnumCheckValidator.class);
 
     /**
      * 由于使用byte类型来映射数据库的枚举类数据,此处也使用byte类型来校验

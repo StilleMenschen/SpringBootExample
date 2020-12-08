@@ -33,7 +33,7 @@ import java.util.*;
 @Api(tags = "测试接口")
 public class TestController {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(TestController.class);
 
     private final StringRedisTemplate stringRedisTemplate;
     private final TestRepository testRepository;

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.tystnad.works.converter.SysOrganizationConverter;
 import tech.tystnad.works.core.service.BaseService;
+import tech.tystnad.works.model.JwtUser;
 import tech.tystnad.works.model.ResponseObjectEntity;
 import tech.tystnad.works.model.dto.SysOrganizationDTO;
 import tech.tystnad.works.model.vo.SysOrganizationVO;
@@ -25,7 +26,7 @@ import java.util.Map;
 @Service
 public class SysOrganizationServiceImpl extends BaseService implements SysOrganizationService {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(SysOrganizationServiceImpl.class);
 
     private final SysOrganizationDOMapper sysOrganizationDOMapper;
     private final SysOrganizationVOMapper sysOrganizationVOMapper;
@@ -70,9 +71,13 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
                 return fail(400, "机构层级最大为5级");
             }
             sysOrganizationDO.setOrgLevel((byte) orgLevel);
+            JwtUser user = (JwtUser) getCurrentUser();
+            sysOrganizationDO.setUpdater(user.getId());
             if (sysOrganizationDO.getOrgId() != null) {
                 if (sysOrganizationDOMapper.updateByPrimaryKeySelective(sysOrganizationDO) > 1) {
                     return ok(null);
+                } else {
+                    fail(400, "机构不存在");
                 }
             } else {
                 sysOrganizationDO.setOrgId(idWorker.nextId());

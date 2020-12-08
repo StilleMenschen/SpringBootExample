@@ -1,68 +1,81 @@
 package tech.tystnad.works.model;
 
-import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
 
 public class SysUser {
-    private long user_id;
-    private long org_id;
-    private long top_id;
-    private String user_name;
-    private String user_cipher;
-    private long role_id;
+    private long userId;
+    private long orgId;
+    private long topId;
+    private String userName;
+    private String userCipher;
+    private long roleId;
+    private List<String> roles;
     private String nickname;
     private String email;
+    private String telephoneNumber;
+    private Byte userType;
     private boolean enabled;
     private long updater;
     private long creator;
-    private Timestamp update_time;
-    private Timestamp create_time;
+    private Date lastPasswordResetTime;
+    private Date updateTime;
+    private Date createTime;
 
-    public long getUser_id() {
-        return user_id;
+    public long getUserId() {
+        return userId;
     }
 
-    public void setUser_id(long user_id) {
-        this.user_id = user_id;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
-    public long getOrg_id() {
-        return org_id;
+    public long getOrgId() {
+        return orgId;
     }
 
-    public void setOrg_id(long org_id) {
-        this.org_id = org_id;
+    public void setOrgId(long orgId) {
+        this.orgId = orgId;
     }
 
-    public long getTop_id() {
-        return top_id;
+    public long getTopId() {
+        return topId;
     }
 
-    public void setTop_id(long top_id) {
-        this.top_id = top_id;
+    public void setTopId(long topId) {
+        this.topId = topId;
     }
 
-    public String getUser_name() {
-        return user_name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getUser_cipher() {
-        return user_cipher;
+    public String getUserCipher() {
+        return userCipher;
     }
 
-    public void setUser_cipher(String user_cipher) {
-        this.user_cipher = user_cipher;
+    public void setUserCipher(String userCipher) {
+        this.userCipher = userCipher;
     }
 
-    public long getRole_id() {
-        return role_id;
+    public long getRoleId() {
+        return roleId;
     }
 
-    public void setRole_id(long role_id) {
-        this.role_id = role_id;
+    public void setRoleId(long roleId) {
+        this.roleId = roleId;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 
     public String getNickname() {
@@ -79,6 +92,22 @@ public class SysUser {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getTelephoneNumber() {
+        return telephoneNumber;
+    }
+
+    public void setTelephoneNumber(String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
+    }
+
+    public Byte getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Byte userType) {
+        this.userType = userType;
     }
 
     public boolean isEnabled() {
@@ -105,19 +134,27 @@ public class SysUser {
         this.creator = creator;
     }
 
-    public Timestamp getUpdate_time() {
-        return update_time;
+    public Date getLastPasswordResetTime() {
+        return lastPasswordResetTime;
     }
 
-    public void setUpdate_time(Timestamp update_time) {
-        this.update_time = update_time;
+    public void setLastPasswordResetTime(Date lastPasswordResetTime) {
+        this.lastPasswordResetTime = lastPasswordResetTime;
     }
 
-    public Timestamp getCreate_time() {
-        return create_time;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setCreate_time(Timestamp create_time) {
-        this.create_time = create_time;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class JwtUser implements UserDetails {
     private static final long serialVersionUID = 9089079004248710985L;
-    private final String id;
+    private final Long id;
     private final String username;
     private final String password;
     private final boolean enabled;
@@ -17,7 +17,7 @@ public class JwtUser implements UserDetails {
     private final Collection<? extends GrantedAuthority> authorities;
     private final Date lastPasswordResetDate;
 
-    public JwtUser(String id, String username, String password, boolean enabled, String email,
+    public JwtUser(Long id, String username, String password, boolean enabled, String email,
                    Collection<? extends GrantedAuthority> authorities, Date lastPasswordResetDate) {
         this.id = id;
         this.username = username;
@@ -34,7 +34,7 @@ public class JwtUser implements UserDetails {
     }
 
     @JsonIgnore
-    public String getId() {
+    public Long getId() {
         return id;
     }
 

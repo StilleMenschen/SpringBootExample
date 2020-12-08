@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class AuthController {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     private JwtProperties jwtProperties;
     private AuthService authService;

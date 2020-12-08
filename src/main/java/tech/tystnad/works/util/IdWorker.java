@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 public class IdWorker {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(IdWorker.class);
 
     private long workerId;
     private long dataCenterId;

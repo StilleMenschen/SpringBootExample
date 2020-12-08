@@ -8,8 +8,8 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import tech.tystnad.works.model.SysUser;
+import tech.tystnad.works.properties.JwtProperties;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -18,12 +18,10 @@ import java.util.Date;
 @Component
 public class UserTokenUtil {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(UserTokenUtil.class);
 
-    @Value("${jwt.expiration}")
-    private long DEFAULT_TIMEOUT_SECONDS;
+    private JwtProperties jwtProperties;
     private final String PREFIX = "user:";
-    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private StringRedisTemplate stringRedisTemplate;
 
     public UserTokenUtil() {
@@ -31,26 +29,28 @@ public class UserTokenUtil {
     }
 
     @Autowired
-    public UserTokenUtil(StringRedisTemplate stringRedisTemplate) {
+    public UserTokenUtil(JwtProperties jwtProperties, StringRedisTemplate stringRedisTemplate) {
+        this.jwtProperties = jwtProperties;
         this.stringRedisTemplate = stringRedisTemplate;
     }
 
     public void saveUser(SysUser user) {
-        final String key = PREFIX.concat(user.getUser_name());
+        final String key = PREFIX.concat(user.getUserName());
         HashOperations<String, String, String> operations = stringRedisTemplate.opsForHash();
         operations.put(key, UserField.NICKNAME, user.getNickname());
         operations.put(key, UserField.EMAIL, user.getEmail());
-        operations.put(key, UserField.ORG_ID, String.valueOf(user.getOrg_id()));
-        operations.put(key, UserField.TOP_ID, String.valueOf(user.getTop_id()));
-        operations.put(key, UserField.ROLE_ID, String.valueOf(user.getRole_id()));
-        operations.put(key, UserField.UPDATE_TIME, sdf.format(user.getUpdate_time()));
-        stringRedisTemplate.expire(key, Duration.ofSeconds(DEFAULT_TIMEOUT_SECONDS));
+        operations.put(key, UserField.ORG_ID, String.valueOf(user.getOrgId()));
+        operations.put(key, UserField.TOP_ID, String.valueOf(user.getTopId()));
+        operations.put(key, UserField.ROLE_ID, String.valueOf(user.getRoleId()));
+        operations.put(key, UserField.UPDATE_TIME, Long.toString(user.getUpdateTime().getTime()));
+        operations.put(key, UserField.LAST_PASSWORD_RESET_DATE, Long.toString(user.getLastPasswordResetTime().getTime()));
+        stringRedisTemplate.expire(key, Duration.ofSeconds(jwtProperties.getExpiration()));
     }
 
     public boolean refreshUser(SysUser user) {
-        final String key = PREFIX.concat(user.getUser_name());
+        final String key = PREFIX.concat(user.getUserName());
         if (hasUser(key)) {
-            stringRedisTemplate.expire(key, Duration.ofSeconds(DEFAULT_TIMEOUT_SECONDS));
+            stringRedisTemplate.expire(key, Duration.ofSeconds(jwtProperties.getExpiration()));
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
@@ -59,19 +59,18 @@ public class UserTokenUtil {
     public SysUser getUser(String userName) {
         final String key = PREFIX.concat(userName);
         if (hasUser(key)) {
-            HashOperations<String, String, String> operations = stringRedisTemplate.opsForHash();
+            String temp;
             SysUser user = new SysUser();
+            HashOperations<String, String, String> operations = stringRedisTemplate.opsForHash();
             user.setNickname(operations.get(key, UserField.NICKNAME));
             user.setEmail(operations.get(key, UserField.EMAIL));
-            user.setOrg_id(Long.valueOf(operations.get(key, UserField.ORG_ID)));
-            user.setTop_id(Long.valueOf(operations.get(key, UserField.TOP_ID)));
-            user.setRole_id(Long.valueOf(operations.get(key, UserField.ROLE_ID)));
-            try {
-                Date temp = sdf.parse(operations.get(key, UserField.UPDATE_TIME));
-                user.setUpdate_time(new Timestamp(temp.getTime()));
-            } catch (ParseException e) {
-                logger.warn(e.getMessage());
-            }
+            user.setOrgId(Long.valueOf(operations.get(key, UserField.ORG_ID)));
+            user.setTopId(Long.valueOf(operations.get(key, UserField.TOP_ID)));
+            user.setRoleId(Long.valueOf(operations.get(key, UserField.ROLE_ID)));
+            temp = operations.get(key, UserField.UPDATE_TIME);
+            user.setUpdateTime(new Date(Long.valueOf(temp)));
+            temp = operations.get(key, UserField.LAST_PASSWORD_RESET_DATE);
+            user.setLastPasswordResetTime(new Date(Long.valueOf(temp)));
             return user;
         }
         return null;
@@ -88,9 +87,10 @@ public class UserTokenUtil {
     private class UserField {
         public final static String NICKNAME = "nickname";
         public final static String EMAIL = "email";
-        public final static String ORG_ID = "org_id";
-        public final static String TOP_ID = "top_id";
-        public final static String ROLE_ID = "role_id";
-        public final static String UPDATE_TIME = "update_time";
+        public final static String ORG_ID = "orgId";
+        public final static String TOP_ID = "topId";
+        public final static String ROLE_ID = "roleId";
+        public final static String UPDATE_TIME = "updateTime";
+        public final static String LAST_PASSWORD_RESET_DATE = "lastPasswordResetDate";
     }
 }

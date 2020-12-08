@@ -9,7 +9,7 @@ import tech.tystnad.works.model.PageEntity;
 import tech.tystnad.works.model.ResponseObjectEntity;
 
 public class BaseService {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(BaseService.class);
 
     /**
      * 处理成功

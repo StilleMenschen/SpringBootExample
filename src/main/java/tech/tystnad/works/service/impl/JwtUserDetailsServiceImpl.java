@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import tech.tystnad.works.core.exception.BusinessException;
 import tech.tystnad.works.factory.JwtUserFactory;
-import tech.tystnad.works.model.User;
+import tech.tystnad.works.model.SysUser;
 import tech.tystnad.works.repository.domain.*;
 import tech.tystnad.works.repository.mapper.RoleAuthorityRelationshipDOMapper;
 import tech.tystnad.works.repository.mapper.SysAuthorityDOMapper;
@@ -23,7 +23,7 @@ import java.util.Map;
 @Service
 public class JwtUserDetailsServiceImpl implements UserDetailsService {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(JwtUserDetailsServiceImpl.class);
 
     @Resource
     private SysUserDOMapper sysUserDOMapper;
@@ -68,8 +68,8 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
      * @return 用户信息
      * @throws BusinessException 可能会出现重复的用户名
      */
-    private User getSysUser(String username) throws BusinessException {
-        User user = new User();
+    private SysUser getSysUser(String username) throws BusinessException {
+        SysUser user = new SysUser();
         SysUserDOExample sysUserDOExample = new SysUserDOExample();
         // 用户名或者邮箱
         sysUserDOExample.createCriteria().andDeletedEqualTo(false).andUserNameEqualTo(username);
@@ -83,11 +83,14 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
         }
         SysUserDO sysUser = sysUserList.get(0);
         List<String> roles = getRoles(sysUser.getRoleId());
-        user.setUsername(sysUser.getUserName());
-        user.setPassword(sysUser.getUserCipher());
+        user.setUserId(sysUser.getUserId());
+        user.setTopId(sysUser.getTopId());
+        user.setOrgId(sysUser.getOrgId());
+        user.setUserName(sysUser.getUserName());
+        user.setUserCipher(sysUser.getUserCipher());
         user.setEnabled(sysUser.getEnabled());
         // 只有用户修改密码后此属性才会更新,首次新增用户时取新增时间作为初始时间
-        user.setLastPasswordResetDate(sysUser.getPasswordResetTime());
+        user.setLastPasswordResetTime(sysUser.getPasswordResetTime());
         user.setEmail(sysUser.getEmail());
         user.setRoles(roles);
         return user;
@@ -97,7 +100,7 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.debug("查询用户名 {}", username);
-        User user = null;
+        SysUser user = null;
         try {
             user = getSysUser(username);
         } catch (BusinessException e) {
@@ -106,6 +109,7 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
         } else {
+            // TODO replace to user domain
             return JwtUserFactory.create(user);
         }
     }
