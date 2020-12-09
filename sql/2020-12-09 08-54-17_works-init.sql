@@ -1,5 +1,5 @@
 /*
-SQLyog Ultimate v13.1.1 (64 bit)
+SQLyog Trial v13.1.7 (64 bit)
 MySQL - 10.5.3-MariaDB : Database - works
 *********************************************************************
 */
@@ -26,8 +26,6 @@ CREATE TABLE `role_authority_relationship` (
   `create_time` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-/*Data for the table `role_authority_relationship` */
-
 /*Table structure for table `sys_authority` */
 
 DROP TABLE IF EXISTS `sys_authority`;
@@ -39,8 +37,6 @@ CREATE TABLE `sys_authority` (
   `update_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`auth_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-/*Data for the table `sys_authority` */
 
 /*Table structure for table `sys_log` */
 
@@ -54,8 +50,6 @@ CREATE TABLE `sys_log` (
   `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`log_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-/*Data for the table `sys_log` */
 
 /*Table structure for table `sys_organization` */
 
@@ -76,8 +70,6 @@ CREATE TABLE `sys_organization` (
   PRIMARY KEY (`org_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-/*Data for the table `sys_organization` */
-
 /*Table structure for table `sys_role` */
 
 DROP TABLE IF EXISTS `sys_role`;
@@ -94,8 +86,6 @@ CREATE TABLE `sys_role` (
   `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-/*Data for the table `sys_role` */
 
 /*Table structure for table `sys_user` */
 
@@ -114,14 +104,13 @@ CREATE TABLE `sys_user` (
   `user_type` tinyint(4) unsigned DEFAULT NULL COMMENT '用户类型(0-超级管理员,1-机构管理员,2-普通用户)',
   `enabled` tinyint(1) unsigned DEFAULT 1 COMMENT '状态(1-启用,0-禁用)',
   `deleted` tinyint(1) unsigned DEFAULT 0 COMMENT '是否删除(1-删除,0-未删除)',
+  `password_reset_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '密码最后更新时间',
   `updater` bigint(20) unsigned DEFAULT NULL,
   `creator` bigint(20) unsigned DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-/*Data for the table `sys_user` */
 
 /*Table structure for table `work_log` */
 
@@ -143,8 +132,6 @@ CREATE TABLE `work_log` (
   PRIMARY KEY (`log_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-/*Data for the table `work_log` */
-
 /*Table structure for table `work_next_plan` */
 
 DROP TABLE IF EXISTS `work_next_plan`;
@@ -161,8 +148,6 @@ CREATE TABLE `work_next_plan` (
   `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`plan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-/*Data for the table `work_next_plan` */
 
 /*Table structure for table `work_plan_text` */
 
@@ -181,8 +166,6 @@ CREATE TABLE `work_plan_text` (
   PRIMARY KEY (`plan_text_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-/*Data for the table `work_plan_text` */
-
 /*Table structure for table `work_project` */
 
 DROP TABLE IF EXISTS `work_project`;
@@ -200,8 +183,6 @@ CREATE TABLE `work_project` (
   `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`project_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-/*Data for the table `work_project` */
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
