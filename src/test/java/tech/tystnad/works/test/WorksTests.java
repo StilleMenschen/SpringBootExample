@@ -23,7 +23,7 @@ public class WorksTests {
 
     @Test
     public void example() {
-        System.out.println(chinese2encoding("机构层级最大5级"));
+        System.out.println(chinese2encoding("角色名称不能为空"));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class WorksTests {
             }
             /* 其它字符保留*/
             else {
-                unicodeBytes.append(charCode);
+                unicodeBytes.append((char) charCode);
             }
         }
         return unicodeBytes.toString();

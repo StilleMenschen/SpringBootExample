@@ -1,12 +1,15 @@
 package tech.tystnad.works.test;
 
+import org.hibernate.validator.HibernateValidator;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
+import tech.tystnad.works.core.validator.groups.SysOrganizationGroups;
 import tech.tystnad.works.core.validator.groups.SysOrganizationGroups.queryGroup;
-import tech.tystnad.works.core.validator.groups.SysOrganizationGroups.updateGroup;
+import tech.tystnad.works.core.validator.groups.SysRoleGroups;
 import tech.tystnad.works.model.dto.SysOrganizationDTO;
+import tech.tystnad.works.model.dto.SysRoleDTO;
 import tech.tystnad.works.model.dto.SysUserDTO;
 import tech.tystnad.works.repository.domain.SysOrganizationDO;
 import tech.tystnad.works.repository.domain.SysOrganizationDOExample;
@@ -16,6 +19,7 @@ import tech.tystnad.works.util.IdWorker;
 
 import javax.annotation.Resource;
 import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
 import javax.validation.Validator;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -37,23 +41,33 @@ class WorksApplicationTests {
     @Resource
     private IdWorker idWorker;
 
-    @Resource
-    private Validator validator;
-
     @Test
     public void testValidator() {
-        SysOrganizationDTO dto = new SysOrganizationDTO();
-        dto.setOrgId(idWorker.nextId());
-        dto.setTopId(idWorker.nextId());
-        dto.setParentId(idWorker.nextId());
-        dto.setOrgName("   jack  ");
-        dto.setOrgLevel((byte) 7);
-        Set<ConstraintViolation<SysOrganizationDTO>> constraintViolationSet = validator.validate(dto, updateGroup.class);
-        constraintViolationSet.forEach(e -> logger.debug(e.toString()));
+        Validator validator = Validation.byProvider(HibernateValidator.class).configure().buildValidatorFactory().getValidator();
+        SysOrganizationDTO sysOrganizationDTO = new SysOrganizationDTO();
+        sysOrganizationDTO.setOrgId(idWorker.nextId());
+        sysOrganizationDTO.setTopId(idWorker.nextId());
+        sysOrganizationDTO.setParentId(idWorker.nextId());
+        sysOrganizationDTO.setOrgName("   华尔兹街道布伦茨大夏十四楼305号坎迪拉恩小店  ");
+        sysOrganizationDTO.setOrgLevel((byte) 7);
+        Set<ConstraintViolation<SysOrganizationDTO>> orgConstraintViolation = validator.validate(sysOrganizationDTO, SysOrganizationGroups.updateGroup.class);
+        orgConstraintViolation.forEach(e -> logger.debug(e.toString()));
         logger.debug("----");
-        dto.setOrgName("     ");
-        constraintViolationSet = validator.validate(dto, queryGroup.class);
-        constraintViolationSet.forEach(e -> logger.debug(e.toString()));
+        sysOrganizationDTO.setOrgName("     ");
+        orgConstraintViolation = validator.validate(sysOrganizationDTO, queryGroup.class);
+        orgConstraintViolation.forEach(e -> logger.debug(e.toString()));
+        logger.debug("----");
+        SysRoleDTO sysRoleDTO = new SysRoleDTO();
+        sysRoleDTO.setRoleId(idWorker.nextId());
+        sysRoleDTO.setOrgId(null);
+        sysRoleDTO.setTopId(idWorker.nextId());
+        sysRoleDTO.setRoleName("  华尔兹街道布伦茨大夏十四楼305号坎迪拉恩小店   ");
+        Set<ConstraintViolation<SysRoleDTO>> roleConstraintViolation = validator.validate(sysRoleDTO, SysRoleGroups.updateGroup.class);
+        roleConstraintViolation.forEach(e -> logger.debug(e.toString()));
+        sysRoleDTO.setRoleName("   ");
+        roleConstraintViolation = validator.validate(sysRoleDTO, SysRoleGroups.queryGroup.class);
+        roleConstraintViolation.forEach(e -> logger.debug(e.toString()));
+        logger.debug("----");
     }
 
     @Test

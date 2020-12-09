@@ -19,7 +19,7 @@ public class BeanConfig {
     private IdWorkerProperties idWorkerProperties;
 
     @Bean("idWorker")
-    @Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public IdWorker idWorker() {
         // 雪花算法的ID生成器,指定工作ID和数据中心ID,最大值为31(五位二进制数都为1,0b11111)
         return new IdWorker(idWorkerProperties.getWorkerId(), idWorkerProperties.getDataCenterId());
