@@ -18,10 +18,7 @@ import tech.tystnad.works.repository.mapper.SysOrganizationVOMapper;
 import tech.tystnad.works.service.SysOrganizationService;
 import tech.tystnad.works.util.IdWorker;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class SysOrganizationServiceImpl extends BaseService implements SysOrganizationService {
@@ -53,7 +50,12 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
             return fail(400, "顶级机构不存在");
         }
         example.clear();
-        example.createCriteria().andDeletedEqualTo(false).andOrgNameEqualTo(dto.getOrgName());
+        if (dto.getOrgId() != null) {
+            example.createCriteria().andDeletedEqualTo(false).andOrgNameEqualTo(dto.getOrgName())
+                    .andOrgIdNotEqualTo(dto.getOrgId());
+        } else {
+            example.createCriteria().andDeletedEqualTo(false).andOrgNameEqualTo(dto.getOrgName());
+        }
         list = sysOrganizationDOMapper.selectByExample(example);
         if (!list.isEmpty()) {
             return fail(400, "机构名称重复");
@@ -72,8 +74,8 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
             }
             sysOrganizationDO.setOrgLevel((byte) orgLevel);
             JwtUser user = (JwtUser) getCurrentUser();
-            sysOrganizationDO.setUpdater(user.getId());
             if (sysOrganizationDO.getOrgId() != null) {
+                sysOrganizationDO.setUpdater(user.getId());
                 if (sysOrganizationDOMapper.updateByPrimaryKeySelective(sysOrganizationDO) > 1) {
                     return ok(null);
                 } else {
@@ -81,6 +83,7 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
                 }
             } else {
                 sysOrganizationDO.setOrgId(idWorker.nextId());
+                sysOrganizationDO.setCreator(user.getId());
                 if (sysOrganizationDOMapper.insertSelective(sysOrganizationDO) > 1) {
                     return ok(null);
                 }
@@ -144,7 +147,7 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
             return fail(400, "机构不存在");
         }
         SysOrganizationVO sysOrganizationVO = SysOrganizationConverter.do2vo(sysOrganizationDO);
-        return ok(Arrays.asList(sysOrganizationVO));
+        return ok(Collections.singletonList(sysOrganizationVO));
     }
 
     @Override

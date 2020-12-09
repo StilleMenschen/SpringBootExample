@@ -1,19 +1,20 @@
 package tech.tystnad.works.service.impl;
 
-import tech.tystnad.works.model.Project;
-import tech.tystnad.works.repository.MongoProjectRepository;
-import tech.tystnad.works.service.ProjectService;
-import tech.tystnad.works.model.TaskGroup;
-import tech.tystnad.works.repository.TaskGroupRepository;
-import tech.tystnad.works.model.User;
-import tech.tystnad.works.repository.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import tech.tystnad.works.model.Project;
+import tech.tystnad.works.model.TaskGroup;
+import tech.tystnad.works.model.User;
+import tech.tystnad.works.repository.MongoProjectRepository;
+import tech.tystnad.works.repository.TaskGroupRepository;
+import tech.tystnad.works.repository.UserRepository;
+import tech.tystnad.works.service.ProjectService;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 /**
  * Created by wangpeng on 2017/4/18.
@@ -36,7 +37,7 @@ public class MongoProjectServiceImpl implements ProjectService {
   public Project add(Project project, String userId) {
     final User user = userRepository.findById(userId).get();
     project.setOwner(user);
-    project.setMembers(asList(user));
+    project.setMembers(singletonList(user));
     project.setEnabled(true);
     project.setArchived(false);
     TaskGroup plan = new TaskGroup();
