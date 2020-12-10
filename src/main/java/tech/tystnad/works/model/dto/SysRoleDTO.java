@@ -19,7 +19,6 @@ public class SysRoleDTO {
     @Length(min = 1, max = 16, message = "{role.name.not-validated}", groups = {addGroup.class, updateGroup.class})
     @Pattern(regexp = "^\\S+(\\s*\\S+)*$", message = "{role.name.notnull}", groups = queryGroup.class)
     private String roleName;
-    private Boolean deleted;
     private Long updater;
     private String updaterName;
     private Long creator;
@@ -57,14 +56,6 @@ public class SysRoleDTO {
 
     public void setRoleName(String roleName) {
         this.roleName = roleName == null ? null : roleName.trim();
-    }
-
-    public Boolean getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
     }
 
     public Long getUpdater() {

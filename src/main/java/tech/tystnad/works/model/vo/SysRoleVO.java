@@ -7,7 +7,6 @@ public class SysRoleVO {
     private Long orgId;
     private Long topId;
     private String roleName;
-    private Boolean deleted;
     private Long updater;
     private Long creator;
     private Date updateTime;
@@ -43,14 +42,6 @@ public class SysRoleVO {
 
     public void setRoleName(String roleName) {
         this.roleName = roleName == null ? null : roleName.trim();
-    }
-
-    public Boolean getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
     }
 
     public Long getUpdater() {
