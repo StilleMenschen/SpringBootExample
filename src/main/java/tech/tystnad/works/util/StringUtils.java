@@ -112,10 +112,10 @@ public abstract class StringUtils {
         int strLen = str.length();
         for (int i = 0; i < strLen; i++) {
             if (!Character.isWhitespace(str.charAt(i))) {
-                return true;
+                return Boolean.TRUE;
             }
         }
-        return false;
+        return Boolean.FALSE;
     }
 
     /**
@@ -128,16 +128,16 @@ public abstract class StringUtils {
      */
     public static boolean containsWhitespace(CharSequence str) {
         if (!hasLength(str)) {
-            return false;
+            return Boolean.FALSE;
         }
 
         int strLen = str.length();
         for (int i = 0; i < strLen; i++) {
             if (Character.isWhitespace(str.charAt(i))) {
-                return true;
+                return Boolean.TRUE;
             }
         }
-        return false;
+        return Boolean.FALSE;
     }
 
     /**
@@ -314,14 +314,14 @@ public abstract class StringUtils {
      */
     public static boolean substringMatch(CharSequence str, int index, CharSequence substring) {
         if (index + substring.length() > str.length()) {
-            return false;
+            return Boolean.FALSE;
         }
         for (int i = 0; i < substring.length(); i++) {
             if (str.charAt(index + i) != substring.charAt(i)) {
-                return false;
+                return Boolean.FALSE;
             }
         }
-        return true;
+        return Boolean.TRUE;
     }
 
     /**
