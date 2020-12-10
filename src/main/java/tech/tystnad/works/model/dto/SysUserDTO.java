@@ -18,8 +18,7 @@ public class SysUserDTO {
     private Long userId;
     @NotNull(message = "{org.id.notnull}", groups = addGroup.class)
     private Long orgId;
-    @Length(min = 1, max = 16, message = "{org.name.not-validated}")
-    @Pattern(regexp = "^\\S+(\\s*\\S+)*$", message = "{org.name.notnull}", groups = queryGroup.class)
+    @Pattern(regexp = "\\S+", message = "{org.name.notnull}", groups = queryGroup.class)
     private String orgName;
     private Long topId;
     @NotBlank(message = "{user.username.notnull}", groups = {addGroup.class, updateGroup.class})
@@ -28,7 +27,7 @@ public class SysUserDTO {
     @NotNull(message = "{role.id.notnull}", groups = {addGroup.class})
     private Long roleId;
     @Length(min = 1, max = 32, message = "{user.nickname.not-validated}")
-    @Pattern(regexp = "^\\S+(\\s*\\S+)*$", message = "{user.nickname.notnull}", groups = updateGroup.class)
+    @Pattern(regexp = "\\S+", message = "{user.nickname.notnull}", groups = updateGroup.class)
     private String nickname;
     @Email(regexp = "^[a-z0-9]+([.-_]?[a-z0-9]+)*@[a-z]+(\\.?[a-z0-9]+)*\\.[a-z]+$", message = "{user.email.not-validated}", groups = addGroup.class)
     private String email;

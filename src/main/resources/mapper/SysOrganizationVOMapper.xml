@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="tech.tystnad.works.repository.mapper.SysOrganizationVOMapper">
   <select id="findByDTO" parameterType="tech.tystnad.works.model.dto.SysOrganizationDTO" resultType="tech.tystnad.works.model.vo.SysOrganizationVO">
-    SELECT so.org_id, so.top_id, so.parent_id, so.org_level, so.org_name, so.enabled, so.updater, so.creator, csu.user_name AS creator_name, usu.user_name AS updater_name
-    FROM sys_organization AS so INNER JOIN sys_user AS csu ON (so.creator = csu.user_id) INNER JOIN sys_user AS usu ON (so.updater = usu.user_id)
+    SELECT so.org_id, so.top_id, so.parent_id, pso.org_name AS parent_name, so.org_level, so.org_name, so.enabled, so.updater, so.creator, so.update_time, so.create_time, csu.user_name AS creator_name, usu.user_name AS updater_name
+    FROM sys_organization AS so JOIN sys_organization AS pso ON (so.parent_id = pso.org_id) JOIN sys_user AS csu ON (so.creator = csu.user_id) JOIN sys_user AS usu ON (so.updater = usu.user_id)
     WHERE so.deleted = 0
     <if test="orgId != null">
       AND so.org_id = #{orgId}
@@ -18,7 +18,7 @@
       AND so.org_level = #{orgLevel}
     </if>
     <if test="orgName != null">
-      AND so.org_name LIKE CONCAT(#{orgName}, '%')
+      AND so.org_name LIKE CONCAT(#{orgName},'%')
     </if>
     <if test="enabled != null">
       AND so.enabled = #{enabled}
@@ -29,14 +29,20 @@
     <if test="creator != null">
       AND so.creator = #{creator}
     </if>
+    <if test="createTimeStart != null">
+      AND so.create_time <![CDATA[>=]]> #{createTimeStart}
+    </if>
+    <if test="createTimeEnd != null">
+      AND so.create_time <![CDATA[<=]]> #{createTimeEnd}
+    </if>
     <if test="creatorName != null">
-      AND csu.user_name LIKE CONCAT(#{creatorName}, '%')
+      AND csu.user_name LIKE CONCAT(#{creatorName},'%')
     </if>
     <if test="updaterName != null">
-      AND usu.user_name LIKE CONCAT(#{updaterName}, '%')
+      AND usu.user_name LIKE CONCAT(#{updaterName},'%')
     </if>
   </select>
   <select id="findByParentId" resultType="tech.tystnad.works.model.vo.SysOrganizationTreeVO">
-    SELECT top_id, org_id, org_level, org_name FROM sys_organization WHERE top_id = #{top_id} AND parent_id = #{parent_id};
+    SELECT top_id, org_id, org_level, org_name FROM sys_organization WHERE top_id = #{top_id} AND parent_id = #{parent_id}
   </select>
 </mapper>

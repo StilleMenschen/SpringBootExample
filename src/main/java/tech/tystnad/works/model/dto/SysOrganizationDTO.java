@@ -23,7 +23,7 @@ public class SysOrganizationDTO {
     private Byte orgLevel;
     @NotBlank(message = "{org.name.not-validated}", groups = {addGroup.class, updateGroup.class})
     @Length(min = 1, max = 16, message = "{org.name.not-validated}", groups = {addGroup.class, updateGroup.class})
-    @Pattern(regexp = "^\\S+(\\s*\\S+)*$", message = "{org.name.notnull}", groups = queryGroup.class)
+    @Pattern(regexp = "\\S+", message = "{org.name.notnull}", groups = queryGroup.class)
     private String orgName;
     private Boolean enabled;
     private Long updater;

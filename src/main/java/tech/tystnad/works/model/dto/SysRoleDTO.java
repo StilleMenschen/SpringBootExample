@@ -5,6 +5,7 @@ import tech.tystnad.works.core.validator.groups.SysRoleGroups.addGroup;
 import tech.tystnad.works.core.validator.groups.SysRoleGroups.queryGroup;
 import tech.tystnad.works.core.validator.groups.SysRoleGroups.updateGroup;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.Date;
@@ -14,10 +15,13 @@ public class SysRoleDTO {
     private Long roleId;
     @NotNull(message = "{org.id.notnull}", groups = {updateGroup.class, addGroup.class, queryGroup.class})
     private Long orgId;
+    @Pattern(regexp = "\\S+", message = "{org.name.notnull}", groups = queryGroup.class)
+    private String orgName;
     @NotNull(message = "{org.top-id.notnull}", groups = {addGroup.class, updateGroup.class, queryGroup.class})
     private Long topId;
+    @NotBlank(message = "{role.name.not-validated}", groups = {addGroup.class, updateGroup.class})
     @Length(min = 1, max = 16, message = "{role.name.not-validated}", groups = {addGroup.class, updateGroup.class})
-    @Pattern(regexp = "^\\S+(\\s*\\S+)*$", message = "{role.name.notnull}", groups = queryGroup.class)
+    @Pattern(regexp = "\\S+", message = "{role.name.notnull}", groups = queryGroup.class)
     private String roleName;
     private Long updater;
     private String updaterName;

@@ -6,5 +6,5 @@ import tech.tystnad.works.model.vo.SysUserVO;
 import java.util.List;
 
 public interface SysUserVOMapper {
-    List<SysUserVO> findByExample(SysUserDTO example);
+    List<SysUserVO> findByDTO(SysUserDTO example);
 }

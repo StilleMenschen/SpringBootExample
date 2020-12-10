@@ -94,6 +94,7 @@ public class TestController {
         sysUserDTO.setOrgName("伞兵一号lbw准备就绪");
         sysUserDTO.setUpdaterName("伞兵一号lbw准备就绪");
         sysUserDTO.setCreatorName("伞兵一号lbw准备就绪");
+        sysUserDTO.setEnabled(Boolean.FALSE);
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
@@ -105,7 +106,7 @@ public class TestController {
         calendar.set(Calendar.SECOND, 59);
         calendar.set(Calendar.MILLISECOND, 999);
         sysUserDTO.setCreateTimeEnd(calendar.getTime());
-        List<SysUserVO> list = sysUserVOMapper.findByExample(sysUserDTO);
+        List<SysUserVO> list = sysUserVOMapper.findByDTO(sysUserDTO);
         return ResponseEntity.ok(list);
     }
 
@@ -116,7 +117,7 @@ public class TestController {
     }
 
     @PostMapping(value = "/template")
-    public ResponseEntity<Map> template(@RequestHeader("Platform") String platform, @RequestPart("file") List<MultipartFile> files,
+    public ResponseEntity<Map<String, Object>> template(@RequestHeader("Platform") String platform, @RequestPart("file") List<MultipartFile> files,
                                         @RequestParam("size") Integer size, City city) {
         if (platform == null || files == null || files.isEmpty() || size == null || city == null) {
             return ResponseEntity.badRequest().build();

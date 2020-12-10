@@ -5,10 +5,13 @@ import java.util.Date;
 public class SysRoleVO {
     private Long roleId;
     private Long orgId;
+    private String orgName;
     private Long topId;
     private String roleName;
     private Long updater;
+    private String updaterName;
     private Long creator;
+    private String creatorName;
     private Date updateTime;
     private Date createTime;
 
@@ -26,6 +29,14 @@ public class SysRoleVO {
 
     public void setOrgId(Long orgId) {
         this.orgId = orgId;
+    }
+
+    public String getOrgName() {
+        return orgName;
+    }
+
+    public void setOrgName(String orgName) {
+        this.orgName = orgName == null ? null : orgName.trim();
     }
 
     public Long getTopId() {
@@ -52,12 +63,28 @@ public class SysRoleVO {
         this.updater = updater;
     }
 
+    public String getUpdaterName() {
+        return updaterName;
+    }
+
+    public void setUpdaterName(String updaterName) {
+        this.updaterName = updaterName == null ? null : updaterName.trim();
+    }
+
     public Long getCreator() {
         return creator;
     }
 
     public void setCreator(Long creator) {
         this.creator = creator;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName == null ? null : creatorName.trim();
     }
 
     public Date getUpdateTime() {

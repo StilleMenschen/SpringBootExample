@@ -123,14 +123,13 @@ public class WorksTests {
 
     @Test
     public void id() {
-        final int end = 100;
+        final int end = 10;
         IdWorker idWorker = new IdWorker(0, 0);
         for (int i = 0; i < end; i++) {
             long id = idWorker.nextId();
             System.out.println(id);
             System.out.println(Long.toString(id, Character.MAX_RADIX));
         }
-        System.out.println(1592530867244L);
         System.out.println(System.currentTimeMillis());
     }
 

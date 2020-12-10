@@ -24,13 +24,13 @@ public class SysOrganizationConverter {
         if (sysOrganizationDO == null) {
             return null;
         }
-        SysOrganizationVO vo = new SysOrganizationVO();
-        vo.setOrgId(sysOrganizationDO.getOrgId());
-        vo.setTopId(sysOrganizationDO.getTopId());
-        vo.setParentId(sysOrganizationDO.getParentId());
-        vo.setOrgLevel(sysOrganizationDO.getOrgLevel());
-        vo.setOrgName(sysOrganizationDO.getOrgName());
-        vo.setEnabled(sysOrganizationDO.getEnabled());
-        return vo;
+        SysOrganizationVO sysOrganizationVO = new SysOrganizationVO();
+        sysOrganizationVO.setOrgId(sysOrganizationDO.getOrgId());
+        sysOrganizationVO.setTopId(sysOrganizationDO.getTopId());
+        sysOrganizationVO.setParentId(sysOrganizationDO.getParentId());
+        sysOrganizationVO.setOrgLevel(sysOrganizationDO.getOrgLevel());
+        sysOrganizationVO.setOrgName(sysOrganizationDO.getOrgName());
+        sysOrganizationVO.setEnabled(sysOrganizationDO.getEnabled());
+        return sysOrganizationVO;
     }
 }
