@@ -72,8 +72,8 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
         SysUser user = new SysUser();
         SysUserDOExample sysUserDOExample = new SysUserDOExample();
         // 用户名或者邮箱
-        sysUserDOExample.createCriteria().andDeletedEqualTo(false).andUserNameEqualTo(username);
-        sysUserDOExample.or().andDeletedEqualTo(false).andEmailEqualTo(username);
+        sysUserDOExample.createCriteria().andDeletedEqualTo(Boolean.FALSE).andUserNameEqualTo(username);
+        sysUserDOExample.or().andDeletedEqualTo(Boolean.FALSE).andEmailEqualTo(username);
         List<SysUserDO> sysUserList = sysUserDOMapper.selectByExample(sysUserDOExample);
         if (sysUserList == null || sysUserList.isEmpty()) {
             return null;
@@ -109,7 +109,6 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
         } else {
-            // TODO replace to user domain
             return JwtUserFactory.create(user);
         }
     }

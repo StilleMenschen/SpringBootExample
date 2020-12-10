@@ -87,7 +87,7 @@ public class TestController {
     }
 
     @PostMapping("/list")
-    public ResponseEntity<Object> emptyList(@RequestBody String id) {
+    public ResponseEntity<Object> emptyList(@RequestParam("id") String id) {
         logger.debug(id);
         SysUserDTO sysUserDTO = new SysUserDTO();
         sysUserDTO.setUserName("伞兵一号lbw准备就绪");

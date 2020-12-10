@@ -28,8 +28,8 @@ public class RedisConfig {
     public LettuceConnectionFactory lettuceConnectionFactory() {
         GenericObjectPoolConfig<?> poolConfig = new GenericObjectPoolConfig<>();
         poolConfig.setMaxWaitMillis(3000); // 获取连接时的最大等待毫秒数
-        poolConfig.setTestOnReturn(true);
-        poolConfig.setTestWhileIdle(true);
+        poolConfig.setTestOnReturn(Boolean.TRUE);
+        poolConfig.setTestWhileIdle(Boolean.TRUE);
         LettucePoolingClientConfiguration poolingClientConfiguration = LettucePoolingClientConfiguration.builder()
                 .shutdownTimeout(Duration.ofSeconds(30)).poolConfig(poolConfig).build();
         RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration(redis_host, redis_port);
@@ -37,7 +37,7 @@ public class RedisConfig {
         standaloneConfiguration.setDatabase(redis_database);
         LettuceConnectionFactory factory = new LettuceConnectionFactory(standaloneConfiguration,
                 poolingClientConfiguration);
-        factory.setShareNativeConnection(false);
+        factory.setShareNativeConnection(Boolean.FALSE);
         return factory;
     }
 

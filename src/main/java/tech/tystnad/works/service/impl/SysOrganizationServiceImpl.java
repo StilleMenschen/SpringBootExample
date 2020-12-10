@@ -44,17 +44,17 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
         }
         SysOrganizationDOExample example = new SysOrganizationDOExample();
         List<SysOrganizationDO> list;
-        example.createCriteria().andDeletedEqualTo(false).andTopIdEqualTo(dto.getTopId());
+        example.createCriteria().andDeletedEqualTo(Boolean.FALSE).andTopIdEqualTo(dto.getTopId());
         list = sysOrganizationDOMapper.selectByExample(example);
         if (list.size() != 1) {
             return fail(400, "顶级机构不存在");
         }
         example.clear();
         if (dto.getOrgId() != null) {
-            example.createCriteria().andDeletedEqualTo(false).andOrgNameEqualTo(dto.getOrgName())
+            example.createCriteria().andDeletedEqualTo(Boolean.FALSE).andOrgNameEqualTo(dto.getOrgName())
                     .andOrgIdNotEqualTo(dto.getOrgId());
         } else {
-            example.createCriteria().andDeletedEqualTo(false).andOrgNameEqualTo(dto.getOrgName());
+            example.createCriteria().andDeletedEqualTo(Boolean.FALSE).andOrgNameEqualTo(dto.getOrgName());
         }
         list = sysOrganizationDOMapper.selectByExample(example);
         if (!list.isEmpty()) {
@@ -98,7 +98,7 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
         if (sysOrganizationId != null) {
             SysOrganizationDO sysOrganizationDO = new SysOrganizationDO();
             sysOrganizationDO.setOrgId(sysOrganizationId);
-            sysOrganizationDO.setDeleted(true);
+            sysOrganizationDO.setDeleted(Boolean.TRUE);
             int c = sysOrganizationDOMapper.updateByPrimaryKeySelective(sysOrganizationDO);
             logger.info("delete SysOrganizationDO {}", c);
             return ok(null);
@@ -112,8 +112,8 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
         if (sysOrganizationIds != null && sysOrganizationIds.size() > 0) {
             SysOrganizationDOExample example = new SysOrganizationDOExample();
             SysOrganizationDO sysOrganizationDO = new SysOrganizationDO();
-            sysOrganizationDO.setDeleted(true);
-            example.createCriteria().andOrgIdIn(sysOrganizationIds).andDeletedEqualTo(false);
+            sysOrganizationDO.setDeleted(Boolean.TRUE);
+            example.createCriteria().andOrgIdIn(sysOrganizationIds).andDeletedEqualTo(Boolean.FALSE);
             int c = sysOrganizationDOMapper.updateByExampleSelective(sysOrganizationDO, example);
             logger.info("delete SysOrganizationDO {}", c);
             return ok(null);

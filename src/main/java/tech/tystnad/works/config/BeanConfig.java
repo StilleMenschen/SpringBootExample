@@ -33,7 +33,7 @@ public class BeanConfig {
         // 使用HibernateValidator的实现类
         ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class)
                 .configure()
-                .failFast(true) // 快速失败,遇到第一个校验不通过直接抛出异常
+                .failFast(Boolean.TRUE) // 快速失败,遇到第一个校验不通过直接抛出异常
                 .buildValidatorFactory();
         return validatorFactory.getValidator();
     }

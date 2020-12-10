@@ -288,7 +288,7 @@ public abstract class StringUtils {
      */
     public static boolean startsWithIgnoreCase(String str, String prefix) {
         return (str != null && prefix != null && str.length() >= prefix.length() &&
-                str.regionMatches(true, 0, prefix, 0, prefix.length()));
+                str.regionMatches(Boolean.TRUE, 0, prefix, 0, prefix.length()));
     }
 
     /**
@@ -301,7 +301,7 @@ public abstract class StringUtils {
      */
     public static boolean endsWithIgnoreCase(String str, String suffix) {
         return (str != null && suffix != null && str.length() >= suffix.length() &&
-                str.regionMatches(true, str.length() - suffix.length(), suffix, 0, suffix.length()));
+                str.regionMatches(Boolean.TRUE, str.length() - suffix.length(), suffix, 0, suffix.length()));
     }
 
     /**
