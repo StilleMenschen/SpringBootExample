@@ -32,11 +32,11 @@ public class ExceptionHandlerController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class})
-    public ResponseObjectEntity<Object> dataValidator(MethodArgumentNotValidException e) {
+    public ResponseObjectEntity<?> dataValidator(MethodArgumentNotValidException e) {
         // 获取第一个错误
         FieldError error = e.getBindingResult().getFieldErrors().get(0);
         String message = error.getDefaultMessage();
-        ResponseObjectEntity<Object> entity = new ResponseObjectEntity<>();
+        ResponseObjectEntity<?> entity = new ResponseObjectEntity<>();
         if (message != null && message.contains(MESSAGE_SPLIT)) {
             // 根据拆分标志符来拆分响应代码和消息
             String[] code_message = message.split(MESSAGE_SPLIT);
@@ -55,9 +55,9 @@ public class ExceptionHandlerController {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({SQLException.class, DataAccessException.class})
-    public ResponseObjectEntity<Object> dataAccess(SQLException e) {
+    public ResponseObjectEntity<?> dataAccess(SQLException e) {
         logger.error(e.toString(), e);
-        ResponseObjectEntity<Object> entity = new ResponseObjectEntity<>();
+        ResponseObjectEntity<?> entity = new ResponseObjectEntity<>();
         entity.setCode(400);
         entity.setMsg("执行数据操作有误");
         return entity;
@@ -68,9 +68,9 @@ public class ExceptionHandlerController {
      */
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(BusinessException.class)
-    public ResponseObjectEntity<Object> business(BusinessException e) {
+    public ResponseObjectEntity<?> business(BusinessException e) {
         logger.error(e.toString(), e);
-        ResponseObjectEntity<Object> entity = new ResponseObjectEntity<>();
+        ResponseObjectEntity<?> entity = new ResponseObjectEntity<>();
         entity.setCode(-1);
         entity.setMsg(e.getMessage());
         return entity;
@@ -81,9 +81,9 @@ public class ExceptionHandlerController {
      */
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseObjectEntity<Object> methodNotSupported(HttpRequestMethodNotSupportedException e) {
+    public ResponseObjectEntity<?> methodNotSupported(HttpRequestMethodNotSupportedException e) {
         logger.error(e.toString(), e);
-        ResponseObjectEntity<Object> entity = new ResponseObjectEntity<>();
+        ResponseObjectEntity<?> entity = new ResponseObjectEntity<>();
         entity.setCode(HttpStatus.METHOD_NOT_ALLOWED.value());
         entity.setMsg(e.getMessage());
         return entity;
@@ -94,9 +94,9 @@ public class ExceptionHandlerController {
      */
     @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
     @ExceptionHandler(HttpMediaTypeException.class)
-    public ResponseObjectEntity<Object> mediaTypeUnsupported(HttpMediaTypeException e) {
+    public ResponseObjectEntity<?> mediaTypeUnsupported(HttpMediaTypeException e) {
         logger.error(e.toString(), e);
-        ResponseObjectEntity<Object> entity = new ResponseObjectEntity<>();
+        ResponseObjectEntity<?> entity = new ResponseObjectEntity<>();
         entity.setCode(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value());
         entity.setMsg(e.getMessage());
         return entity;
@@ -107,9 +107,9 @@ public class ExceptionHandlerController {
      */
     @ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
     @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public ResponseObjectEntity<Object> payloadTooLarge(MaxUploadSizeExceededException e) {
+    public ResponseObjectEntity<?> payloadTooLarge(MaxUploadSizeExceededException e) {
         logger.error(e.toString(), e);
-        ResponseObjectEntity<Object> entity = new ResponseObjectEntity<>();
+        ResponseObjectEntity<?> entity = new ResponseObjectEntity<>();
         entity.setCode(HttpStatus.PAYLOAD_TOO_LARGE.value());
         entity.setMsg(e.getMessage());
         return entity;
@@ -120,9 +120,9 @@ public class ExceptionHandlerController {
      */
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
-    public ResponseObjectEntity<Object> defaultHandler(Exception e) {
+    public ResponseObjectEntity<?> defaultHandler(Exception e) {
         logger.error(e.toString(), e);
-        ResponseObjectEntity<Object> entity = new ResponseObjectEntity<>();
+        ResponseObjectEntity<?> entity = new ResponseObjectEntity<>();
         entity.setCode(500);
         entity.setMsg("服务器内部错误,请稍后重试");
         return entity;

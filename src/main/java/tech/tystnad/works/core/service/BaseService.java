@@ -31,19 +31,6 @@ public class BaseService {
      *
      * @param code    响应码
      * @param message 消息
-     * @param body    响应体
-     * @param <T>     响应对象类型
-     * @return
-     */
-    protected <T> ResponseObjectEntity<T> success(int code, String message, T body) {
-        return success(code, message, body, null);
-    }
-
-    /**
-     * 处理成功
-     *
-     * @param code    响应码
-     * @param message 消息
      * @param body    响应体列表
      * @param page    翻页
      * @param <T>     响应对象类型
@@ -64,16 +51,14 @@ public class BaseService {
      * @param code    响应码
      * @param message 消息
      * @param body    响应体
-     * @param page    翻页
      * @param <T>     响应对象类型
      * @return
      */
-    protected <T> ResponseObjectEntity<T> success(int code, String message, T body, PageEntity page) {
+    protected <T> ResponseObjectEntity<T> success(int code, String message, T body) {
         ResponseObjectEntity<T> responseObjectEntity = new ResponseObjectEntity<>();
         responseObjectEntity.setCode(code);
         responseObjectEntity.setMsg(message);
         responseObjectEntity.setValue(body);
-        responseObjectEntity.setPage(page);
         return responseObjectEntity;
     }
 
