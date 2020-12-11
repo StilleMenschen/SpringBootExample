@@ -91,7 +91,7 @@ public class BaseService {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof JwtUser) {
             JwtUser jwtUser = (JwtUser) principal;
-            logger.info("locate JwtUser {} {}", jwtUser.getId(), jwtUser.getUsername());
+            logger.info("locate JwtUser {} {}", jwtUser.getUserId(), jwtUser.getUsername());
             return jwtUser;
         } else if (principal instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) principal;

@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.Date;
+import java.util.List;
 
 public class SysRoleDTO {
     @NotNull(message = "{role.id.notnull}", groups = updateGroup.class)
@@ -29,6 +30,7 @@ public class SysRoleDTO {
     private String creatorName;
     private Date createTimeStart;
     private Date createTimeEnd;
+    private List<Short> authority;
 
     public Long getRoleId() {
         return roleId;
@@ -44,6 +46,14 @@ public class SysRoleDTO {
 
     public void setOrgId(Long orgId) {
         this.orgId = orgId;
+    }
+
+    public String getOrgName() {
+        return orgName;
+    }
+
+    public void setOrgName(String orgName) {
+        this.orgName = orgName == null ? null : orgName.trim();
     }
 
     public Long getTopId() {
@@ -108,5 +118,13 @@ public class SysRoleDTO {
 
     public void setCreateTimeEnd(Date createTimeEnd) {
         this.createTimeEnd = createTimeEnd;
+    }
+
+    public List<Short> getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(List<Short> authority) {
+        this.authority = authority;
     }
 }

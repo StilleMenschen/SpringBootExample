@@ -14,12 +14,13 @@ public final class JwtUserFactory {
     }
 
     public static JwtUser create(SysUser user) {
-        return new JwtUser(user.getUserId(), user.getUserName(), user.getUserCipher(), user.isEnabled(), user.getEmail(),
+        return new JwtUser(user.getUserId(), user.getTopId(), user.getOrgId(), user.getUserName(), user.getUserCipher(), user.isEnabled(), user.getEmail(),
                 mapToGrantedAuthorities(user.getRoles()), user.getLastPasswordResetTime());
     }
 
     /**
      * 简单地将字符串转为权限
+     *
      * @param authorities
      * @return
      */

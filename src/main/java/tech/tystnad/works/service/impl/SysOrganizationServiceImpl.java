@@ -38,35 +38,29 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseObjectEntity<SysOrganizationVO> save(SysOrganizationDTO dto) {
-        if (dto == null) {
+    public ResponseObjectEntity<SysOrganizationVO> save(SysOrganizationDTO sysOrganizationDTO) {
+        if (sysOrganizationDTO == null) {
             return fail(400, "机构信息不能为空");
         }
         SysOrganizationDOExample example = new SysOrganizationDOExample();
         List<SysOrganizationDO> list;
-        example.createCriteria().andDeletedEqualTo(Boolean.FALSE).andTopIdEqualTo(dto.getTopId());
-        list = sysOrganizationDOMapper.selectByExample(example);
-        if (list.size() != 1) {
-            return fail(400, "顶级机构不存在");
-        }
-        example.clear();
-        if (dto.getOrgId() != null) {
-            example.createCriteria().andDeletedEqualTo(Boolean.FALSE).andOrgNameEqualTo(dto.getOrgName())
-                    .andOrgIdNotEqualTo(dto.getOrgId());
+        if (sysOrganizationDTO.getOrgId() != null) {
+            example.createCriteria().andDeletedEqualTo(Boolean.FALSE).andOrgNameEqualTo(sysOrganizationDTO.getOrgName())
+                    .andOrgIdNotEqualTo(sysOrganizationDTO.getOrgId());
         } else {
-            example.createCriteria().andDeletedEqualTo(Boolean.FALSE).andOrgNameEqualTo(dto.getOrgName());
+            example.createCriteria().andDeletedEqualTo(Boolean.FALSE).andOrgNameEqualTo(sysOrganizationDTO.getOrgName());
         }
         list = sysOrganizationDOMapper.selectByExample(example);
         if (!list.isEmpty()) {
             return fail(400, "机构名称重复");
         }
         example.clear();
-        example.createCriteria().andDeletedEqualTo(false).andParentIdEqualTo(dto.getParentId());
+        example.createCriteria().andDeletedEqualTo(false).andParentIdEqualTo(sysOrganizationDTO.getParentId());
         list = sysOrganizationDOMapper.selectByExample(example);
-        if (list.size() != 1) {
+        if (list.isEmpty()) {
             return fail(400, "父级机构不存在");
         } else {
-            SysOrganizationDO sysOrganizationDO = SysOrganizationConverter.dto2do(dto);
+            SysOrganizationDO sysOrganizationDO = SysOrganizationConverter.dto2do(sysOrganizationDTO);
             final byte plus = 1;
             final int orgLevel = list.get(0).getOrgLevel() + plus;
             if (orgLevel > 5) {
@@ -75,7 +69,13 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
             sysOrganizationDO.setOrgLevel((byte) orgLevel);
             JwtUser user = (JwtUser) getCurrentUser();
             if (sysOrganizationDO.getOrgId() != null) {
-                sysOrganizationDO.setUpdater(user.getId());
+                example.clear();
+                example.createCriteria().andDeletedEqualTo(Boolean.FALSE).andTopIdEqualTo(sysOrganizationDTO.getTopId());
+                list = sysOrganizationDOMapper.selectByExample(example);
+                if (list.isEmpty()) {
+                    return fail(400, "顶级机构不存在");
+                }
+                sysOrganizationDO.setUpdater(user.getUserId());
                 if (sysOrganizationDOMapper.updateByPrimaryKeySelective(sysOrganizationDO) > 1) {
                     return ok(null);
                 } else {
@@ -83,7 +83,8 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
                 }
             } else {
                 sysOrganizationDO.setOrgId(idWorker.nextId());
-                sysOrganizationDO.setCreator(user.getId());
+                sysOrganizationDO.setTopId(user.getTopId());
+                sysOrganizationDO.setCreator(user.getUserId());
                 if (sysOrganizationDOMapper.insertSelective(sysOrganizationDO) > 1) {
                     return ok(null);
                 }
@@ -109,7 +110,7 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseObjectEntity<SysOrganizationVO> delete(List<Long> sysOrganizationIds) {
-        if (sysOrganizationIds != null && sysOrganizationIds.size() > 0) {
+        if (sysOrganizationIds != null && !sysOrganizationIds.isEmpty()) {
             SysOrganizationDOExample example = new SysOrganizationDOExample();
             SysOrganizationDO sysOrganizationDO = new SysOrganizationDO();
             sysOrganizationDO.setDeleted(Boolean.TRUE);
@@ -143,7 +144,7 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
     @Override
     public ResponseObjectEntity<List<SysOrganizationVO>> search(Long sysOrganizationId) {
         SysOrganizationDO sysOrganizationDO = sysOrganizationDOMapper.selectByPrimaryKey(sysOrganizationId);
-        if (sysOrganizationDO == null || !sysOrganizationDO.getOrgId().equals(sysOrganizationId)) {
+        if (sysOrganizationDO == null) {
             return fail(400, "机构不存在");
         }
         SysOrganizationVO sysOrganizationVO = SysOrganizationConverter.do2vo(sysOrganizationDO);

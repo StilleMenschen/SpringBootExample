@@ -2,44 +2,44 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="tech.tystnad.works.repository.mapper.SysOrganizationVOMapper">
   <select id="findByDTO" parameterType="tech.tystnad.works.model.dto.SysOrganizationDTO" resultType="tech.tystnad.works.model.vo.SysOrganizationVO">
-    SELECT so.org_id, so.top_id, so.parent_id, pso.org_name AS parent_name, so.org_level, so.org_name, so.enabled, so.updater, so.creator, so.update_time, so.create_time, csu.user_name AS creator_name, usu.user_name AS updater_name
-    FROM sys_organization AS so JOIN sys_organization AS pso ON (so.parent_id = pso.org_id) JOIN sys_user AS csu ON (so.creator = csu.user_id) JOIN sys_user AS usu ON (so.updater = usu.user_id)
-    WHERE so.deleted = 0
+    SELECT o.org_id, o.top_id, o.parent_id, po.org_name AS parent_name, o.org_level, o.org_name, o.enabled, o.updater, o.creator, o.update_time, o.create_time, cu.user_name AS creator_name, uu.user_name AS updater_name
+    FROM sys_organization AS o JOIN sys_organization AS po ON (o.parent_id = po.org_id) JOIN sys_user AS cu ON (o.creator = cu.user_id) JOIN sys_user AS uu ON (o.updater = uu.user_id)
+    WHERE o.deleted = 0
     <if test="orgId != null">
-      AND so.org_id = #{orgId}
+      AND o.org_id = #{orgId}
     </if>
     <if test="topId != null">
-      AND so.top_id = #{topId}
+      AND o.top_id = #{topId}
     </if>
     <if test="parentId != null">
-      AND so.parent_id = #{parentId}
+      AND o.parent_id = #{parentId}
     </if>
     <if test="orgLevel != null">
-      AND so.org_level = #{orgLevel}
+      AND o.org_level = #{orgLevel}
     </if>
     <if test="orgName != null">
-      AND so.org_name LIKE CONCAT(#{orgName},'%')
+      AND o.org_name LIKE CONCAT(#{orgName},'%')
     </if>
     <if test="enabled != null">
-      AND so.enabled = #{enabled}
+      AND o.enabled = #{enabled}
     </if>
     <if test="updater != null">
-      AND so.updater = #{updater}
+      AND o.updater = #{updater}
     </if>
     <if test="creator != null">
-      AND so.creator = #{creator}
+      AND o.creator = #{creator}
     </if>
     <if test="createTimeStart != null">
-      AND so.create_time <![CDATA[>=]]> #{createTimeStart}
+      AND o.create_time <![CDATA[>=]]> #{createTimeStart}
     </if>
     <if test="createTimeEnd != null">
-      AND so.create_time <![CDATA[<=]]> #{createTimeEnd}
+      AND o.create_time <![CDATA[<=]]> #{createTimeEnd}
     </if>
     <if test="creatorName != null">
-      AND csu.user_name LIKE CONCAT(#{creatorName},'%')
+      AND cu.user_name LIKE CONCAT(#{creatorName},'%')
     </if>
     <if test="updaterName != null">
-      AND usu.user_name LIKE CONCAT(#{updaterName},'%')
+      AND uu.user_name LIKE CONCAT(#{updaterName},'%')
     </if>
   </select>
   <select id="findByParentId" resultType="tech.tystnad.works.model.vo.SysOrganizationTreeVO">

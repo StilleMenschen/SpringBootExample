@@ -1,7 +1,6 @@
 package tech.tystnad.works.service;
 
 import tech.tystnad.works.model.ResponseObjectEntity;
-import tech.tystnad.works.model.dto.SysOrganizationDTO;
 import tech.tystnad.works.model.dto.SysRoleDTO;
 import tech.tystnad.works.model.vo.SysRoleVO;
 
@@ -14,7 +13,7 @@ public interface SysRoleService {
 
     ResponseObjectEntity<SysRoleVO> delete(List<Long> sysRoleIds);
 
-    ResponseObjectEntity<List<SysRoleVO>> search(Long sysOrganizationId);
+    ResponseObjectEntity<List<SysRoleVO>> search(Long sysRoleId);
 
-    ResponseObjectEntity<List<SysRoleVO>> search(SysOrganizationDTO sysOrganizationDTO);
+    ResponseObjectEntity<List<SysRoleVO>> search(SysRoleDTO sysRoleDTO);
 }

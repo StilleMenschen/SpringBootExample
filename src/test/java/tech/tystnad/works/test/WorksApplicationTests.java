@@ -12,6 +12,7 @@ import tech.tystnad.works.model.dto.SysOrganizationDTO;
 import tech.tystnad.works.model.dto.SysRoleDTO;
 import tech.tystnad.works.model.dto.SysUserDTO;
 import tech.tystnad.works.repository.mapper.SysOrganizationVOMapper;
+import tech.tystnad.works.repository.mapper.SysRoleVOMapper;
 import tech.tystnad.works.repository.mapper.SysUserVOMapper;
 import tech.tystnad.works.util.IdWorker;
 
@@ -29,16 +30,17 @@ class WorksApplicationTests {
 
     @Resource
     private SysOrganizationVOMapper sysOrganizationVOMapper;
-
+    @Resource
+    private SysRoleVOMapper sysRoleVOMapper;
     @Resource
     private SysUserVOMapper sysUserVOMapper;
-
     @Resource
     private IdWorker idWorker;
 
     @Test
     public void testValidator() {
         Validator validator = Validation.byProvider(HibernateValidator.class).configure().buildValidatorFactory().getValidator();
+        logger.debug("--SysOrganizationDTO--");
         SysOrganizationDTO sysOrganizationDTO = new SysOrganizationDTO();
         sysOrganizationDTO.setOrgId(idWorker.nextId());
         sysOrganizationDTO.setTopId(idWorker.nextId());
@@ -47,11 +49,11 @@ class WorksApplicationTests {
         sysOrganizationDTO.setOrgLevel((byte) 7);
         Set<ConstraintViolation<SysOrganizationDTO>> orgConstraintViolation = validator.validate(sysOrganizationDTO, SysOrganizationGroups.updateGroup.class);
         orgConstraintViolation.forEach(e -> logger.debug(e.toString()));
-        logger.debug("----");
         sysOrganizationDTO.setOrgName("     ");
         orgConstraintViolation = validator.validate(sysOrganizationDTO, queryGroup.class);
         orgConstraintViolation.forEach(e -> logger.debug(e.toString()));
-        logger.debug("----");
+        logger.debug("--SysOrganizationDTO--END--");
+        logger.debug("--SysRoleDTO--");
         SysRoleDTO sysRoleDTO = new SysRoleDTO();
         sysRoleDTO.setRoleId(idWorker.nextId());
         sysRoleDTO.setOrgId(null);
@@ -62,7 +64,7 @@ class WorksApplicationTests {
         sysRoleDTO.setRoleName("   ");
         roleConstraintViolation = validator.validate(sysRoleDTO, SysRoleGroups.queryGroup.class);
         roleConstraintViolation.forEach(e -> logger.debug(e.toString()));
-        logger.debug("----");
+        logger.debug("--SysRoleDTO--END--");
     }
 
     @Test
@@ -84,7 +86,27 @@ class WorksApplicationTests {
         calendar.set(Calendar.SECOND, 59);
         calendar.set(Calendar.MILLISECOND, 999);
         sysOrganizationDTO.setCreateTimeEnd(calendar.getTime());
-        sysOrganizationVOMapper.findByDTO(sysOrganizationDTO).size();
+        logger.info("haseCode={}", sysOrganizationVOMapper.findByDTO(sysOrganizationDTO).hashCode());
+    }
+
+    @Test
+    public void testSysRole() {
+        SysRoleDTO sysRoleDTO = new SysRoleDTO();
+        sysRoleDTO.setOrgName("我带你们打");
+        sysRoleDTO.setCreatorName("我带你们打");
+        sysRoleDTO.setUpdaterName("我带你们打");
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        sysRoleDTO.setCreateTimeStart(calendar.getTime());
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        sysRoleDTO.setCreateTimeEnd(calendar.getTime());
+        logger.info("haseCode={}", sysRoleVOMapper.findByDTO(sysRoleDTO).hashCode());
     }
 
     @Test
@@ -106,6 +128,6 @@ class WorksApplicationTests {
         calendar.set(Calendar.SECOND, 59);
         calendar.set(Calendar.MILLISECOND, 999);
         sysUserDTO.setCreateTimeEnd(calendar.getTime());
-        sysUserVOMapper.findByDTO(sysUserDTO).size();
+        logger.info("haseCode={}", sysUserVOMapper.findByDTO(sysUserDTO).hashCode());
     }
 }
