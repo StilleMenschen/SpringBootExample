@@ -95,7 +95,7 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseObjectEntity<SysOrganizationVO> delete(Long sysOrganizationId) {
+    public ResponseObjectEntity<?> delete(Long sysOrganizationId) {
         if (sysOrganizationId != null) {
             SysOrganizationDO sysOrganizationDO = new SysOrganizationDO();
             sysOrganizationDO.setOrgId(sysOrganizationId);
@@ -109,7 +109,7 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseObjectEntity<SysOrganizationVO> delete(List<Long> sysOrganizationIds) {
+    public ResponseObjectEntity<?> delete(List<Long> sysOrganizationIds) {
         if (sysOrganizationIds != null && !sysOrganizationIds.isEmpty()) {
             SysOrganizationDOExample example = new SysOrganizationDOExample();
             SysOrganizationDO sysOrganizationDO = new SysOrganizationDO();
@@ -142,17 +142,17 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
     }
 
     @Override
-    public ResponseObjectEntity<List<SysOrganizationVO>> search(Long sysOrganizationId) {
+    public ResponseObjectEntity<SysOrganizationVO> search(Long sysOrganizationId) {
         SysOrganizationDO sysOrganizationDO = sysOrganizationDOMapper.selectByPrimaryKey(sysOrganizationId);
         if (sysOrganizationDO == null) {
             return fail(400, "机构不存在");
         }
         SysOrganizationVO sysOrganizationVO = SysOrganizationConverter.do2vo(sysOrganizationDO);
-        return ok(Collections.singletonList(sysOrganizationVO));
+        return ok(sysOrganizationVO);
     }
 
     @Override
-    public ResponseObjectEntity<List<SysOrganizationVO>> search(SysOrganizationDTO sysOrganizationDTO) {
+    public ResponseObjectEntity<SysOrganizationVO> search(SysOrganizationDTO sysOrganizationDTO) {
         return ok(sysOrganizationVOMapper.findByDTO(sysOrganizationDTO));
     }
 }

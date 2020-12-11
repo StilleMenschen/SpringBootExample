@@ -11,16 +11,14 @@ import tech.tystnad.works.model.JwtUser;
 import tech.tystnad.works.model.ResponseObjectEntity;
 import tech.tystnad.works.model.dto.SysRoleDTO;
 import tech.tystnad.works.model.vo.SysRoleVO;
-import tech.tystnad.works.repository.domain.SysOrganizationDOExample;
 import tech.tystnad.works.repository.domain.SysRoleDO;
 import tech.tystnad.works.repository.domain.SysRoleDOExample;
-import tech.tystnad.works.repository.mapper.SysOrganizationDOMapper;
 import tech.tystnad.works.repository.mapper.SysRoleDOMapper;
 import tech.tystnad.works.repository.mapper.SysRoleVOMapper;
+import tech.tystnad.works.service.SysOrganizationService;
 import tech.tystnad.works.service.SysRoleService;
 import tech.tystnad.works.util.IdWorker;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -31,14 +29,14 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
     private final SysRoleDOMapper sysRoleDOMapper;
     private final SysRoleVOMapper sysRoleVOMapper;
     private final IdWorker idWorker;
-    private final SysOrganizationDOMapper sysOrganizationDOMapper;
+    private final SysOrganizationService sysOrganizationService;
 
     @Autowired
-    public SysRoleServiceImpl(SysRoleDOMapper sysRoleDOMapper, SysRoleVOMapper sysRoleVOMapper, IdWorker idWorker, SysOrganizationDOMapper sysOrganizationDOMapper) {
+    public SysRoleServiceImpl(SysRoleDOMapper sysRoleDOMapper, SysRoleVOMapper sysRoleVOMapper, IdWorker idWorker, SysOrganizationService sysOrganizationService) {
         this.sysRoleDOMapper = sysRoleDOMapper;
         this.sysRoleVOMapper = sysRoleVOMapper;
         this.idWorker = idWorker;
-        this.sysOrganizationDOMapper = sysOrganizationDOMapper;
+        this.sysOrganizationService = sysOrganizationService;
     }
 
     @Override
@@ -62,15 +60,13 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
             SysRoleDO sysRoleDO = SysRoleConverter.dto2do(sysRoleDTO);
             JwtUser user = (JwtUser) getCurrentUser();
             if (sysRoleDO.getOrgId() != null) {
-                SysOrganizationDOExample sysOrganizationDOExample = new SysOrganizationDOExample();
-                sysOrganizationDOExample.createCriteria().andDeletedEqualTo(Boolean.FALSE).andTopIdEqualTo(sysRoleDTO.getTopId());
-                if (sysOrganizationDOMapper.selectByExample(sysOrganizationDOExample).isEmpty()) {
-                    return fail(400, "顶级机构不存在");
+                ResponseObjectEntity<?> response = sysOrganizationService.search(sysRoleDTO.getTopId());
+                if (response.getCode() != 0) {
+                    return fail(response.getCode(), "顶级机构不存在");
                 }
-                sysOrganizationDOExample.clear();
-                sysOrganizationDOExample.createCriteria().andDeletedEqualTo(Boolean.FALSE).andOrgIdNotEqualTo(sysRoleDTO.getOrgId());
-                if (sysOrganizationDOMapper.selectByExample(sysOrganizationDOExample).isEmpty()) {
-                    return fail(400, "所属机构不存在");
+                response = sysOrganizationService.search(sysRoleDTO.getOrgId());
+                if (response.getCode() != 0) {
+                    return fail(response.getCode(), "所属机构不存在");
                 }
                 sysRoleDO.setUpdater(user.getUserId());
                 if (sysRoleDOMapper.updateByPrimaryKeySelective(sysRoleDO) > 1) {
@@ -93,7 +89,7 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseObjectEntity<SysRoleVO> delete(Long sysRoleId) {
+    public ResponseObjectEntity<?> delete(Long sysRoleId) {
         if (sysRoleId != null) {
             SysRoleDO sysRoleDO = new SysRoleDO();
             sysRoleDO.setRoleId(sysRoleId);
@@ -107,7 +103,7 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseObjectEntity<SysRoleVO> delete(List<Long> sysRoleIds) {
+    public ResponseObjectEntity<?> delete(List<Long> sysRoleIds) {
         if (sysRoleIds != null && !sysRoleIds.isEmpty()) {
             SysRoleDOExample example = new SysRoleDOExample();
             SysRoleDO sysRoleDO = new SysRoleDO();
@@ -121,17 +117,17 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
     }
 
     @Override
-    public ResponseObjectEntity<List<SysRoleVO>> search(Long sysRoleId) {
+    public ResponseObjectEntity<SysRoleVO> search(Long sysRoleId) {
         SysRoleDO sysRoleDO = sysRoleDOMapper.selectByPrimaryKey(sysRoleId);
         if (sysRoleDO == null) {
             return fail(400, "角色不存在");
         }
         SysRoleVO sysRoleVO = SysRoleConverter.do2vo(sysRoleDO);
-        return ok(Collections.singletonList(sysRoleVO));
+        return ok(sysRoleVO);
     }
 
     @Override
-    public ResponseObjectEntity<List<SysRoleVO>> search(SysRoleDTO sysRoleDTO) {
+    public ResponseObjectEntity<SysRoleVO> search(SysRoleDTO sysRoleDTO) {
         return ok(sysRoleVOMapper.findByDTO(sysRoleDTO));
     }
 }

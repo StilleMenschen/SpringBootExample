@@ -9,11 +9,11 @@ import java.util.List;
 public interface SysRoleService {
     ResponseObjectEntity<SysRoleVO> save(SysRoleDTO sysRoleDTO);
 
-    ResponseObjectEntity<SysRoleVO> delete(Long sysRoleId);
+    ResponseObjectEntity<?> delete(Long sysRoleId);
 
-    ResponseObjectEntity<SysRoleVO> delete(List<Long> sysRoleIds);
+    ResponseObjectEntity<?> delete(List<Long> sysRoleIds);
 
-    ResponseObjectEntity<List<SysRoleVO>> search(Long sysRoleId);
+    ResponseObjectEntity<SysRoleVO> search(Long sysRoleId);
 
-    ResponseObjectEntity<List<SysRoleVO>> search(SysRoleDTO sysRoleDTO);
+    ResponseObjectEntity<SysRoleVO> search(SysRoleDTO sysRoleDTO);
 }

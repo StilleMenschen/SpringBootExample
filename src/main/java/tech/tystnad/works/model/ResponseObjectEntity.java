@@ -1,9 +1,12 @@
 package tech.tystnad.works.model;
 
+import java.util.List;
+
 public class ResponseObjectEntity<T> {
     private int code;
     private String msg;
-    private T values;
+    private T value;
+    private List<T> values;
     private PageEntity page;
 
     public int getCode() {
@@ -22,11 +25,19 @@ public class ResponseObjectEntity<T> {
         this.msg = msg;
     }
 
-    public T getValues() {
+    public T getValue() {
+        return value;
+    }
+
+    public void setValue(T value) {
+        this.value = value;
+    }
+
+    public List<T> getValues() {
         return values;
     }
 
-    public void setValues(T values) {
+    public void setValues(List<T> values) {
         this.values = values;
     }
 
