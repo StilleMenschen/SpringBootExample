@@ -33,7 +33,7 @@ DROP TABLE IF EXISTS `sys_authority`;
 CREATE TABLE `sys_authority` (
   `auth_id` smallint(6) unsigned NOT NULL COMMENT '权限ID',
   `auth_name` varchar(32) DEFAULT NULL COMMENT '权限名称',
-  `description` varchar(64) DEFAULT NULL COMMENT '权限描述',
+  `auth_description` varchar(64) DEFAULT NULL COMMENT '权限描述',
   `update_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`auth_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -325,73 +325,73 @@ public class SysAuthorityDOExample {
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionIsNull() {
-            addCriterion("description is null");
+        public Criteria andAuthDescriptionIsNull() {
+            addCriterion("auth_description is null");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionIsNotNull() {
-            addCriterion("description is not null");
+        public Criteria andAuthDescriptionIsNotNull() {
+            addCriterion("auth_description is not null");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionEqualTo(String value) {
-            addCriterion("description =", value, "description");
+        public Criteria andAuthDescriptionEqualTo(String value) {
+            addCriterion("auth_description =", value, "authDescription");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionNotEqualTo(String value) {
-            addCriterion("description <>", value, "description");
+        public Criteria andAuthDescriptionNotEqualTo(String value) {
+            addCriterion("auth_description <>", value, "authDescription");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionGreaterThan(String value) {
-            addCriterion("description >", value, "description");
+        public Criteria andAuthDescriptionGreaterThan(String value) {
+            addCriterion("auth_description >", value, "authDescription");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionGreaterThanOrEqualTo(String value) {
-            addCriterion("description >=", value, "description");
+        public Criteria andAuthDescriptionGreaterThanOrEqualTo(String value) {
+            addCriterion("auth_description >=", value, "authDescription");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionLessThan(String value) {
-            addCriterion("description <", value, "description");
+        public Criteria andAuthDescriptionLessThan(String value) {
+            addCriterion("auth_description <", value, "authDescription");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionLessThanOrEqualTo(String value) {
-            addCriterion("description <=", value, "description");
+        public Criteria andAuthDescriptionLessThanOrEqualTo(String value) {
+            addCriterion("auth_description <=", value, "authDescription");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionLike(String value) {
-            addCriterion("description like", value, "description");
+        public Criteria andAuthDescriptionLike(String value) {
+            addCriterion("auth_description like", value, "authDescription");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionNotLike(String value) {
-            addCriterion("description not like", value, "description");
+        public Criteria andAuthDescriptionNotLike(String value) {
+            addCriterion("auth_description not like", value, "authDescription");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionIn(List<String> values) {
-            addCriterion("description in", values, "description");
+        public Criteria andAuthDescriptionIn(List<String> values) {
+            addCriterion("auth_description in", values, "authDescription");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionNotIn(List<String> values) {
-            addCriterion("description not in", values, "description");
+        public Criteria andAuthDescriptionNotIn(List<String> values) {
+            addCriterion("auth_description not in", values, "authDescription");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionBetween(String value1, String value2) {
-            addCriterion("description between", value1, value2, "description");
+        public Criteria andAuthDescriptionBetween(String value1, String value2) {
+            addCriterion("auth_description between", value1, value2, "authDescription");
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionNotBetween(String value1, String value2) {
-            addCriterion("description not between", value1, value2, "description");
+        public Criteria andAuthDescriptionNotBetween(String value1, String value2) {
+            addCriterion("auth_description not between", value1, value2, "authDescription");
             return (Criteria) this;
         }
 

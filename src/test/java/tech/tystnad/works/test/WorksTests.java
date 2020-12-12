@@ -13,17 +13,43 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import tech.tystnad.works.config.AuthorityCodeConfig;
 import tech.tystnad.works.model.dto.SysUserDTO;
 import tech.tystnad.works.util.IdWorker;
 
 import java.io.File;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class WorksTests {
 
     @Test
     public void example() {
         System.out.println(chinese2encoding("角色名称不能为空"));
+    }
+
+    @Test
+    public void readAuthorityCode() {
+        final Map<String, String> Name = new LinkedHashMap<>();
+        Name.put("ORGANIZATION", "机构");
+        Name.put("ROLE", "角色");
+        Name.put("USER", "用户");
+        final Map<String, String> Operating = new LinkedHashMap<>();
+        Operating.put("CREATE", "新增");
+        Operating.put("READ", "查询");
+        Operating.put("UPDATE", "更新");
+        Operating.put("DELETE", "删除");
+        AuthorityCodeConfig.keySet().stream().sorted().forEach(key -> {
+            String description;
+            if ("MANAGER".equals(key)) {
+                description = "管理员";
+            } else {
+                final String[] keySplit = key.split("_");
+                description = Operating.get(keySplit[1]).concat(Name.get(keySplit[0]));
+            }
+            System.out.printf("REPLACE INTO sys_authority (auth_id,auth_name,auth_description) VALUES (%s,'%s','%s');\n", AuthorityCodeConfig.getString(key), key, description);
+        });
     }
 
     @Test

@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class HttpUtils {
 
-    private static final CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+    private static final CloseableHttpClient HTTP_CLIENT = HttpClientBuilder.create().build();
 
     /**
      * 发送GET请求
@@ -213,7 +213,7 @@ public class HttpUtils {
      */
     private static String executeRequest(HttpUriRequest request) {
         try {
-            CloseableHttpResponse response = httpClient.execute(request);
+            CloseableHttpResponse response = HTTP_CLIENT.execute(request);
             return EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
             e.printStackTrace();
@@ -229,7 +229,7 @@ public class HttpUtils {
      */
     private static byte[] executeRequestToByte(HttpUriRequest request) {
         try {
-            CloseableHttpResponse response = httpClient.execute(request);
+            CloseableHttpResponse response = HTTP_CLIENT.execute(request);
             byte[] buffers = EntityUtils.toByteArray(response.getEntity());
             return buffers;
         } catch (IOException e) {
