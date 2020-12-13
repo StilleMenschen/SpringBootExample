@@ -21,8 +21,8 @@ USE `works`;
 DROP TABLE IF EXISTS `role_authority_relationship`;
 
 CREATE TABLE `role_authority_relationship` (
-  `role_id` bigint(20) unsigned DEFAULT NULL COMMENT '角色ID',
-  `auth_id` smallint(6) unsigned DEFAULT NULL COMMENT '权限ID',
+  `role_id` bigint(20) unsigned NOT NULL COMMENT '角色ID',
+  `auth_id` smallint(6) unsigned NOT NULL COMMENT '权限ID',
   `create_time` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -32,6 +32,7 @@ DROP TABLE IF EXISTS `sys_authority`;
 
 CREATE TABLE `sys_authority` (
   `auth_id` smallint(6) unsigned NOT NULL COMMENT '权限ID',
+  `parent_id` smallint(6) unsigned NULL COMMENT '父权限ID',
   `auth_name` varchar(32) DEFAULT NULL COMMENT '权限名称',
   `auth_description` varchar(64) DEFAULT NULL COMMENT '权限描述',
   `update_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
@@ -44,7 +45,7 @@ DROP TABLE IF EXISTS `sys_log`;
 
 CREATE TABLE `sys_log` (
   `log_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '日志ID',
-  `operator` bigint(20) unsigned DEFAULT NULL COMMENT '操作者',
+  `operator` bigint(20) unsigned NOT NULL COMMENT '操作者ID',
   `module` varchar(64) DEFAULT NULL COMMENT '操作模块',
   `features` int(10) unsigned DEFAULT NULL COMMENT '操作功能',
   `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -64,7 +65,7 @@ CREATE TABLE `sys_organization` (
   `enabled` tinyint(1) unsigned DEFAULT 1 COMMENT '状态(1-启用,0-禁用)',
   `deleted` tinyint(1) unsigned DEFAULT 0 COMMENT '是否删除(1-删除,0-未删除)',
   `updater` bigint(20) unsigned DEFAULT NULL,
-  `creator` bigint(20) unsigned DEFAULT NULL,
+  `creator` bigint(20) unsigned NOT NULL COMMENT '创建用户ID',
   `update_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`org_id`)
@@ -76,12 +77,12 @@ DROP TABLE IF EXISTS `sys_role`;
 
 CREATE TABLE `sys_role` (
   `role_id` bigint(20) unsigned NOT NULL COMMENT '角色ID',
-  `org_id` bigint(20) unsigned DEFAULT NULL COMMENT '机构ID',
-  `top_id` bigint(20) unsigned DEFAULT NULL COMMENT '顶级机构ID',
+  `org_id` bigint(20) unsigned NOT NULL COMMENT '机构ID',
+  `top_id` bigint(20) unsigned NOT NULL COMMENT '顶级机构ID',
   `role_name` varchar(32) DEFAULT NULL COMMENT '角色名称',
   `deleted` tinyint(1) unsigned DEFAULT 0 COMMENT '是否删除(1-删除,0-未删除)',
   `updater` bigint(20) unsigned DEFAULT NULL,
-  `creator` bigint(20) unsigned DEFAULT NULL,
+  `creator` bigint(20) unsigned NOT NULL COMMENT '创建用户ID',
   `update_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`role_id`)
@@ -106,7 +107,7 @@ CREATE TABLE `sys_user` (
   `deleted` tinyint(1) unsigned DEFAULT 0 COMMENT '是否删除(1-删除,0-未删除)',
   `password_reset_time` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '密码最后更新时间',
   `updater` bigint(20) unsigned DEFAULT NULL,
-  `creator` bigint(20) unsigned DEFAULT NULL,
+  `creator` bigint(20) unsigned NOT NULL COMMENT '创建用户ID',
   `update_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`user_id`)
@@ -118,15 +119,14 @@ DROP TABLE IF EXISTS `work_log`;
 
 CREATE TABLE `work_log` (
   `log_id` bigint(20) unsigned NOT NULL COMMENT '日志ID',
-  `org_id` bigint(20) unsigned DEFAULT NULL COMMENT '机构ID',
-  `top_id` bigint(20) unsigned DEFAULT NULL COMMENT '顶级机构ID',
-  `user_id` bigint(20) unsigned DEFAULT NULL COMMENT '用户ID',
+  `org_id` bigint(20) unsigned NOT NULL COMMENT '机构ID',
+  `top_id` bigint(20) unsigned NOT NULL COMMENT '顶级机构ID',
   `project_id` bigint(20) unsigned DEFAULT NULL COMMENT '项目ID',
   `work_time` float unsigned DEFAULT NULL COMMENT '工作时间',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   `log_time` datetime DEFAULT NULL COMMENT '日志时间',
   `updater` bigint(20) unsigned DEFAULT NULL,
-  `creator` bigint(20) unsigned DEFAULT NULL,
+  `creator` bigint(20) unsigned NOT NULL COMMENT '创建用户ID',
   `update_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`log_id`)
@@ -143,7 +143,7 @@ CREATE TABLE `work_next_plan` (
   `user_id` bigint(20) unsigned DEFAULT NULL COMMENT '用户ID',
   `plan_text_id` bigint(20) unsigned DEFAULT NULL COMMENT '计划内容ID',
   `updater` bigint(20) unsigned DEFAULT NULL,
-  `creator` bigint(20) unsigned DEFAULT NULL,
+  `creator` bigint(20) unsigned NOT NULL COMMENT '创建用户ID',
   `update_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`plan_id`)
@@ -160,7 +160,7 @@ CREATE TABLE `work_plan_text` (
   `plan` varchar(64) DEFAULT NULL COMMENT '明天计划',
   `total` smallint(6) unsigned DEFAULT 1 COMMENT '激活次数',
   `updater` bigint(20) unsigned DEFAULT NULL,
-  `creator` bigint(20) unsigned DEFAULT NULL,
+  `creator` bigint(20) unsigned NOT NULL COMMENT '创建用户ID',
   `update_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`plan_text_id`)
@@ -178,7 +178,7 @@ CREATE TABLE `work_project` (
   `project_name` varchar(64) DEFAULT NULL COMMENT '项目名称',
   `project_time` datetime DEFAULT NULL COMMENT '项目开始时间',
   `updater` bigint(20) unsigned DEFAULT NULL,
-  `creator` bigint(20) unsigned DEFAULT NULL,
+  `creator` bigint(20) unsigned NOT NULL COMMENT '创建用户ID',
   `update_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`project_id`)

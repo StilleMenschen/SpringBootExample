@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
     <!--Maven 命令为: mybatis-generator:generate -e-->
-<!-- <classPathEntry location="${M2_HOME}\repository\org\mariadb\jdbc\mariadb-java-client\2.6.2\mariadb-java-client-2.6.2.jar"/>-->
+    <!--<classPathEntry location="${M2_HOME}\repository\org\mariadb\jdbc\mariadb-java-client\2.6.2\mariadb-java-client-2.6.2.jar"/>-->
 
     <context id="MysqlTables" targetRuntime="MyBatis3">
         <property name="javaFileEncoding" value="UTF-8"/>
@@ -47,7 +47,7 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <!-- <table tableName="auth_user" domainObjectName="AuthUserDO">
+        <!--<table tableName="auth_user" domainObjectName="AuthUserDO">
              <generatedKey column="id" sqlStatement="MySql" identity="true"/>
          </table>-->
         <table tableName="role_authority_relationship" domainObjectName="RoleAuthorityRelationshipDO"/>
