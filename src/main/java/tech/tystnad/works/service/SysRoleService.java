@@ -1,5 +1,6 @@
 package tech.tystnad.works.service;
 
+import tech.tystnad.works.model.PageEntity;
 import tech.tystnad.works.model.ResponseObjectEntity;
 import tech.tystnad.works.model.dto.SysRoleDTO;
 import tech.tystnad.works.model.vo.SysRoleVO;
@@ -15,5 +16,5 @@ public interface SysRoleService {
 
     ResponseObjectEntity<SysRoleVO> search(Long sysRoleId);
 
-    ResponseObjectEntity<SysRoleVO> search(SysRoleDTO sysRoleDTO);
+    ResponseObjectEntity<SysRoleVO> search(SysRoleDTO sysRoleDTO, PageEntity pageEntity);
 }

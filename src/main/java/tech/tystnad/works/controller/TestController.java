@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import tech.tystnad.works.core.validator.groups.SysUserValidatorGroups.addGroup;
 import tech.tystnad.works.core.validator.groups.SysUserValidatorGroups.deleteGroup;
 import tech.tystnad.works.model.City;
+import tech.tystnad.works.model.PageEntity;
 import tech.tystnad.works.model.Pet;
 import tech.tystnad.works.model.User;
 import tech.tystnad.works.model.dto.SysUserDTO;
@@ -87,7 +88,7 @@ public class TestController {
     }
 
     @PostMapping("/list")
-    public ResponseEntity<Object> emptyList(@RequestParam("id") String id) {
+    public ResponseEntity<Object> emptyList(@RequestParam("id") String id, @RequestParam("page") Integer page, @RequestParam("range") Integer range) {
         logger.debug(id);
         SysUserDTO sysUserDTO = new SysUserDTO();
         sysUserDTO.setUserName("伞兵一号lbw准备就绪");
@@ -106,7 +107,8 @@ public class TestController {
         calendar.set(Calendar.SECOND, 59);
         calendar.set(Calendar.MILLISECOND, 999);
         sysUserDTO.setCreateTimeEnd(calendar.getTime());
-        List<SysUserVO> list = sysUserVOMapper.findByDTO(sysUserDTO);
+        PageEntity pageEntity = new PageEntity(page, range);
+        List<SysUserVO> list = sysUserVOMapper.findByDTO(sysUserDTO, pageEntity);
         return ResponseEntity.ok(list);
     }
 
@@ -118,7 +120,7 @@ public class TestController {
 
     @PostMapping(value = "/template")
     public ResponseEntity<Map<String, Object>> template(@RequestHeader("Platform") String platform, @RequestPart("file") List<MultipartFile> files,
-                                        @RequestParam("size") Integer size, City city) {
+                                                        @RequestParam("size") Integer size, City city) {
         if (platform == null || files == null || files.isEmpty() || size == null || city == null) {
             return ResponseEntity.badRequest().build();
         }

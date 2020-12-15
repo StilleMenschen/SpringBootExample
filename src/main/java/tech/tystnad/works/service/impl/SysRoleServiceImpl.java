@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.tystnad.works.converter.SysRoleConverter;
 import tech.tystnad.works.core.service.BaseService;
 import tech.tystnad.works.model.JwtUser;
+import tech.tystnad.works.model.PageEntity;
 import tech.tystnad.works.model.ResponseObjectEntity;
 import tech.tystnad.works.model.dto.SysRoleDTO;
 import tech.tystnad.works.model.vo.SysRoleVO;
@@ -128,7 +129,7 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
     }
 
     @Override
-    public ResponseObjectEntity<SysRoleVO> search(SysRoleDTO sysRoleDTO) {
-        return ok(sysRoleVOMapper.findByDTO(sysRoleDTO));
+    public ResponseObjectEntity<SysRoleVO> search(SysRoleDTO sysRoleDTO, PageEntity pageEntity) {
+        return ok(sysRoleVOMapper.findByDTO(sysRoleDTO, pageEntity));
     }
 }

@@ -16,12 +16,13 @@ import tech.tystnad.works.repository.mapper.SysOrganizationVOMapper;
 import tech.tystnad.works.repository.mapper.SysRoleVOMapper;
 import tech.tystnad.works.repository.mapper.SysUserVOMapper;
 import tech.tystnad.works.util.IdWorker;
+import tech.tystnad.works.util.TimeUtils;
 
 import javax.annotation.Resource;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.Set;
 
 @SpringBootTest
@@ -72,21 +73,13 @@ class WorksApplicationTests {
     public void testSysOrganization() {
         SysOrganizationDTO sysOrganizationDTO = new SysOrganizationDTO();
         sysOrganizationDTO.setOrgLevel((byte) 3);
-        sysOrganizationDTO.setOrgName("我带你们打");
-        sysOrganizationDTO.setCreatorName("我带你们打");
-        sysOrganizationDTO.setUpdaterName("我带你们打");
+        sysOrganizationDTO.setOrgName("xxx的传统的艺能");
+        sysOrganizationDTO.setCreatorName("xxx的传统的艺能");
+        sysOrganizationDTO.setUpdaterName("xxx的传统的艺能");
         sysOrganizationDTO.setEnabled(Boolean.TRUE);
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        sysOrganizationDTO.setCreateTimeStart(calendar.getTime());
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 59);
-        calendar.set(Calendar.MILLISECOND, 999);
-        sysOrganizationDTO.setCreateTimeEnd(calendar.getTime());
+        Date c = new Date(System.currentTimeMillis());
+        sysOrganizationDTO.setCreateTimeStart(TimeUtils.get(c, 0, 0, 0, 0));
+        sysOrganizationDTO.setCreateTimeEnd(TimeUtils.get(c, 23, 59, 59, 999));
         PageEntity pageEntity = new PageEntity(3, 15);
         logger.info("haseCode={}", sysOrganizationVOMapper.findByDTO(sysOrganizationDTO, pageEntity).hashCode());
     }
@@ -97,18 +90,11 @@ class WorksApplicationTests {
         sysRoleDTO.setOrgName("我带你们打");
         sysRoleDTO.setCreatorName("我带你们打");
         sysRoleDTO.setUpdaterName("我带你们打");
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        sysRoleDTO.setCreateTimeStart(calendar.getTime());
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 59);
-        calendar.set(Calendar.MILLISECOND, 999);
-        sysRoleDTO.setCreateTimeEnd(calendar.getTime());
-        logger.info("haseCode={}", sysRoleVOMapper.findByDTO(sysRoleDTO).hashCode());
+        Date c = new Date(System.currentTimeMillis());
+        sysRoleDTO.setCreateTimeStart(TimeUtils.get(c, 0, 0, 0, 0));
+        sysRoleDTO.setCreateTimeEnd(TimeUtils.get(c, 23, 59, 59, 999));
+        PageEntity pageEntity = new PageEntity(3, 15);
+        logger.info("haseCode={}", sysRoleVOMapper.findByDTO(sysRoleDTO, pageEntity).hashCode());
     }
 
     @Test
@@ -119,17 +105,10 @@ class WorksApplicationTests {
         sysUserDTO.setUpdaterName("伞兵一号lbw准备就绪");
         sysUserDTO.setCreatorName("伞兵一号lbw准备就绪");
         sysUserDTO.setEnabled(Boolean.TRUE);
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        sysUserDTO.setCreateTimeStart(calendar.getTime());
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 59);
-        calendar.set(Calendar.MILLISECOND, 999);
-        sysUserDTO.setCreateTimeEnd(calendar.getTime());
-        logger.info("haseCode={}", sysUserVOMapper.findByDTO(sysUserDTO).hashCode());
+        Date c = new Date(System.currentTimeMillis());
+        sysUserDTO.setCreateTimeStart(TimeUtils.get(c, 0, 0, 0, 0));
+        sysUserDTO.setCreateTimeEnd(TimeUtils.get(c, 23, 59, 59, 999));
+        PageEntity pageEntity = new PageEntity(3, 15);
+        logger.info("haseCode={}", sysUserVOMapper.findByDTO(sysUserDTO, pageEntity).hashCode());
     }
 }
