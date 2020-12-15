@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.tystnad.works.converter.SysOrganizationConverter;
 import tech.tystnad.works.core.service.BaseService;
 import tech.tystnad.works.model.JwtUser;
+import tech.tystnad.works.model.PageEntity;
 import tech.tystnad.works.model.ResponseObjectEntity;
 import tech.tystnad.works.model.dto.SysOrganizationDTO;
 import tech.tystnad.works.model.vo.SysOrganizationVO;
@@ -44,18 +45,26 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
         }
         SysOrganizationDOExample example = new SysOrganizationDOExample();
         List<SysOrganizationDO> list;
+        example.createCriteria().andDeletedEqualTo(Boolean.FALSE).andTopIdEqualTo(sysOrganizationDTO.getTopId());
+        list = sysOrganizationDOMapper.selectByExample(example);
+        if (list.isEmpty()) {
+            return fail(400, "顶级机构不存在");
+        }
+        example.clear();
         if (sysOrganizationDTO.getOrgId() != null) {
             example.createCriteria().andDeletedEqualTo(Boolean.FALSE).andOrgNameEqualTo(sysOrganizationDTO.getOrgName())
-                    .andOrgIdNotEqualTo(sysOrganizationDTO.getOrgId());
+                    .andOrgIdNotEqualTo(sysOrganizationDTO.getOrgId()).andTopIdEqualTo(sysOrganizationDTO.getTopId());
         } else {
-            example.createCriteria().andDeletedEqualTo(Boolean.FALSE).andOrgNameEqualTo(sysOrganizationDTO.getOrgName());
+            example.createCriteria().andDeletedEqualTo(Boolean.FALSE).andOrgNameEqualTo(sysOrganizationDTO.getOrgName())
+                    .andTopIdEqualTo(sysOrganizationDTO.getTopId());
         }
         list = sysOrganizationDOMapper.selectByExample(example);
         if (!list.isEmpty()) {
             return fail(400, "机构名称重复");
         }
         example.clear();
-        example.createCriteria().andDeletedEqualTo(false).andParentIdEqualTo(sysOrganizationDTO.getParentId());
+        example.createCriteria().andDeletedEqualTo(false).andTopIdEqualTo(sysOrganizationDTO.getTopId())
+                .andParentIdEqualTo(sysOrganizationDTO.getParentId());
         list = sysOrganizationDOMapper.selectByExample(example);
         if (list.isEmpty()) {
             return fail(400, "父级机构不存在");
@@ -69,12 +78,6 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
             sysOrganizationDO.setOrgLevel((byte) orgLevel);
             JwtUser user = (JwtUser) getCurrentUser();
             if (sysOrganizationDO.getOrgId() != null) {
-                example.clear();
-                example.createCriteria().andDeletedEqualTo(Boolean.FALSE).andTopIdEqualTo(sysOrganizationDTO.getTopId());
-                list = sysOrganizationDOMapper.selectByExample(example);
-                if (list.isEmpty()) {
-                    return fail(400, "顶级机构不存在");
-                }
                 sysOrganizationDO.setUpdater(user.getUserId());
                 if (sysOrganizationDOMapper.updateByPrimaryKeySelective(sysOrganizationDO) > 1) {
                     return ok(null);
@@ -152,7 +155,7 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
     }
 
     @Override
-    public ResponseObjectEntity<SysOrganizationVO> search(SysOrganizationDTO sysOrganizationDTO) {
-        return ok(sysOrganizationVOMapper.findByDTO(sysOrganizationDTO));
+    public ResponseObjectEntity<SysOrganizationVO> search(SysOrganizationDTO sysOrganizationDTO, PageEntity pageEntity) {
+        return ok(sysOrganizationVOMapper.findByDTO(sysOrganizationDTO, pageEntity));
     }
 }

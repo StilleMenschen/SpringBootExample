@@ -5,42 +5,43 @@
     SELECT o.org_id, o.top_id, o.parent_id, po.org_name AS parent_name, o.org_level, o.org_name, o.enabled, o.updater, o.creator, o.update_time, o.create_time, cu.user_name AS creator_name, uu.user_name AS updater_name
     FROM sys_organization AS o JOIN sys_organization AS po ON (o.parent_id = po.org_id) JOIN sys_user AS cu ON (o.creator = cu.user_id) JOIN sys_user AS uu ON (o.updater = uu.user_id)
     WHERE o.deleted = 0
-    <if test="orgId != null">
-      AND o.org_id = #{orgId}
+    <if test="dto.orgId != null">
+      AND o.org_id = #{dto.orgId}
     </if>
-    <if test="topId != null">
-      AND o.top_id = #{topId}
+    <if test="dto.topId != null">
+      AND o.top_id = #{dto.topId}
     </if>
-    <if test="parentId != null">
-      AND o.parent_id = #{parentId}
+    <if test="dto.parentId != null">
+      AND o.parent_id = #{dto.parentId}
     </if>
-    <if test="orgLevel != null">
-      AND o.org_level = #{orgLevel}
+    <if test="dto.orgLevel != null">
+      AND o.org_level = #{dto.orgLevel}
     </if>
-    <if test="orgName != null">
-      AND o.org_name LIKE CONCAT(#{orgName},'%')
+    <if test="dto.orgName != null">
+      AND o.org_name LIKE CONCAT(#{dto.orgName},'%')
     </if>
-    <if test="enabled != null">
-      AND o.enabled = #{enabled}
+    <if test="dto.enabled != null">
+      AND o.enabled = #{dto.enabled}
     </if>
-    <if test="updater != null">
-      AND o.updater = #{updater}
+    <if test="dto.updater != null">
+      AND o.updater = #{dto.updater}
     </if>
-    <if test="creator != null">
-      AND o.creator = #{creator}
+    <if test="dto.creator != null">
+      AND o.creator = #{dto.creator}
     </if>
-    <if test="createTimeStart != null">
-      AND o.create_time <![CDATA[>=]]> #{createTimeStart}
+    <if test="dto.createTimeStart != null">
+      AND o.create_time <![CDATA[>=]]> #{dto.createTimeStart}
     </if>
-    <if test="createTimeEnd != null">
-      AND o.create_time <![CDATA[<=]]> #{createTimeEnd}
+    <if test="dto.createTimeEnd != null">
+      AND o.create_time <![CDATA[<=]]> #{dto.createTimeEnd}
     </if>
-    <if test="creatorName != null">
-      AND cu.user_name LIKE CONCAT(#{creatorName},'%')
+    <if test="dto.creatorName != null">
+      AND cu.user_name LIKE CONCAT(#{dto.creatorName},'%')
     </if>
-    <if test="updaterName != null">
-      AND uu.user_name LIKE CONCAT(#{updaterName},'%')
+    <if test="dto.updaterName != null">
+      AND uu.user_name LIKE CONCAT(#{dto.updaterName},'%')
     </if>
+    LIMIT #{page.pos}, #{page.range}
   </select>
   <select id="findByParentId" resultType="tech.tystnad.works.model.vo.SysOrganizationTreeVO">
     SELECT top_id, org_id, org_level, org_name FROM sys_organization WHERE top_id = #{top_id} AND parent_id = #{parent_id}

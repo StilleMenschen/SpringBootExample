@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import tech.tystnad.works.core.validator.groups.SysOrganizationGroups;
 import tech.tystnad.works.core.validator.groups.SysOrganizationGroups.queryGroup;
 import tech.tystnad.works.core.validator.groups.SysRoleGroups;
+import tech.tystnad.works.model.PageEntity;
 import tech.tystnad.works.model.dto.SysOrganizationDTO;
 import tech.tystnad.works.model.dto.SysRoleDTO;
 import tech.tystnad.works.model.dto.SysUserDTO;
@@ -86,7 +87,8 @@ class WorksApplicationTests {
         calendar.set(Calendar.SECOND, 59);
         calendar.set(Calendar.MILLISECOND, 999);
         sysOrganizationDTO.setCreateTimeEnd(calendar.getTime());
-        logger.info("haseCode={}", sysOrganizationVOMapper.findByDTO(sysOrganizationDTO).hashCode());
+        PageEntity pageEntity = new PageEntity(3, 15);
+        logger.info("haseCode={}", sysOrganizationVOMapper.findByDTO(sysOrganizationDTO, pageEntity).hashCode());
     }
 
     @Test

@@ -1,18 +1,26 @@
 package tech.tystnad.works.model;
 
 public class PageEntity {
-    private int current;
-    private int range;
-    private int max;
-    private int size;
+    private Integer current;
+    private Integer range;
+    private Integer max;
+    private Integer size;
+    private Integer pos = 0;
 
     public PageEntity() {
     }
 
-    public PageEntity(int current, int range, int size) {
+    public PageEntity(Integer current, Integer range) {
+        this.current = current;
+        this.range = range;
+        getPos();
+    }
+
+    public PageEntity(Integer current, Integer range, Integer size) {
         this.current = current;
         this.range = range;
         this.size = size;
+        getPos();
         calculationPage();
     }
 
@@ -23,35 +31,42 @@ public class PageEntity {
         }
     }
 
-    public int getCurrent() {
+    public Integer getCurrent() {
         return current;
     }
 
-    public void setCurrent(int current) {
+    public void setCurrent(Integer current) {
         this.current = current;
     }
 
-    public int getRange() {
+    public Integer getRange() {
         return range;
     }
 
-    public void setRange(int range) {
+    public void setRange(Integer range) {
         this.range = range;
     }
 
-    public int getMax() {
+    public Integer getMax() {
         return max;
     }
 
-    public void setMax(int max) {
+    public void setMax(Integer max) {
         this.max = max;
     }
 
-    public int getSize() {
+    public Integer getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(Integer size) {
         this.size = size;
+    }
+
+    public Integer getPos() {
+        if (current > 1) {
+            pos = (current - 1) * range;
+        }
+        return pos;
     }
 }

@@ -45,13 +45,22 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
         if (sysRoleDTO == null) {
             return fail(400, "角色信息不能为空");
         }
+        ResponseObjectEntity<?> response = sysOrganizationService.search(sysRoleDTO.getTopId());
+        if (response.getCode() != 0) {
+            return fail(response.getCode(), "顶级机构不存在");
+        }
+        response = sysOrganizationService.search(sysRoleDTO.getOrgId());
+        if (response.getCode() != 0) {
+            return fail(response.getCode(), "所属机构不存在");
+        }
         SysRoleDOExample example = new SysRoleDOExample();
         List<SysRoleDO> list;
         if (sysRoleDTO.getRoleId() != null) {
             example.createCriteria().andDeletedEqualTo(Boolean.FALSE).andRoleNameEqualTo(sysRoleDTO.getRoleName())
-                    .andRoleIdNotEqualTo(sysRoleDTO.getRoleId());
+                    .andRoleIdNotEqualTo(sysRoleDTO.getRoleId()).andTopIdEqualTo(sysRoleDTO.getTopId());
         } else {
-            example.createCriteria().andDeletedEqualTo(Boolean.FALSE).andRoleNameEqualTo(sysRoleDTO.getRoleName());
+            example.createCriteria().andDeletedEqualTo(Boolean.FALSE).andRoleNameEqualTo(sysRoleDTO.getRoleName())
+                    .andTopIdEqualTo(sysRoleDTO.getTopId());
         }
         list = sysRoleDOMapper.selectByExample(example);
         if (!list.isEmpty()) {
@@ -60,14 +69,6 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
             SysRoleDO sysRoleDO = SysRoleConverter.dto2do(sysRoleDTO);
             JwtUser user = (JwtUser) getCurrentUser();
             if (sysRoleDO.getOrgId() != null) {
-                ResponseObjectEntity<?> response = sysOrganizationService.search(sysRoleDTO.getTopId());
-                if (response.getCode() != 0) {
-                    return fail(response.getCode(), "顶级机构不存在");
-                }
-                response = sysOrganizationService.search(sysRoleDTO.getOrgId());
-                if (response.getCode() != 0) {
-                    return fail(response.getCode(), "所属机构不存在");
-                }
                 sysRoleDO.setUpdater(user.getUserId());
                 if (sysRoleDOMapper.updateByPrimaryKeySelective(sysRoleDO) > 1) {
                     return ok(null);

@@ -1,5 +1,6 @@
 package tech.tystnad.works.service;
 
+import tech.tystnad.works.model.PageEntity;
 import tech.tystnad.works.model.ResponseObjectEntity;
 import tech.tystnad.works.model.dto.SysOrganizationDTO;
 import tech.tystnad.works.model.vo.SysOrganizationVO;
@@ -18,5 +19,5 @@ public interface SysOrganizationService {
 
     ResponseObjectEntity<SysOrganizationVO> search(Long sysOrganizationId);
 
-    ResponseObjectEntity<SysOrganizationVO> search(SysOrganizationDTO sysOrganizationDTO);
+    ResponseObjectEntity<SysOrganizationVO> search(SysOrganizationDTO sysOrganizationDTO, PageEntity pageEntity);
 }
