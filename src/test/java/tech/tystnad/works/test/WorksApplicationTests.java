@@ -81,6 +81,7 @@ class WorksApplicationTests {
         sysOrganizationDTO.setCreateTimeStart(TimeUtils.get(c, 0, 0, 0, 0));
         sysOrganizationDTO.setCreateTimeEnd(TimeUtils.get(c, 23, 59, 59, 999));
         PageEntity pageEntity = new PageEntity(3, 15);
+        logger.info("count={}", sysOrganizationVOMapper.countByDTO(sysOrganizationDTO));
         logger.info("haseCode={}", sysOrganizationVOMapper.findByDTO(sysOrganizationDTO, pageEntity).hashCode());
     }
 

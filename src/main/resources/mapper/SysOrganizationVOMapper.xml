@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="tech.tystnad.works.repository.mapper.SysOrganizationVOMapper">
-  <select id="findByDTO" parameterType="tech.tystnad.works.model.dto.SysOrganizationDTO" resultType="tech.tystnad.works.model.vo.SysOrganizationVO">
-    SELECT o.org_id, o.top_id, o.parent_id, po.org_name AS parent_name, o.org_level, o.org_name, o.enabled, o.updater, o.creator, o.update_time, o.create_time, cu.user_name AS creator_name, uu.user_name AS updater_name
-    FROM sys_organization AS o JOIN sys_organization AS po ON (o.parent_id = po.org_id) JOIN sys_user AS cu ON (o.creator = cu.user_id) JOIN sys_user AS uu ON (o.updater = uu.user_id)
+  <sql id="whereByDTO">
     WHERE o.deleted = 0
     <if test="dto.orgId != null">
       AND o.org_id = #{dto.orgId}
@@ -41,7 +39,16 @@
     <if test="dto.updaterName != null">
       AND uu.user_name LIKE CONCAT(#{dto.updaterName},'%')
     </if>
+  </sql>
+  <select id="findByDTO" parameterType="tech.tystnad.works.model.dto.SysOrganizationDTO" resultType="tech.tystnad.works.model.vo.SysOrganizationVO">
+    SELECT o.org_id, o.top_id, o.parent_id, po.org_name AS parent_name, o.org_level, o.org_name, o.enabled, o.updater, o.creator, o.update_time, o.create_time, cu.user_name AS creator_name, uu.user_name AS updater_name
+    FROM sys_organization AS o JOIN sys_organization AS po ON (o.parent_id = po.org_id) JOIN sys_user AS cu ON (o.creator = cu.user_id) JOIN sys_user AS uu ON (o.updater = uu.user_id)
+    <include refid="whereByDTO" />
     LIMIT #{page.pos}, #{page.range}
+  </select>
+  <select id="countByDTO" parameterType="tech.tystnad.works.model.dto.SysOrganizationDTO" resultType="java.lang.Integer">
+    SELECT COUNT(o.org_id) FROM sys_organization AS o JOIN sys_organization AS po ON (o.parent_id = po.org_id) JOIN sys_user AS cu ON (o.creator = cu.user_id) JOIN sys_user AS uu ON (o.updater = uu.user_id)
+    <include refid="whereByDTO" />
   </select>
   <select id="findByParentId" resultType="tech.tystnad.works.model.vo.SysOrganizationTreeVO">
     SELECT top_id, org_id, org_level, org_name FROM sys_organization WHERE top_id = #{top_id} AND parent_id = #{parent_id}

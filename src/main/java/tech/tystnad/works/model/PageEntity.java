@@ -61,6 +61,7 @@ public class PageEntity {
 
     public void setSize(Integer size) {
         this.size = size;
+        calculationPage();
     }
 
     public Integer getPos() {

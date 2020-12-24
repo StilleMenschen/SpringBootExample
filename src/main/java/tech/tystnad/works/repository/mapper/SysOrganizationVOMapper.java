@@ -11,5 +11,7 @@ import java.util.List;
 public interface SysOrganizationVOMapper {
     List<SysOrganizationVO> findByDTO(@Param("dto") SysOrganizationDTO sysOrganizationDTO, @Param("page") PageEntity pageEntity);
 
+    Integer countByDTO(@Param("dto") SysOrganizationDTO sysOrganizationDTO);
+
     List<SysOrganizationTreeVO> findByParentId(@Param("top_id") Long topId, @Param("parent_id") Long parentId);
 }

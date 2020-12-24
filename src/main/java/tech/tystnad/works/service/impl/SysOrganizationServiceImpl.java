@@ -156,6 +156,9 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
 
     @Override
     public ResponseObjectEntity<SysOrganizationVO> search(SysOrganizationDTO sysOrganizationDTO, PageEntity pageEntity) {
-        return ok(sysOrganizationVOMapper.findByDTO(sysOrganizationDTO, pageEntity));
+        List<SysOrganizationVO> list = sysOrganizationVOMapper.findByDTO(sysOrganizationDTO, pageEntity);
+        Integer size = sysOrganizationVOMapper.countByDTO(sysOrganizationDTO);
+        pageEntity.setSize(size);
+        return ok(list, pageEntity);
     }
 }
