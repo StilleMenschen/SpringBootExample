@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface SysUserVOMapper {
     List<SysUserVO> findByDTO(@Param("dto") SysUserDTO sysUserDTO, @Param("page") PageEntity pageEntity);
+
+    Integer countByDTO(@Param("dto") SysUserDTO sysUserDTO);
 }

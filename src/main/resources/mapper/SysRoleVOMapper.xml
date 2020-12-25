@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="tech.tystnad.works.repository.mapper.SysRoleVOMapper">
-    <select id="findByDTO" resultType="tech.tystnad.works.model.vo.SysRoleVO">
-        SELECT r.role_id, r.org_id, o.org_name, r.top_id, r.updater, uu.user_name AS updater_name, r.creator, cu.user_name AS creator_name, r.update_time, r.create_time
-        FROM works.sys_role AS r JOIN works.sys_user AS cu ON (r.creator = cu.user_id) JOIN works.sys_organization AS o ON (r.org_id = o.org_id) JOIN works.sys_user AS uu ON (r.updater = uu.user_id)
+    <sql id="whereByDTO">
         WHERE r.deleted = 0
         <if test="dto.roleId != null">
             AND r.role_id = #{dto.roleId}
@@ -35,6 +33,15 @@
         <if test="dto.createTimeEnd != null">
             AND r.create_time <![CDATA[<=]]> #{dto.createTimeEnd}
         </if>
+    </sql>
+    <select id="findByDTO" resultType="tech.tystnad.works.model.vo.SysRoleVO">
+        SELECT r.role_id, r.org_id, o.org_name, r.top_id, r.updater, uu.user_name AS updater_name, r.creator, cu.user_name AS creator_name, r.update_time, r.create_time
+        FROM works.sys_role AS r JOIN works.sys_user AS cu ON (r.creator = cu.user_id) JOIN works.sys_organization AS o ON (r.org_id = o.org_id) JOIN works.sys_user AS uu ON (r.updater = uu.user_id)
+        <include refid="whereByDTO" />
         LIMIT #{page.pos}, #{page.range}
+    </select>
+    <select id="countByDTO" resultType="java.lang.Integer">
+        SELECT COUNT(r.role_id) FROM works.sys_role AS r JOIN works.sys_user AS cu ON (r.creator = cu.user_id) JOIN works.sys_organization AS o ON (r.org_id = o.org_id) JOIN works.sys_user AS uu ON (r.updater = uu.user_id)
+        <include refid="whereByDTO" />
     </select>
 </mapper>

@@ -95,6 +95,7 @@ class WorksApplicationTests {
         sysRoleDTO.setCreateTimeStart(TimeUtils.get(c, 0, 0, 0, 0));
         sysRoleDTO.setCreateTimeEnd(TimeUtils.get(c, 23, 59, 59, 999));
         PageEntity pageEntity = new PageEntity(3, 15);
+        logger.info("count={}", sysRoleVOMapper.countByDTO(sysRoleDTO));
         logger.info("haseCode={}", sysRoleVOMapper.findByDTO(sysRoleDTO, pageEntity).hashCode());
     }
 
@@ -110,6 +111,7 @@ class WorksApplicationTests {
         sysUserDTO.setCreateTimeStart(TimeUtils.get(c, 0, 0, 0, 0));
         sysUserDTO.setCreateTimeEnd(TimeUtils.get(c, 23, 59, 59, 999));
         PageEntity pageEntity = new PageEntity(3, 15);
+        logger.info("count={}", sysUserVOMapper.countByDTO(sysUserDTO));
         logger.info("haseCode={}", sysUserVOMapper.findByDTO(sysUserDTO, pageEntity).hashCode());
     }
 }

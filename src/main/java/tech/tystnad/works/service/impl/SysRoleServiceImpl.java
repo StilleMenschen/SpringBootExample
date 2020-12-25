@@ -130,6 +130,9 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
 
     @Override
     public ResponseObjectEntity<SysRoleVO> search(SysRoleDTO sysRoleDTO, PageEntity pageEntity) {
-        return ok(sysRoleVOMapper.findByDTO(sysRoleDTO, pageEntity));
+        List<SysRoleVO> list = sysRoleVOMapper.findByDTO(sysRoleDTO, pageEntity);
+        int size = sysRoleVOMapper.countByDTO(sysRoleDTO);
+        pageEntity.setSize(size);
+        return ok(list, pageEntity);
     }
 }

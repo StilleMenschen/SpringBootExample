@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="tech.tystnad.works.repository.mapper.SysUserVOMapper">
-    <select id="findByDTO" resultType="tech.tystnad.works.model.vo.SysUserVO">
-        SELECT u.user_id, u.org_id, o.org_name, u.top_id, u.user_name, u.role_id, u.nickname, u.email, u.telephone_number, u.user_type, u.enabled, u.create_time, u.updater, u.creator, cu.user_name AS creator_name, uu.user_name AS updater_name
-        FROM sys_user AS u JOIN sys_organization AS o ON (u.org_id = o.org_id) JOIN sys_user AS uu ON (u.updater = uu.user_id) JOIN sys_user AS cu ON (cu.user_id = u.creator)
+    <sql id="whereBYDTO">
         WHERE u.deleted = 0
         <if test="dto.userId != null">
             AND u.user_id = #{dto.userId}
@@ -50,6 +48,15 @@
         <if test="dto.updaterName != null">
             AND uu.user_name LIKE CONCAT(#{dto.updaterName},'%')
         </if>
+    </sql>
+    <select id="findByDTO" resultType="tech.tystnad.works.model.vo.SysUserVO">
+        SELECT u.user_id, u.org_id, o.org_name, u.top_id, u.user_name, u.role_id, u.nickname, u.email, u.telephone_number, u.user_type, u.enabled, u.create_time, u.updater, u.creator, cu.user_name AS creator_name, uu.user_name AS updater_name
+        FROM sys_user AS u JOIN sys_organization AS o ON (u.org_id = o.org_id) JOIN sys_user AS uu ON (u.updater = uu.user_id) JOIN sys_user AS cu ON (cu.user_id = u.creator)
+        <include refid="whereBYDTO"/>
         LIMIT #{page.pos}, #{page.range}
+    </select>
+    <select id="countByDTO" resultType="java.lang.Integer">
+        SELECT COUNT(u.user_id) FROM sys_user AS u JOIN sys_organization AS o ON (u.org_id = o.org_id) JOIN sys_user AS uu ON (u.updater = uu.user_id) JOIN sys_user AS cu ON (cu.user_id = u.creator)
+        <include refid="whereBYDTO"/>
     </select>
 </mapper>
