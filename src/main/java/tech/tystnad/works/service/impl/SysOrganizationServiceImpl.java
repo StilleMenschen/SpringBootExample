@@ -76,7 +76,7 @@ public class SysOrganizationServiceImpl extends BaseService implements SysOrgani
                 return fail(400, "机构层级最大为5级");
             }
             sysOrganizationDO.setOrgLevel((byte) orgLevel);
-            JwtUser user = (JwtUser) getCurrentUser();
+            final JwtUser user = (JwtUser) getCurrentUser();
             if (sysOrganizationDO.getOrgId() != null) {
                 sysOrganizationDO.setUpdater(user.getUserId());
                 if (sysOrganizationDOMapper.updateByPrimaryKeySelective(sysOrganizationDO) > 1) {

@@ -12,15 +12,17 @@ import tech.tystnad.works.model.PageEntity;
 import tech.tystnad.works.model.ResponseObjectEntity;
 import tech.tystnad.works.model.dto.SysRoleDTO;
 import tech.tystnad.works.model.vo.SysRoleVO;
+import tech.tystnad.works.repository.domain.SysAuthorityDO;
 import tech.tystnad.works.repository.domain.SysRoleDO;
 import tech.tystnad.works.repository.domain.SysRoleDOExample;
 import tech.tystnad.works.repository.mapper.SysRoleDOMapper;
 import tech.tystnad.works.repository.mapper.SysRoleVOMapper;
+import tech.tystnad.works.service.SysAuthorityService;
 import tech.tystnad.works.service.SysOrganizationService;
 import tech.tystnad.works.service.SysRoleService;
 import tech.tystnad.works.util.IdWorker;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class SysRoleServiceImpl extends BaseService implements SysRoleService {
@@ -31,13 +33,15 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
     private final SysRoleVOMapper sysRoleVOMapper;
     private final IdWorker idWorker;
     private final SysOrganizationService sysOrganizationService;
+    private final SysAuthorityService sysAuthorityService;
 
     @Autowired
-    public SysRoleServiceImpl(SysRoleDOMapper sysRoleDOMapper, SysRoleVOMapper sysRoleVOMapper, IdWorker idWorker, SysOrganizationService sysOrganizationService) {
+    public SysRoleServiceImpl(SysRoleDOMapper sysRoleDOMapper, SysRoleVOMapper sysRoleVOMapper, IdWorker idWorker, SysOrganizationService sysOrganizationService, SysAuthorityService sysAuthorityService) {
         this.sysRoleDOMapper = sysRoleDOMapper;
         this.sysRoleVOMapper = sysRoleVOMapper;
         this.idWorker = idWorker;
         this.sysOrganizationService = sysOrganizationService;
+        this.sysAuthorityService = sysAuthorityService;
     }
 
     @Override
@@ -134,5 +138,66 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
         int size = sysRoleVOMapper.countByDTO(sysRoleDTO);
         pageEntity.setSize(size);
         return ok(list, pageEntity);
+    }
+
+    private Map<Integer, List<SysAuthorityDO>> listAuthority() {
+        // 1. 获取顶级机构ID
+        final JwtUser user = (JwtUser) getCurrentUser();
+        // 2. 查询顶级机构可用权限
+        final List<Short> authorityIds = sysRoleVOMapper.findRoleAuthorityByTopId(user.getTopId());
+        // 3. 获取权限详细信息
+        ResponseObjectEntity<SysAuthorityDO> response = sysAuthorityService.search(authorityIds);
+        List<SysAuthorityDO> authority = response.getValues();
+        final Map<Integer, List<SysAuthorityDO>> map = new LinkedHashMap<>();
+        if (authority.isEmpty()) {
+            map.put(1, Collections.emptyList());
+            map.put(2, Collections.emptyList());
+        } else {
+            List<SysAuthorityDO> topAuthority = new LinkedList<>();
+            List<SysAuthorityDO> childrenAuthority = new LinkedList<>();
+            for (SysAuthorityDO e : authority) {
+                if (e.getParentId() == null) {
+                    topAuthority.add(e);
+                } else {
+                    childrenAuthority.add(e);
+                }
+            }
+            map.put(1, topAuthority);
+            map.put(2, childrenAuthority);
+        }
+        return map;
+    }
+
+    private Map<String, Object> buildTree(final SysAuthorityDO parent, List<SysAuthorityDO> authority) {
+        Map<String, Object> top = new LinkedHashMap<>();
+        // TODO: 实现树形算法
+        for (SysAuthorityDO e : authority) {
+            if (parent.getParentId().equals(e.getParentId())) {
+                Map<String, Object> map = new LinkedHashMap<>();
+                map.put("auth_id", e.getAuthId());
+                map.put("auth_description", e.getAuthDescription());
+                map.put("checked", Boolean.FALSE);
+                map.put("children", null);
+            }
+        }
+        top.put("auth_id", parent.getAuthId());
+        top.put("auth_description", parent.getAuthDescription());
+        top.put("checked", Boolean.FALSE);
+        return top;
+    }
+
+    @Override
+    public ResponseObjectEntity<Map<String, Object>> authorityTree() {
+        final Map<Integer, List<SysAuthorityDO>> map = listAuthority();
+        // 4. 结构化权限树
+        List<Map<String, Object>> results = new LinkedList<>();
+        return ok(results);
+    }
+
+    @Override
+    public ResponseObjectEntity<Map<String, Object>> authorityTree(Long roleId) {
+        final Map<Integer, List<SysAuthorityDO>> map = listAuthority();
+        List<Map<String, Object>> results = new LinkedList<>();
+        return ok(results);
     }
 }

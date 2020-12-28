@@ -1,9 +1,8 @@
 package tech.tystnad.works.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.tystnad.works.core.service.BaseService;
 import tech.tystnad.works.model.ResponseObjectEntity;
 import tech.tystnad.works.repository.domain.RoleAuthorityRelationshipDO;
@@ -17,7 +16,6 @@ import java.util.List;
 
 @Service
 public class RoleAuthorityRelationshipServiceImpl extends BaseService implements RoleAuthorityRelationshipService {
-    private static final Logger logger = LoggerFactory.getLogger(RoleAuthorityRelationshipServiceImpl.class);
 
     private final RoleAuthorityRelationshipDOMapper relationshipDOMapper;
     private final RoleAuthorityRelationshipVOMapper relationshipVOMapper;
@@ -31,6 +29,7 @@ public class RoleAuthorityRelationshipServiceImpl extends BaseService implements
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseObjectEntity<?> save(Long roleId, List<Short> authIds) {
         ResponseObjectEntity<?> response = sysRoleService.search(roleId);
         if (response.getCode() != 0) {
@@ -43,6 +42,7 @@ public class RoleAuthorityRelationshipServiceImpl extends BaseService implements
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseObjectEntity<?> delete(Long roleId) {
         RoleAuthorityRelationshipDOExample example = new RoleAuthorityRelationshipDOExample();
         example.createCriteria().andRoleIdEqualTo(roleId);
@@ -51,6 +51,7 @@ public class RoleAuthorityRelationshipServiceImpl extends BaseService implements
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseObjectEntity<?> delete(Long roleId, List<Short> authIds) {
         RoleAuthorityRelationshipDOExample example = new RoleAuthorityRelationshipDOExample();
         example.createCriteria().andRoleIdEqualTo(roleId).andAuthIdIn(authIds);

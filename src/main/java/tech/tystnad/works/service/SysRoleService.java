@@ -6,6 +6,7 @@ import tech.tystnad.works.model.dto.SysRoleDTO;
 import tech.tystnad.works.model.vo.SysRoleVO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SysRoleService {
     ResponseObjectEntity<SysRoleVO> save(SysRoleDTO sysRoleDTO);
@@ -17,4 +18,8 @@ public interface SysRoleService {
     ResponseObjectEntity<SysRoleVO> search(Long sysRoleId);
 
     ResponseObjectEntity<SysRoleVO> search(SysRoleDTO sysRoleDTO, PageEntity pageEntity);
+
+    ResponseObjectEntity<Map<String, Object>> authorityTree();
+
+    ResponseObjectEntity<Map<String, Object>> authorityTree(Long roleId);
 }
