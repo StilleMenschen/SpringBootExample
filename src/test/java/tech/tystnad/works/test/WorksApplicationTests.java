@@ -12,9 +12,12 @@ import tech.tystnad.works.model.PageEntity;
 import tech.tystnad.works.model.dto.SysOrganizationDTO;
 import tech.tystnad.works.model.dto.SysRoleDTO;
 import tech.tystnad.works.model.dto.SysUserDTO;
+import tech.tystnad.works.repository.domain.SysRoleDO;
 import tech.tystnad.works.repository.mapper.SysOrganizationVOMapper;
+import tech.tystnad.works.repository.mapper.SysRoleDOMapper;
 import tech.tystnad.works.repository.mapper.SysRoleVOMapper;
 import tech.tystnad.works.repository.mapper.SysUserVOMapper;
+import tech.tystnad.works.service.RoleAuthorityRelationshipService;
 import tech.tystnad.works.util.IdWorker;
 import tech.tystnad.works.util.TimeUtils;
 
@@ -23,6 +26,8 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @SpringBootTest
@@ -34,6 +39,10 @@ class WorksApplicationTests {
     private SysOrganizationVOMapper sysOrganizationVOMapper;
     @Resource
     private SysRoleVOMapper sysRoleVOMapper;
+    @Resource
+    private SysRoleDOMapper sysRoleDOMapper;
+    @Resource
+    private RoleAuthorityRelationshipService roleAuthorityRelationshipService;
     @Resource
     private SysUserVOMapper sysUserVOMapper;
     @Resource
@@ -97,6 +106,29 @@ class WorksApplicationTests {
         PageEntity pageEntity = new PageEntity(3, 15);
         logger.info("count={}", sysRoleVOMapper.countByDTO(sysRoleDTO));
         logger.info("haseCode={}", sysRoleVOMapper.findByDTO(sysRoleDTO, pageEntity).hashCode());
+    }
+
+    @Test
+    public void testRoleAuthorityRelationship() {
+        final long roleId = idWorker.nextId();
+        final List<Short> list = new LinkedList<>();
+        list.add((short) 10000);
+        list.add((short) 10001);
+        list.add((short) 10002);
+        list.add((short) 10003);
+        final SysRoleDO sysRoleDO = new SysRoleDO();
+        sysRoleDO.setRoleId(roleId);
+        sysRoleDO.setRoleName("我带你们打2");
+        sysRoleDO.setTopId(0L);
+        sysRoleDO.setOrgId(idWorker.nextId());
+        sysRoleDO.setCreator(idWorker.nextId());
+        sysRoleDOMapper.insertSelective(sysRoleDO);
+        roleAuthorityRelationshipService.save(roleId, list);
+        roleAuthorityRelationshipService.search(roleId).getValues().forEach(e -> {
+            logger.info("RoleId={}, AuthId={}", e.getRoleId(), e.getAuthId());
+        });
+        sysRoleDOMapper.deleteByPrimaryKey(roleId);
+        roleAuthorityRelationshipService.delete(roleId);
     }
 
     @Test

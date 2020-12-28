@@ -1,6 +1,7 @@
 package tech.tystnad.works.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import tech.tystnad.works.core.service.BaseService;
 import tech.tystnad.works.model.ResponseObjectEntity;
 import tech.tystnad.works.repository.domain.SysAuthorityDO;
@@ -10,6 +11,7 @@ import tech.tystnad.works.service.SysAuthorityService;
 
 import java.util.List;
 
+@Service
 public class SysAuthorityServiceImpl extends BaseService implements SysAuthorityService {
 
     private final SysAuthorityDOMapper sysAuthorityDOMapper;
