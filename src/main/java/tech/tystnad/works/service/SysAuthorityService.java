@@ -12,5 +12,5 @@ public interface SysAuthorityService {
 
     ResponseObjectEntity<SysAuthorityDO> search(Short sysAuthorityId);
 
-    ResponseObjectEntity<SysAuthorityDO> search(SysAuthorityDO SysAuthorityDO);
+    ResponseObjectEntity<SysAuthorityDO> search(List<Short> sysAuthorityIds);
 }

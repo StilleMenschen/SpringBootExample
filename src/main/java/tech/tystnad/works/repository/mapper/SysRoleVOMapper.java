@@ -11,4 +11,6 @@ public interface SysRoleVOMapper {
     List<SysRoleVO> findByDTO(@Param("dto") SysRoleDTO sysRoleDTO, @Param("page") PageEntity pageEntity);
 
     Integer countByDTO(@Param("dto") SysRoleDTO sysRoleDTO);
+
+    List<Short> findRoleAuthorityByTopId(@Param("topId") Long topId);
 }

@@ -44,4 +44,8 @@
         SELECT COUNT(r.role_id) FROM works.sys_role AS r JOIN works.sys_user AS cu ON (r.creator = cu.user_id) JOIN works.sys_organization AS o ON (r.org_id = o.org_id) JOIN works.sys_user AS uu ON (r.updater = uu.user_id)
         <include refid="whereByDTO" />
     </select>
+    <select id="findRoleAuthorityByTopId">
+        SELECT DISTINCT rar.auth_id FROM sys_role r JOIN role_authority_relationship rar ON (r.role_id = rar.role_id)
+        WHERE r.deleted = 0 AND r.top_id = #{topId}
+    </select>
 </mapper>

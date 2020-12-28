@@ -41,7 +41,9 @@ public class SysAuthorityServiceImpl extends BaseService implements SysAuthority
     }
 
     @Override
-    public ResponseObjectEntity<SysAuthorityDO> search(SysAuthorityDO SysAuthorityDO) {
-        return null;
+    public ResponseObjectEntity<SysAuthorityDO> search(List<Short> sysAuthorityIds) {
+        SysAuthorityDOExample example = new SysAuthorityDOExample();
+        example.createCriteria().andAuthIdIn(sysAuthorityIds);
+        return ok(sysAuthorityDOMapper.selectByExample(example));
     }
 }
