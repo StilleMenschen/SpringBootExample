@@ -13,11 +13,13 @@ import tech.tystnad.works.model.ResponseObjectEntity;
 import tech.tystnad.works.model.dto.SysRoleDTO;
 import tech.tystnad.works.model.vo.SysAuthorityTreeVO;
 import tech.tystnad.works.model.vo.SysRoleVO;
+import tech.tystnad.works.repository.domain.RoleAuthorityRelationshipDO;
 import tech.tystnad.works.repository.domain.SysAuthorityDO;
 import tech.tystnad.works.repository.domain.SysRoleDO;
 import tech.tystnad.works.repository.domain.SysRoleDOExample;
 import tech.tystnad.works.repository.mapper.SysRoleDOMapper;
 import tech.tystnad.works.repository.mapper.SysRoleVOMapper;
+import tech.tystnad.works.service.RoleAuthorityRelationshipService;
 import tech.tystnad.works.service.SysAuthorityService;
 import tech.tystnad.works.service.SysOrganizationService;
 import tech.tystnad.works.service.SysRoleService;
@@ -35,14 +37,16 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
     private final IdWorker idWorker;
     private final SysOrganizationService sysOrganizationService;
     private final SysAuthorityService sysAuthorityService;
+    private final RoleAuthorityRelationshipService roleAuthorityRelationshipService;
 
     @Autowired
-    public SysRoleServiceImpl(SysRoleDOMapper sysRoleDOMapper, SysRoleVOMapper sysRoleVOMapper, IdWorker idWorker, SysOrganizationService sysOrganizationService, SysAuthorityService sysAuthorityService) {
+    public SysRoleServiceImpl(SysRoleDOMapper sysRoleDOMapper, SysRoleVOMapper sysRoleVOMapper, IdWorker idWorker, SysOrganizationService sysOrganizationService, SysAuthorityService sysAuthorityService, RoleAuthorityRelationshipService roleAuthorityRelationshipService) {
         this.sysRoleDOMapper = sysRoleDOMapper;
         this.sysRoleVOMapper = sysRoleVOMapper;
         this.idWorker = idWorker;
         this.sysOrganizationService = sysOrganizationService;
         this.sysAuthorityService = sysAuthorityService;
+        this.roleAuthorityRelationshipService = roleAuthorityRelationshipService;
     }
 
     @Override
@@ -149,8 +153,8 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
         // 3. 获取权限详细信息
         ResponseObjectEntity<SysAuthorityDO> response = sysAuthorityService.search(authorityIds);
         List<SysAuthorityDO> authority = response.getValues();
-        final AuthorityCollection<SysAuthorityDO> collection = new AuthorityCollection();
-        if (authority.isEmpty()) {
+        final AuthorityCollection<SysAuthorityDO> collection = new AuthorityCollection<>();
+        if (authority == null || authority.isEmpty()) {
             collection.parent = Collections.emptyList();
             collection.children = Collections.emptyList();
         } else {
@@ -169,12 +173,13 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
         return collection;
     }
 
-    private SysAuthorityTreeVO buildTree(final SysAuthorityDO parent, List<SysAuthorityDO> authority) {
+    private SysAuthorityTreeVO buildTree(final SysAuthorityDO parent, List<SysAuthorityDO> authority, Set<Short> checkedAuths) {
         final SysAuthorityTreeVO top = new SysAuthorityTreeVO();
         final ArrayDeque<SysAuthorityTreeVO> queue = new ArrayDeque<>();
         List<SysAuthorityDO> temp;
         top.setAuthId(parent.getAuthId());
         top.setAuthDescription(parent.getAuthDescription());
+        top.setChecked(checkedAuths.contains(parent.getAuthId()));
         queue.offerFirst(top);
         while (!queue.isEmpty()) {
             SysAuthorityTreeVO p = queue.pollLast();
@@ -185,6 +190,7 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
                     SysAuthorityTreeVO child = new SysAuthorityTreeVO();
                     child.setAuthId(e.getAuthId());
                     child.setAuthDescription(e.getAuthDescription());
+                    child.setChecked(checkedAuths.contains(e.getAuthId()));
                     voList.add(child);
                     queue.offerFirst(child);
                 } else {
@@ -201,14 +207,18 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
     public ResponseObjectEntity<SysAuthorityTreeVO> authorityTree() {
         final AuthorityCollection<SysAuthorityDO> collection = listAuthority();
         List<SysAuthorityTreeVO> results = new LinkedList<>();
-        collection.parent.forEach(e -> results.add(buildTree(e, collection.children)));
+        collection.parent.forEach(e -> results.add(buildTree(e, collection.children, Collections.emptySet())));
         return ok(results);
     }
 
     @Override
     public ResponseObjectEntity<SysAuthorityTreeVO> authorityTree(Long roleId) {
         final AuthorityCollection<SysAuthorityDO> collection = listAuthority();
-        List<SysAuthorityTreeVO> results = new LinkedList<>();
+        final List<RoleAuthorityRelationshipDO> relationshipDO = roleAuthorityRelationshipService.search(roleId).getValues();
+        final List<SysAuthorityTreeVO> results = new LinkedList<>();
+        Set<Short> checkedAuths = new HashSet<>();
+        relationshipDO.forEach(e -> checkedAuths.add(e.getAuthId()));
+        collection.parent.forEach(e -> results.add(buildTree(e, collection.children, checkedAuths)));
         return ok(results);
     }
 

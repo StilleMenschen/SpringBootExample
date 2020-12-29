@@ -35,16 +35,22 @@
         </if>
     </sql>
     <select id="findByDTO" resultType="tech.tystnad.works.model.vo.SysRoleVO">
-        SELECT r.role_id, r.org_id, o.org_name, r.top_id, r.updater, uu.user_name AS updater_name, r.creator, cu.user_name AS creator_name, r.update_time, r.create_time
-        FROM works.sys_role AS r JOIN works.sys_user AS cu ON (r.creator = cu.user_id) JOIN works.sys_organization AS o ON (r.org_id = o.org_id) JOIN works.sys_user AS uu ON (r.updater = uu.user_id)
-        <include refid="whereByDTO" />
+        SELECT r.role_id, r.org_id, o.org_name, r.top_id, r.updater, uu.user_name AS updater_name, r.creator,
+        cu.user_name AS creator_name, r.update_time, r.create_time
+        FROM works.sys_role AS r JOIN works.sys_user AS cu ON (r.creator = cu.user_id) JOIN works.sys_organization AS o
+        ON (r.org_id = o.org_id) JOIN works.sys_user AS uu ON (r.updater = uu.user_id)
+        <include refid="whereByDTO"/>
         LIMIT #{page.pos}, #{page.range}
     </select>
     <select id="countByDTO" resultType="java.lang.Integer">
-        SELECT COUNT(r.role_id) FROM works.sys_role AS r JOIN works.sys_user AS cu ON (r.creator = cu.user_id) JOIN works.sys_organization AS o ON (r.org_id = o.org_id) JOIN works.sys_user AS uu ON (r.updater = uu.user_id)
-        <include refid="whereByDTO" />
+        SELECT COUNT(r.role_id) FROM works.sys_role AS r JOIN works.sys_user AS cu ON (r.creator = cu.user_id) JOIN
+        works.sys_organization AS o ON (r.org_id = o.org_id) JOIN works.sys_user AS uu ON (r.updater = uu.user_id)
+        <include refid="whereByDTO"/>
     </select>
-    <select id="findRoleAuthorityByTopId">
+    <!-- <resultMap id="BaseResultMap" type="java.util.List">
+         <result column="auth_id" jdbcType="SMALLINT" property="authId" />
+     </resultMap>-->
+    <select id="findRoleAuthorityByTopId" resultType="java.lang.Short">
         SELECT DISTINCT rar.auth_id FROM sys_role r JOIN role_authority_relationship rar ON (r.role_id = rar.role_id)
         WHERE r.deleted = 0 AND r.top_id = #{topId}
     </select>

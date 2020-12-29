@@ -3,21 +3,25 @@ package tech.tystnad.works.test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.validator.HibernateValidator;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import tech.tystnad.works.config.AuthorityCodeConfig;
 import tech.tystnad.works.core.validator.groups.SysOrganizationGroups;
 import tech.tystnad.works.core.validator.groups.SysOrganizationGroups.queryGroup;
 import tech.tystnad.works.core.validator.groups.SysRoleGroups;
+import tech.tystnad.works.model.JwtUser;
 import tech.tystnad.works.model.PageEntity;
-import tech.tystnad.works.model.ResponseObjectEntity;
 import tech.tystnad.works.model.dto.SysOrganizationDTO;
 import tech.tystnad.works.model.dto.SysRoleDTO;
 import tech.tystnad.works.model.dto.SysUserDTO;
 import tech.tystnad.works.model.vo.SysAuthorityTreeVO;
-import tech.tystnad.works.repository.domain.SysAuthorityDO;
 import tech.tystnad.works.repository.domain.SysRoleDO;
 import tech.tystnad.works.repository.mapper.SysOrganizationVOMapper;
 import tech.tystnad.works.repository.mapper.SysRoleDOMapper;
@@ -25,6 +29,7 @@ import tech.tystnad.works.repository.mapper.SysRoleVOMapper;
 import tech.tystnad.works.repository.mapper.SysUserVOMapper;
 import tech.tystnad.works.service.RoleAuthorityRelationshipService;
 import tech.tystnad.works.service.SysAuthorityService;
+import tech.tystnad.works.service.SysRoleService;
 import tech.tystnad.works.util.IdWorker;
 import tech.tystnad.works.util.TimeUtils;
 
@@ -39,12 +44,16 @@ class WorksApplicationTests {
 
     private static final Logger logger = LoggerFactory.getLogger(WorksApplicationTests.class);
 
+    private static final Map<Long, Object> tempMap = new HashMap<>();
+
     @Resource
     private SysOrganizationVOMapper sysOrganizationVOMapper;
     @Resource
     private SysRoleVOMapper sysRoleVOMapper;
     @Resource
     private SysRoleDOMapper sysRoleDOMapper;
+    @Resource
+    private SysRoleService sysRoleService;
     @Resource
     private SysAuthorityService sysAuthorityService;
     @Resource
@@ -53,6 +62,33 @@ class WorksApplicationTests {
     private SysUserVOMapper sysUserVOMapper;
     @Resource
     private IdWorker idWorker;
+
+    @BeforeEach
+    public void on() {
+        final long id = idWorker.nextId();
+        UserDetails userDetails = new JwtUser(idWorker.nextId(), 0L, id, "", "",
+                Boolean.TRUE, "", Collections.emptyList(), new Date());
+        TestingAuthenticationToken authentication = new TestingAuthenticationToken(userDetails, null);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        SysRoleDO sysRoleDO = new SysRoleDO();
+        sysRoleDO.setRoleId(idWorker.nextId());
+        sysRoleDO.setTopId(0L);
+        sysRoleDO.setOrgId(id);
+        sysRoleDO.setCreator(idWorker.nextId());
+        sysRoleDOMapper.insertSelective(sysRoleDO);
+        final List<Short> authorityIds = new LinkedList<>();
+        AuthorityCodeConfig.keySet().forEach(e -> authorityIds.add(Short.valueOf(AuthorityCodeConfig.getString(e))));
+        roleAuthorityRelationshipService.save(sysRoleDO.getRoleId(), authorityIds);
+        tempMap.put(1L, sysRoleDO);
+    }
+
+    @AfterEach
+    public void off() {
+        SysRoleDO sysRoleDO = new SysRoleDO();
+        sysRoleDO = (SysRoleDO) tempMap.get(1L);
+        sysRoleDOMapper.deleteByPrimaryKey(sysRoleDO.getRoleId());
+        roleAuthorityRelationshipService.delete(sysRoleDO.getRoleId());
+    }
 
     @Test
     public void testValidator() {
@@ -114,55 +150,16 @@ class WorksApplicationTests {
         logger.info("haseCode={}", sysRoleVOMapper.findByDTO(sysRoleDTO, pageEntity).hashCode());
     }
 
-    private SysAuthorityTreeVO buildTree(final SysAuthorityDO parent, List<SysAuthorityDO> authority) {
-        final SysAuthorityTreeVO top = new SysAuthorityTreeVO();
-        final ArrayDeque<SysAuthorityTreeVO> queue = new ArrayDeque<>();
-        List<SysAuthorityDO> temp;
-        top.setAuthId(parent.getAuthId());
-        top.setAuthDescription(parent.getAuthDescription());
-        queue.offerFirst(top);
-        while (!queue.isEmpty()) {
-            SysAuthorityTreeVO p = queue.pollLast();
-            logger.info("pollLast {}", p.getAuthDescription());
-            List<SysAuthorityTreeVO> voList = new ArrayList<>();
-            temp = new LinkedList<>();
-            for (SysAuthorityDO e : authority) {
-                if (p.getAuthId().equals(e.getParentId())) {
-                    SysAuthorityTreeVO child = new SysAuthorityTreeVO();
-                    child.setAuthId(e.getAuthId());
-                    child.setAuthDescription(e.getAuthDescription());
-                    voList.add(child);
-                    logger.info("offerFirst {}", child.getAuthDescription());
-                    queue.offerFirst(child);
-                } else {
-                    temp.add(e);
-                }
-            }
-            authority = temp;
-            p.setChildren(voList);
-        }
-        return top;
-    }
 
     @Test
     public void testSysAuthority() {
-        final List<Short> authorityIds = new LinkedList<>();
-        AuthorityCodeConfig.keySet().forEach(e -> authorityIds.add(Short.valueOf(AuthorityCodeConfig.getString(e))));
-        final ResponseObjectEntity<SysAuthorityDO> response = sysAuthorityService.search(authorityIds);
-        final List<SysAuthorityDO> authority = response.getValues();
-        final List<SysAuthorityDO> topAuthority = new LinkedList<>();
-        final List<SysAuthorityDO> childrenAuthority = new ArrayList<>();
-        for (SysAuthorityDO e : authority) {
-            if (e.getParentId() == null) {
-                topAuthority.add(e);
-            } else {
-                childrenAuthority.add(e);
-            }
-        }
-        List<SysAuthorityTreeVO> results = new LinkedList<>();
-        topAuthority.forEach(e -> results.add(buildTree(e, childrenAuthority)));
+        List<SysAuthorityTreeVO> results = sysRoleService.authorityTree().getValues();
+        SysRoleDO sysRoleDO = new SysRoleDO();
+        sysRoleDO = (SysRoleDO) tempMap.get(1L);
         ObjectMapper mapper = new ObjectMapper();
         try {
+            logger.info(mapper.writeValueAsString(results));
+            results = sysRoleService.authorityTree(sysRoleDO.getRoleId()).getValues();
             logger.info(mapper.writeValueAsString(results));
         } catch (JsonProcessingException e) {
             e.printStackTrace();

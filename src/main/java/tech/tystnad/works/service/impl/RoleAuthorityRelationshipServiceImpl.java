@@ -9,8 +9,8 @@ import tech.tystnad.works.repository.domain.RoleAuthorityRelationshipDO;
 import tech.tystnad.works.repository.domain.RoleAuthorityRelationshipDOExample;
 import tech.tystnad.works.repository.mapper.RoleAuthorityRelationshipDOMapper;
 import tech.tystnad.works.repository.mapper.RoleAuthorityRelationshipVOMapper;
+import tech.tystnad.works.repository.mapper.SysRoleDOMapper;
 import tech.tystnad.works.service.RoleAuthorityRelationshipService;
-import tech.tystnad.works.service.SysRoleService;
 
 import java.util.List;
 
@@ -19,21 +19,20 @@ public class RoleAuthorityRelationshipServiceImpl extends BaseService implements
 
     private final RoleAuthorityRelationshipDOMapper relationshipDOMapper;
     private final RoleAuthorityRelationshipVOMapper relationshipVOMapper;
-    private final SysRoleService sysRoleService;
+    private final SysRoleDOMapper sysRoleDOMapper;
 
     @Autowired
-    public RoleAuthorityRelationshipServiceImpl(RoleAuthorityRelationshipDOMapper relationshipDOMapper, RoleAuthorityRelationshipVOMapper relationshipVOMapper, SysRoleService sysRoleService) {
+    public RoleAuthorityRelationshipServiceImpl(RoleAuthorityRelationshipDOMapper relationshipDOMapper, RoleAuthorityRelationshipVOMapper relationshipVOMapper, SysRoleDOMapper sysRoleDOMapper) {
         this.relationshipDOMapper = relationshipDOMapper;
         this.relationshipVOMapper = relationshipVOMapper;
-        this.sysRoleService = sysRoleService;
+        this.sysRoleDOMapper = sysRoleDOMapper;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseObjectEntity<?> save(Long roleId, List<Short> authIds) {
-        ResponseObjectEntity<?> response = sysRoleService.search(roleId);
-        if (response.getCode() != 0) {
-            return fail(response.getCode(), response.getMsg());
+        if (sysRoleDOMapper.selectByPrimaryKey(roleId) == null) {
+            return fail(400, "角色不存在");
         }
         if (relationshipVOMapper.insertMulti(roleId, authIds) > 0) {
             return ok(null);
