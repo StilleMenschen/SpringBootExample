@@ -3,10 +3,10 @@ package tech.tystnad.works.service;
 import tech.tystnad.works.model.PageEntity;
 import tech.tystnad.works.model.ResponseObjectEntity;
 import tech.tystnad.works.model.dto.SysRoleDTO;
+import tech.tystnad.works.model.vo.SysAuthorityTreeVO;
 import tech.tystnad.works.model.vo.SysRoleVO;
 
 import java.util.List;
-import java.util.Map;
 
 public interface SysRoleService {
     ResponseObjectEntity<SysRoleVO> save(SysRoleDTO sysRoleDTO);
@@ -19,7 +19,7 @@ public interface SysRoleService {
 
     ResponseObjectEntity<SysRoleVO> search(SysRoleDTO sysRoleDTO, PageEntity pageEntity);
 
-    ResponseObjectEntity<Map<String, Object>> authorityTree();
+    ResponseObjectEntity<SysAuthorityTreeVO> authorityTree();
 
-    ResponseObjectEntity<Map<String, Object>> authorityTree(Long roleId);
+    ResponseObjectEntity<SysAuthorityTreeVO> authorityTree(Long roleId);
 }

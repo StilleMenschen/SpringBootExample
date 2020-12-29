@@ -42,6 +42,7 @@ public class WorksTests {
         OperatingMap.put("READ", "查询");
         OperatingMap.put("UPDATE", "更新");
         OperatingMap.put("DELETE", "删除");
+        AuthorityMap.put("MANAGER", Collections.emptyList());
         authoritySet.stream().filter(e -> e.contains(splitChar)).forEach(key -> {
             final String[] splitKey = key.split("\\.");
             List<String> list = AuthorityMap.computeIfAbsent(splitKey[0], k -> new LinkedList<>());

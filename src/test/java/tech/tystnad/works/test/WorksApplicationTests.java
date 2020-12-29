@@ -1,23 +1,30 @@
 package tech.tystnad.works.test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.validator.HibernateValidator;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
+import tech.tystnad.works.config.AuthorityCodeConfig;
 import tech.tystnad.works.core.validator.groups.SysOrganizationGroups;
 import tech.tystnad.works.core.validator.groups.SysOrganizationGroups.queryGroup;
 import tech.tystnad.works.core.validator.groups.SysRoleGroups;
 import tech.tystnad.works.model.PageEntity;
+import tech.tystnad.works.model.ResponseObjectEntity;
 import tech.tystnad.works.model.dto.SysOrganizationDTO;
 import tech.tystnad.works.model.dto.SysRoleDTO;
 import tech.tystnad.works.model.dto.SysUserDTO;
+import tech.tystnad.works.model.vo.SysAuthorityTreeVO;
+import tech.tystnad.works.repository.domain.SysAuthorityDO;
 import tech.tystnad.works.repository.domain.SysRoleDO;
 import tech.tystnad.works.repository.mapper.SysOrganizationVOMapper;
 import tech.tystnad.works.repository.mapper.SysRoleDOMapper;
 import tech.tystnad.works.repository.mapper.SysRoleVOMapper;
 import tech.tystnad.works.repository.mapper.SysUserVOMapper;
 import tech.tystnad.works.service.RoleAuthorityRelationshipService;
+import tech.tystnad.works.service.SysAuthorityService;
 import tech.tystnad.works.util.IdWorker;
 import tech.tystnad.works.util.TimeUtils;
 
@@ -25,10 +32,7 @@ import javax.annotation.Resource;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @SpringBootTest
 class WorksApplicationTests {
@@ -41,6 +45,8 @@ class WorksApplicationTests {
     private SysRoleVOMapper sysRoleVOMapper;
     @Resource
     private SysRoleDOMapper sysRoleDOMapper;
+    @Resource
+    private SysAuthorityService sysAuthorityService;
     @Resource
     private RoleAuthorityRelationshipService roleAuthorityRelationshipService;
     @Resource
@@ -106,6 +112,66 @@ class WorksApplicationTests {
         PageEntity pageEntity = new PageEntity(3, 15);
         logger.info("count={}", sysRoleVOMapper.countByDTO(sysRoleDTO));
         logger.info("haseCode={}", sysRoleVOMapper.findByDTO(sysRoleDTO, pageEntity).hashCode());
+    }
+
+    private SysAuthorityTreeVO buildTree(final SysAuthorityDO parent, List<SysAuthorityDO> authority) {
+        final SysAuthorityTreeVO top = new SysAuthorityTreeVO();
+        final ArrayDeque<SysAuthorityTreeVO> queue = new ArrayDeque<>();
+        List<SysAuthorityDO> temp;
+        top.setAuthId(parent.getAuthId());
+        top.setAuthDescription(parent.getAuthDescription());
+        queue.offerFirst(top);
+        while (!queue.isEmpty()) {
+            SysAuthorityTreeVO p = queue.pollLast();
+            logger.info("pollLast {}", p.getAuthDescription());
+            List<SysAuthorityTreeVO> voList = new ArrayList<>();
+            temp = new LinkedList<>();
+            for (SysAuthorityDO e : authority) {
+                if (p.getAuthId().equals(e.getParentId())) {
+                    SysAuthorityTreeVO child = new SysAuthorityTreeVO();
+                    child.setAuthId(e.getAuthId());
+                    child.setAuthDescription(e.getAuthDescription());
+                    voList.add(child);
+                    logger.info("offerFirst {}", child.getAuthDescription());
+                    queue.offerFirst(child);
+                } else {
+                    temp.add(e);
+                }
+            }
+            authority = temp;
+            p.setChildren(voList);
+        }
+        return top;
+    }
+
+    @Test
+    public void testSysAuthority() {
+        List<Short> authorityIds = new LinkedList<>();
+        AuthorityCodeConfig.keySet().forEach(e -> {
+            authorityIds.add(Short.valueOf(AuthorityCodeConfig.getString(e)));
+        });
+        ResponseObjectEntity<SysAuthorityDO> response = sysAuthorityService.search(authorityIds);
+        List<SysAuthorityDO> authority = response.getValues();
+        final Map<String, List<SysAuthorityDO>> map = new LinkedHashMap<>();
+        List<SysAuthorityDO> topAuthority = new LinkedList<>();
+        List<SysAuthorityDO> childrenAuthority = new ArrayList<>();
+        for (SysAuthorityDO e : authority) {
+            if (e.getParentId() == null) {
+                topAuthority.add(e);
+            } else {
+                childrenAuthority.add(e);
+            }
+        }
+        List<SysAuthorityTreeVO> results = new LinkedList<>();
+        topAuthority.forEach(e -> {
+            results.add(buildTree(e, childrenAuthority));
+        });
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            logger.info(mapper.writeValueAsString(results));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
