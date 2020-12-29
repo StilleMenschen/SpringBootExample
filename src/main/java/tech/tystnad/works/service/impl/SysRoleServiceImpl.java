@@ -141,7 +141,7 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
         return ok(list, pageEntity);
     }
 
-    private Map<String, List<SysAuthorityDO>> listAuthority() {
+    private AuthorityCollection<SysAuthorityDO> listAuthority() {
         // 1. 获取顶级机构ID
         final JwtUser user = (JwtUser) getCurrentUser();
         // 2. 查询顶级机构可用权限
@@ -149,10 +149,10 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
         // 3. 获取权限详细信息
         ResponseObjectEntity<SysAuthorityDO> response = sysAuthorityService.search(authorityIds);
         List<SysAuthorityDO> authority = response.getValues();
-        final Map<String, List<SysAuthorityDO>> map = new LinkedHashMap<>();
+        final AuthorityCollection<SysAuthorityDO> collection = new AuthorityCollection();
         if (authority.isEmpty()) {
-            map.put("top", Collections.emptyList());
-            map.put("children", Collections.emptyList());
+            collection.parent = Collections.emptyList();
+            collection.children = Collections.emptyList();
         } else {
             List<SysAuthorityDO> topAuthority = new LinkedList<>();
             List<SysAuthorityDO> childrenAuthority = new ArrayList<>();
@@ -163,10 +163,10 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
                     childrenAuthority.add(e);
                 }
             }
-            map.put("top", topAuthority);
-            map.put("children", childrenAuthority);
+            collection.parent = topAuthority;
+            collection.children = childrenAuthority;
         }
-        return map;
+        return collection;
     }
 
     private SysAuthorityTreeVO buildTree(final SysAuthorityDO parent, List<SysAuthorityDO> authority) {
@@ -199,18 +199,24 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
 
     @Override
     public ResponseObjectEntity<SysAuthorityTreeVO> authorityTree() {
-        final Map<String, List<SysAuthorityDO>> map = listAuthority();
-        List<SysAuthorityDO> top = map.get("top");
-        List<SysAuthorityDO> children = map.get("children");
+        final AuthorityCollection<SysAuthorityDO> collection = listAuthority();
         List<SysAuthorityTreeVO> results = new LinkedList<>();
-        top.forEach(e -> results.add(buildTree(e, children)));
+        collection.parent.forEach(e -> results.add(buildTree(e, collection.children)));
         return ok(results);
     }
 
     @Override
     public ResponseObjectEntity<SysAuthorityTreeVO> authorityTree(Long roleId) {
-        final Map<String, List<SysAuthorityDO>> map = listAuthority();
+        final AuthorityCollection<SysAuthorityDO> collection = listAuthority();
         List<SysAuthorityTreeVO> results = new LinkedList<>();
         return ok(results);
+    }
+
+    class AuthorityCollection<E> {
+        public List<E> parent;
+        public List<E> children;
+
+        public AuthorityCollection() {
+        }
     }
 }

@@ -146,13 +146,12 @@ class WorksApplicationTests {
 
     @Test
     public void testSysAuthority() {
-        List<Short> authorityIds = new LinkedList<>();
+        final List<Short> authorityIds = new LinkedList<>();
         AuthorityCodeConfig.keySet().forEach(e -> authorityIds.add(Short.valueOf(AuthorityCodeConfig.getString(e))));
-        ResponseObjectEntity<SysAuthorityDO> response = sysAuthorityService.search(authorityIds);
-        List<SysAuthorityDO> authority = response.getValues();
-        final Map<String, List<SysAuthorityDO>> map = new LinkedHashMap<>();
-        List<SysAuthorityDO> topAuthority = new LinkedList<>();
-        List<SysAuthorityDO> childrenAuthority = new ArrayList<>();
+        final ResponseObjectEntity<SysAuthorityDO> response = sysAuthorityService.search(authorityIds);
+        final List<SysAuthorityDO> authority = response.getValues();
+        final List<SysAuthorityDO> topAuthority = new LinkedList<>();
+        final List<SysAuthorityDO> childrenAuthority = new ArrayList<>();
         for (SysAuthorityDO e : authority) {
             if (e.getParentId() == null) {
                 topAuthority.add(e);
