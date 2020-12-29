@@ -147,9 +147,7 @@ class WorksApplicationTests {
     @Test
     public void testSysAuthority() {
         List<Short> authorityIds = new LinkedList<>();
-        AuthorityCodeConfig.keySet().forEach(e -> {
-            authorityIds.add(Short.valueOf(AuthorityCodeConfig.getString(e)));
-        });
+        AuthorityCodeConfig.keySet().forEach(e -> authorityIds.add(Short.valueOf(AuthorityCodeConfig.getString(e))));
         ResponseObjectEntity<SysAuthorityDO> response = sysAuthorityService.search(authorityIds);
         List<SysAuthorityDO> authority = response.getValues();
         final Map<String, List<SysAuthorityDO>> map = new LinkedHashMap<>();
@@ -163,9 +161,7 @@ class WorksApplicationTests {
             }
         }
         List<SysAuthorityTreeVO> results = new LinkedList<>();
-        topAuthority.forEach(e -> {
-            results.add(buildTree(e, childrenAuthority));
-        });
+        topAuthority.forEach(e -> results.add(buildTree(e, childrenAuthority)));
         ObjectMapper mapper = new ObjectMapper();
         try {
             logger.info(mapper.writeValueAsString(results));
@@ -178,11 +174,11 @@ class WorksApplicationTests {
     public void testRoleAuthorityRelationship() {
         final long roleId = idWorker.nextId();
         final List<Short> list = new LinkedList<>();
+        final SysRoleDO sysRoleDO = new SysRoleDO();
         list.add((short) 10000);
         list.add((short) 10001);
         list.add((short) 10002);
         list.add((short) 10003);
-        final SysRoleDO sysRoleDO = new SysRoleDO();
         sysRoleDO.setRoleId(roleId);
         sysRoleDO.setRoleName("我带你们打2");
         sysRoleDO.setTopId(0L);
@@ -190,9 +186,7 @@ class WorksApplicationTests {
         sysRoleDO.setCreator(idWorker.nextId());
         sysRoleDOMapper.insertSelective(sysRoleDO);
         roleAuthorityRelationshipService.save(roleId, list);
-        roleAuthorityRelationshipService.search(roleId).getValues().forEach(e -> {
-            logger.info("RoleId={}, AuthId={}", e.getRoleId(), e.getAuthId());
-        });
+        roleAuthorityRelationshipService.search(roleId).getValues().forEach(e -> logger.info("RoleId={}, AuthId={}", e.getRoleId(), e.getAuthId()));
         sysRoleDOMapper.deleteByPrimaryKey(roleId);
         roleAuthorityRelationshipService.delete(roleId);
     }

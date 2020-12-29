@@ -201,11 +201,9 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
     public ResponseObjectEntity<SysAuthorityTreeVO> authorityTree() {
         final Map<String, List<SysAuthorityDO>> map = listAuthority();
         List<SysAuthorityDO> top = map.get("top");
-        List<SysAuthorityDO> children = map.get("top");
+        List<SysAuthorityDO> children = map.get("children");
         List<SysAuthorityTreeVO> results = new LinkedList<>();
-        top.forEach(e -> {
-            results.add(buildTree(e, children));
-        });
+        top.forEach(e -> results.add(buildTree(e, children)));
         return ok(results);
     }
 
