@@ -3,8 +3,6 @@ package tech.tystnad.works.test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.validator.HibernateValidator;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +36,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 class WorksApplicationTests {
@@ -63,12 +62,14 @@ class WorksApplicationTests {
     @Resource
     private IdWorker idWorker;
 
-    @BeforeEach
-    public void on() {
+    private void setup() {
         final long id = idWorker.nextId();
-        UserDetails userDetails = new JwtUser(idWorker.nextId(), 0L, id, "", "",
+        final UserDetails userDetails = new JwtUser(idWorker.nextId(), 0L, id, "", "",
                 Boolean.TRUE, "", Collections.emptyList(), new Date());
-        TestingAuthenticationToken authentication = new TestingAuthenticationToken(userDetails, null);
+        final TestingAuthenticationToken authentication = new TestingAuthenticationToken(userDetails, null);
+        final List<Short> authorityIds = new ArrayList<>();
+        final Set<Short> randomRemoveAuthorityIds = new HashSet<>();
+        final Random random = new Random();
         SecurityContextHolder.getContext().setAuthentication(authentication);
         SysRoleDO sysRoleDO = new SysRoleDO();
         sysRoleDO.setRoleId(idWorker.nextId());
@@ -76,16 +77,24 @@ class WorksApplicationTests {
         sysRoleDO.setOrgId(id);
         sysRoleDO.setCreator(idWorker.nextId());
         sysRoleDOMapper.insertSelective(sysRoleDO);
-        final List<Short> authorityIds = new LinkedList<>();
         AuthorityCodeConfig.keySet().forEach(e -> authorityIds.add(Short.valueOf(AuthorityCodeConfig.getString(e))));
+        for (int i = 0, size = authorityIds.size(); i < 10; i++) {
+            randomRemoveAuthorityIds.add(authorityIds.get(random.nextInt(size)));
+        }
         roleAuthorityRelationshipService.save(sysRoleDO.getRoleId(), authorityIds);
         tempMap.put(1L, sysRoleDO);
+        tempMap.put(2L, randomRemoveAuthorityIds);
     }
 
-    @AfterEach
-    public void off() {
-        SysRoleDO sysRoleDO = new SysRoleDO();
-        sysRoleDO = (SysRoleDO) tempMap.get(1L);
+    private void midden() {
+        // TODO: 需要创建两个角色信息来模拟选中效果
+        SysRoleDO sysRoleDO = (SysRoleDO) tempMap.get(1L);
+        final Set<Short> randomRemoveAuthorityIds = (Set<Short>) tempMap.get(2L);
+        roleAuthorityRelationshipService.delete(sysRoleDO.getRoleId(), randomRemoveAuthorityIds.stream().collect(Collectors.toList()));
+    }
+
+    private void tearDown() {
+        SysRoleDO sysRoleDO = (SysRoleDO) tempMap.get(1L);
         sysRoleDOMapper.deleteByPrimaryKey(sysRoleDO.getRoleId());
         roleAuthorityRelationshipService.delete(sysRoleDO.getRoleId());
     }
@@ -153,16 +162,20 @@ class WorksApplicationTests {
 
     @Test
     public void testSysAuthority() {
+        setup();
         List<SysAuthorityTreeVO> results = sysRoleService.authorityTree().getValues();
         SysRoleDO sysRoleDO = new SysRoleDO();
         sysRoleDO = (SysRoleDO) tempMap.get(1L);
         ObjectMapper mapper = new ObjectMapper();
         try {
             logger.info(mapper.writeValueAsString(results));
+            midden();
             results = sysRoleService.authorityTree(sysRoleDO.getRoleId()).getValues();
             logger.info(mapper.writeValueAsString(results));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+        } finally {
+            tearDown();
         }
     }
 
