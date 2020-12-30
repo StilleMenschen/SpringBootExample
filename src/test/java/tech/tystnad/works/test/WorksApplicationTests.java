@@ -36,7 +36,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @SpringBootTest
 class WorksApplicationTests {
@@ -68,8 +67,6 @@ class WorksApplicationTests {
                 Boolean.TRUE, "", Collections.emptyList(), new Date());
         final TestingAuthenticationToken authentication = new TestingAuthenticationToken(userDetails, null);
         final List<Short> authorityIds = new ArrayList<>();
-        final Set<Short> randomRemoveAuthorityIds = new HashSet<>();
-        final Random random = new Random();
         SecurityContextHolder.getContext().setAuthentication(authentication);
         SysRoleDO sysRoleDO = new SysRoleDO();
         sysRoleDO.setRoleId(idWorker.nextId());
@@ -78,19 +75,25 @@ class WorksApplicationTests {
         sysRoleDO.setCreator(idWorker.nextId());
         sysRoleDOMapper.insertSelective(sysRoleDO);
         AuthorityCodeConfig.keySet().forEach(e -> authorityIds.add(Short.valueOf(AuthorityCodeConfig.getString(e))));
-        for (int i = 0, size = authorityIds.size(); i < 10; i++) {
-            randomRemoveAuthorityIds.add(authorityIds.get(random.nextInt(size)));
-        }
         roleAuthorityRelationshipService.save(sysRoleDO.getRoleId(), authorityIds);
         tempMap.put(1L, sysRoleDO);
-        tempMap.put(2L, randomRemoveAuthorityIds);
+        SysRoleDO sysRoleDO2 = new SysRoleDO();
+        sysRoleDO2.setRoleId(idWorker.nextId());
+        sysRoleDO2.setTopId(0L);
+        sysRoleDO2.setOrgId(id);
+        sysRoleDO2.setCreator(idWorker.nextId());
+        sysRoleDOMapper.insertSelective(sysRoleDO2);
+        roleAuthorityRelationshipService.save(sysRoleDO2.getRoleId(), authorityIds);
     }
 
     private void midden() {
-        // TODO: 需要创建两个角色信息来模拟选中效果
         SysRoleDO sysRoleDO = (SysRoleDO) tempMap.get(1L);
-        final Set<Short> randomRemoveAuthorityIds = (Set<Short>) tempMap.get(2L);
-        roleAuthorityRelationshipService.delete(sysRoleDO.getRoleId(), randomRemoveAuthorityIds.stream().collect(Collectors.toList()));
+        List<Short> removeAuthorityIds = new LinkedList<>();
+        removeAuthorityIds.add((short) 10001);
+        removeAuthorityIds.add((short) 10002);
+        removeAuthorityIds.add((short) 10003);
+        removeAuthorityIds.add((short) 11002);
+        roleAuthorityRelationshipService.delete(sysRoleDO.getRoleId(), removeAuthorityIds);
     }
 
     private void tearDown() {
@@ -164,8 +167,7 @@ class WorksApplicationTests {
     public void testSysAuthority() {
         setup();
         List<SysAuthorityTreeVO> results = sysRoleService.authorityTree().getValues();
-        SysRoleDO sysRoleDO = new SysRoleDO();
-        sysRoleDO = (SysRoleDO) tempMap.get(1L);
+        SysRoleDO sysRoleDO = (SysRoleDO) tempMap.get(1L);
         ObjectMapper mapper = new ObjectMapper();
         try {
             logger.info(mapper.writeValueAsString(results));
