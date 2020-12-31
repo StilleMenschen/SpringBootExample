@@ -3,6 +3,7 @@ package tech.tystnad.works.test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.validator.HibernateValidator;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,7 @@ class WorksApplicationTests {
     private static final Logger logger = LoggerFactory.getLogger(WorksApplicationTests.class);
 
     private static final Map<Long, Object> tempMap = new HashMap<>();
+    private static final long USER_ID = Long.MAX_VALUE - 1;
 
     @Resource
     private SysOrganizationVOMapper sysOrganizationVOMapper;
@@ -61,13 +63,17 @@ class WorksApplicationTests {
     @Resource
     private IdWorker idWorker;
 
-    private void setup() {
-        final long id = idWorker.nextId();
-        final UserDetails userDetails = new JwtUser(idWorker.nextId(), 0L, id, "", "",
+    @BeforeAll
+    private static void initialize() {
+        final UserDetails userDetails = new JwtUser(USER_ID, 0L, Long.MIN_VALUE + 1, "", "",
                 Boolean.TRUE, "", Collections.emptyList(), new Date());
         final TestingAuthenticationToken authentication = new TestingAuthenticationToken(userDetails, null);
-        final List<Short> authorityIds = new ArrayList<>();
         SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    private void setup() {
+        final long id = Long.MAX_VALUE - 0x1024;
+        final List<Short> authorityIds = new ArrayList<>();
         SysRoleDO sysRoleDO = new SysRoleDO();
         sysRoleDO.setRoleId(idWorker.nextId());
         sysRoleDO.setTopId(0L);
