@@ -50,7 +50,7 @@
     <!-- <resultMap id="BaseResultMap" type="java.util.List">
          <result column="auth_id" jdbcType="SMALLINT" property="authId" />
      </resultMap>-->
-    <select id="findRoleAuthorityByTopId" resultType="java.lang.Short">
+    <select id="findRoleAuthorityByTopId" resultType="java.lang.Integer">
         SELECT DISTINCT rar.auth_id FROM sys_role r JOIN role_authority_relationship rar ON (r.role_id = rar.role_id)
         WHERE r.deleted = 0 AND r.top_id = #{topId}
     </select>

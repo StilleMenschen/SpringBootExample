@@ -27,7 +27,6 @@ import tech.tystnad.works.repository.mapper.SysRoleDOMapper;
 import tech.tystnad.works.repository.mapper.SysRoleVOMapper;
 import tech.tystnad.works.repository.mapper.SysUserVOMapper;
 import tech.tystnad.works.service.RoleAuthorityRelationshipService;
-import tech.tystnad.works.service.SysAuthorityService;
 import tech.tystnad.works.service.SysRoleService;
 import tech.tystnad.works.util.IdWorker;
 import tech.tystnad.works.util.TimeUtils;
@@ -47,21 +46,19 @@ class WorksApplicationTests {
     private static final long USER_ID = Long.MAX_VALUE - 1;
 
     @Resource
-    private SysOrganizationVOMapper sysOrganizationVOMapper;
+    public SysOrganizationVOMapper sysOrganizationVOMapper;
     @Resource
-    private SysRoleVOMapper sysRoleVOMapper;
+    public SysRoleVOMapper sysRoleVOMapper;
     @Resource
-    private SysRoleDOMapper sysRoleDOMapper;
+    public SysRoleDOMapper sysRoleDOMapper;
     @Resource
-    private SysRoleService sysRoleService;
+    public SysRoleService sysRoleService;
     @Resource
-    private SysAuthorityService sysAuthorityService;
+    public RoleAuthorityRelationshipService roleAuthorityRelationshipService;
     @Resource
-    private RoleAuthorityRelationshipService roleAuthorityRelationshipService;
+    public SysUserVOMapper sysUserVOMapper;
     @Resource
-    private SysUserVOMapper sysUserVOMapper;
-    @Resource
-    private IdWorker idWorker;
+    public IdWorker idWorker;
 
     @BeforeAll
     private static void initialize() {
@@ -73,14 +70,14 @@ class WorksApplicationTests {
 
     private void setup() {
         final long id = Long.MAX_VALUE - 0x1024;
-        final List<Short> authorityIds = new ArrayList<>();
+        final List<Integer> authorityIds = new ArrayList<>();
         SysRoleDO sysRoleDO = new SysRoleDO();
         sysRoleDO.setRoleId(idWorker.nextId());
         sysRoleDO.setTopId(0L);
         sysRoleDO.setOrgId(id);
         sysRoleDO.setCreator(idWorker.nextId());
         sysRoleDOMapper.insertSelective(sysRoleDO);
-        AuthorityCodeConfig.keySet().forEach(e -> authorityIds.add(Short.valueOf(AuthorityCodeConfig.getString(e))));
+        AuthorityCodeConfig.keySet().forEach(e -> authorityIds.add(Integer.valueOf(AuthorityCodeConfig.getString(e))));
         roleAuthorityRelationshipService.save(sysRoleDO.getRoleId(), authorityIds);
         tempMap.put(1L, sysRoleDO);
         SysRoleDO sysRoleDO2 = new SysRoleDO();
@@ -94,11 +91,11 @@ class WorksApplicationTests {
 
     private void midden() {
         SysRoleDO sysRoleDO = (SysRoleDO) tempMap.get(1L);
-        List<Short> removeAuthorityIds = new LinkedList<>();
-        removeAuthorityIds.add((short) 10001);
-        removeAuthorityIds.add((short) 10002);
-        removeAuthorityIds.add((short) 10003);
-        removeAuthorityIds.add((short) 11002);
+        List<Integer> removeAuthorityIds = new LinkedList<>();
+        removeAuthorityIds.add(10001);
+        removeAuthorityIds.add(10002);
+        removeAuthorityIds.add(10003);
+        removeAuthorityIds.add(11002);
         roleAuthorityRelationshipService.delete(sysRoleDO.getRoleId(), removeAuthorityIds);
     }
 
@@ -190,12 +187,12 @@ class WorksApplicationTests {
     @Test
     public void testRoleAuthorityRelationship() {
         final long roleId = idWorker.nextId();
-        final List<Short> list = new LinkedList<>();
+        final List<Integer> list = new LinkedList<>();
         final SysRoleDO sysRoleDO = new SysRoleDO();
-        list.add((short) 10000);
-        list.add((short) 10001);
-        list.add((short) 10002);
-        list.add((short) 10003);
+        list.add(10000);
+        list.add(10001);
+        list.add(10002);
+        list.add(10003);
         sysRoleDO.setRoleId(roleId);
         sysRoleDO.setRoleName("我带你们打2");
         sysRoleDO.setTopId(0L);

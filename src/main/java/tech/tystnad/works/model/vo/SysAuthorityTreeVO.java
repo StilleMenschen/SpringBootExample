@@ -3,16 +3,16 @@ package tech.tystnad.works.model.vo;
 import java.util.List;
 
 public class SysAuthorityTreeVO {
-    private Short authId;
+    private Integer authId;
     private String authDescription;
     private Boolean checked = Boolean.FALSE;
     private List<SysAuthorityTreeVO> children;
 
-    public Short getAuthId() {
+    public Integer getAuthId() {
         return authId;
     }
 
-    public void setAuthId(Short authId) {
+    public void setAuthId(Integer authId) {
         this.authId = authId;
     }
 

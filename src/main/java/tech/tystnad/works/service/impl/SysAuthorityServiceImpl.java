@@ -22,13 +22,13 @@ public class SysAuthorityServiceImpl extends BaseService implements SysAuthority
     }
 
     @Override
-    public ResponseObjectEntity<?> delete(Short sysAuthorityId) {
+    public ResponseObjectEntity<?> delete(Integer sysAuthorityId) {
         sysAuthorityDOMapper.deleteByPrimaryKey(sysAuthorityId);
         return ok(null);
     }
 
     @Override
-    public ResponseObjectEntity<?> delete(List<Short> sysAuthorityIds) {
+    public ResponseObjectEntity<?> delete(List<Integer> sysAuthorityIds) {
         SysAuthorityDOExample example = new SysAuthorityDOExample();
         example.createCriteria().andAuthIdIn(sysAuthorityIds);
         sysAuthorityDOMapper.deleteByExample(example);
@@ -36,12 +36,12 @@ public class SysAuthorityServiceImpl extends BaseService implements SysAuthority
     }
 
     @Override
-    public ResponseObjectEntity<SysAuthorityDO> search(Short sysAuthorityId) {
+    public ResponseObjectEntity<SysAuthorityDO> search(Integer sysAuthorityId) {
         return ok(sysAuthorityDOMapper.selectByPrimaryKey(sysAuthorityId));
     }
 
     @Override
-    public ResponseObjectEntity<SysAuthorityDO> search(List<Short> sysAuthorityIds) {
+    public ResponseObjectEntity<SysAuthorityDO> search(List<Integer> sysAuthorityIds) {
         if (sysAuthorityIds.isEmpty()) {
             return ok(null);
         }

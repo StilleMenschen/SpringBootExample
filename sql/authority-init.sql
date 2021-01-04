@@ -1,4 +1,4 @@
-REPLACE INTO sys_authority (auth_id,auth_name,auth_description) VALUES (32767,'MANAGER','管理员');
+REPLACE INTO sys_authority (auth_id,auth_name,auth_description) VALUES (65535,'MANAGER','管理员');
 REPLACE INTO sys_authority (auth_id,auth_name,auth_description) VALUES (10000,'ORGANIZATION','机构');
 REPLACE INTO sys_authority (auth_id,parent_id,auth_name,auth_description) VALUES (10004,10000,'ORGANIZATION.DELETE','删除机构');
 REPLACE INTO sys_authority (auth_id,parent_id,auth_name,auth_description) VALUES (10003,10000,'ORGANIZATION.UPDATE','更新机构');

@@ -6,11 +6,11 @@ import tech.tystnad.works.repository.domain.RoleAuthorityRelationshipDO;
 import java.util.List;
 
 public interface RoleAuthorityRelationshipService {
-    ResponseObjectEntity<?> save(Long roleId, List<Short> authIds);
+    ResponseObjectEntity<?> save(Long roleId, List<Integer> authIds);
 
     ResponseObjectEntity<?> delete(Long roleId);
 
-    ResponseObjectEntity<?> delete(Long roleId, List<Short> authIds);
+    ResponseObjectEntity<?> delete(Long roleId, List<Integer> authIds);
 
     ResponseObjectEntity<RoleAuthorityRelationshipDO> search(Long roleId);
 }

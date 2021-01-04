@@ -30,7 +30,7 @@ public class RoleAuthorityRelationshipServiceImpl extends BaseService implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseObjectEntity<?> save(Long roleId, List<Short> authIds) {
+    public ResponseObjectEntity<?> save(Long roleId, List<Integer> authIds) {
         if (sysRoleDOMapper.selectByPrimaryKey(roleId) == null) {
             return fail(400, "角色不存在");
         }
@@ -51,7 +51,7 @@ public class RoleAuthorityRelationshipServiceImpl extends BaseService implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseObjectEntity<?> delete(Long roleId, List<Short> authIds) {
+    public ResponseObjectEntity<?> delete(Long roleId, List<Integer> authIds) {
         RoleAuthorityRelationshipDOExample example = new RoleAuthorityRelationshipDOExample();
         example.createCriteria().andRoleIdEqualTo(roleId).andAuthIdIn(authIds);
         relationshipDOMapper.deleteByExample(example);

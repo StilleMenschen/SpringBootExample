@@ -48,7 +48,7 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
         if (roleAuthorityRelationshipList == null || roleAuthorityRelationshipList.isEmpty()) {
             logger.warn("{}角色的权限为空", roleId);
         } else {
-            Map<Short, String> map = new HashMap<>();
+            Map<Integer, String> map = new HashMap<>();
             List<SysAuthorityDO> sysAuthorityList = sysAuthorityDOMapper.selectByExample(new SysAuthorityDOExample());
             sysAuthorityList.forEach(e -> map.put(e.getAuthId(), e.getAuthName()));
             roleAuthorityRelationshipList.forEach(e -> {

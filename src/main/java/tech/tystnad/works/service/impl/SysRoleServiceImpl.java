@@ -149,7 +149,7 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
         // 1. 获取顶级机构ID
         final JwtUser user = (JwtUser) getCurrentUser();
         // 2. 查询顶级机构可用权限
-        final List<Short> authorityIds = sysRoleVOMapper.findRoleAuthorityByTopId(user.getTopId());
+        final List<Integer> authorityIds = sysRoleVOMapper.findRoleAuthorityByTopId(user.getTopId());
         // 3. 获取权限详细信息
         ResponseObjectEntity<SysAuthorityDO> response = sysAuthorityService.search(authorityIds);
         List<SysAuthorityDO> authority = response.getValues();
@@ -173,7 +173,7 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
         return collection;
     }
 
-    private SysAuthorityTreeVO buildTree(final SysAuthorityDO parent, List<SysAuthorityDO> authority, Set<Short> checkedAuths) {
+    private SysAuthorityTreeVO buildTree(final SysAuthorityDO parent, List<SysAuthorityDO> authority, Set<Integer> checkedAuths) {
         final SysAuthorityTreeVO top = new SysAuthorityTreeVO();
         final ArrayDeque<SysAuthorityTreeVO> queue = new ArrayDeque<>();
         List<SysAuthorityDO> temp;
@@ -216,7 +216,7 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
         final AuthorityCollection<SysAuthorityDO> collection = listAuthority();
         final List<RoleAuthorityRelationshipDO> relationshipDO = roleAuthorityRelationshipService.search(roleId).getValues();
         final List<SysAuthorityTreeVO> results = new LinkedList<>();
-        Set<Short> checkedAuths = new HashSet<>();
+        Set<Integer> checkedAuths = new HashSet<>();
         relationshipDO.forEach(e -> checkedAuths.add(e.getAuthId()));
         collection.parent.forEach(e -> results.add(buildTree(e, collection.children, checkedAuths)));
         return ok(results);

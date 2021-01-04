@@ -205,52 +205,52 @@ public class SysAuthorityDOExample {
             return (Criteria) this;
         }
 
-        public Criteria andAuthIdEqualTo(Short value) {
+        public Criteria andAuthIdEqualTo(Integer value) {
             addCriterion("auth_id =", value, "authId");
             return (Criteria) this;
         }
 
-        public Criteria andAuthIdNotEqualTo(Short value) {
+        public Criteria andAuthIdNotEqualTo(Integer value) {
             addCriterion("auth_id <>", value, "authId");
             return (Criteria) this;
         }
 
-        public Criteria andAuthIdGreaterThan(Short value) {
+        public Criteria andAuthIdGreaterThan(Integer value) {
             addCriterion("auth_id >", value, "authId");
             return (Criteria) this;
         }
 
-        public Criteria andAuthIdGreaterThanOrEqualTo(Short value) {
+        public Criteria andAuthIdGreaterThanOrEqualTo(Integer value) {
             addCriterion("auth_id >=", value, "authId");
             return (Criteria) this;
         }
 
-        public Criteria andAuthIdLessThan(Short value) {
+        public Criteria andAuthIdLessThan(Integer value) {
             addCriterion("auth_id <", value, "authId");
             return (Criteria) this;
         }
 
-        public Criteria andAuthIdLessThanOrEqualTo(Short value) {
+        public Criteria andAuthIdLessThanOrEqualTo(Integer value) {
             addCriterion("auth_id <=", value, "authId");
             return (Criteria) this;
         }
 
-        public Criteria andAuthIdIn(List<Short> values) {
+        public Criteria andAuthIdIn(List<Integer> values) {
             addCriterion("auth_id in", values, "authId");
             return (Criteria) this;
         }
 
-        public Criteria andAuthIdNotIn(List<Short> values) {
+        public Criteria andAuthIdNotIn(List<Integer> values) {
             addCriterion("auth_id not in", values, "authId");
             return (Criteria) this;
         }
 
-        public Criteria andAuthIdBetween(Short value1, Short value2) {
+        public Criteria andAuthIdBetween(Integer value1, Integer value2) {
             addCriterion("auth_id between", value1, value2, "authId");
             return (Criteria) this;
         }
 
-        public Criteria andAuthIdNotBetween(Short value1, Short value2) {
+        public Criteria andAuthIdNotBetween(Integer value1, Integer value2) {
             addCriterion("auth_id not between", value1, value2, "authId");
             return (Criteria) this;
         }
@@ -265,52 +265,52 @@ public class SysAuthorityDOExample {
             return (Criteria) this;
         }
 
-        public Criteria andParentIdEqualTo(Short value) {
+        public Criteria andParentIdEqualTo(Integer value) {
             addCriterion("parent_id =", value, "parentId");
             return (Criteria) this;
         }
 
-        public Criteria andParentIdNotEqualTo(Short value) {
+        public Criteria andParentIdNotEqualTo(Integer value) {
             addCriterion("parent_id <>", value, "parentId");
             return (Criteria) this;
         }
 
-        public Criteria andParentIdGreaterThan(Short value) {
+        public Criteria andParentIdGreaterThan(Integer value) {
             addCriterion("parent_id >", value, "parentId");
             return (Criteria) this;
         }
 
-        public Criteria andParentIdGreaterThanOrEqualTo(Short value) {
+        public Criteria andParentIdGreaterThanOrEqualTo(Integer value) {
             addCriterion("parent_id >=", value, "parentId");
             return (Criteria) this;
         }
 
-        public Criteria andParentIdLessThan(Short value) {
+        public Criteria andParentIdLessThan(Integer value) {
             addCriterion("parent_id <", value, "parentId");
             return (Criteria) this;
         }
 
-        public Criteria andParentIdLessThanOrEqualTo(Short value) {
+        public Criteria andParentIdLessThanOrEqualTo(Integer value) {
             addCriterion("parent_id <=", value, "parentId");
             return (Criteria) this;
         }
 
-        public Criteria andParentIdIn(List<Short> values) {
+        public Criteria andParentIdIn(List<Integer> values) {
             addCriterion("parent_id in", values, "parentId");
             return (Criteria) this;
         }
 
-        public Criteria andParentIdNotIn(List<Short> values) {
+        public Criteria andParentIdNotIn(List<Integer> values) {
             addCriterion("parent_id not in", values, "parentId");
             return (Criteria) this;
         }
 
-        public Criteria andParentIdBetween(Short value1, Short value2) {
+        public Criteria andParentIdBetween(Integer value1, Integer value2) {
             addCriterion("parent_id between", value1, value2, "parentId");
             return (Criteria) this;
         }
 
-        public Criteria andParentIdNotBetween(Short value1, Short value2) {
+        public Criteria andParentIdNotBetween(Integer value1, Integer value2) {
             addCriterion("parent_id not between", value1, value2, "parentId");
             return (Criteria) this;
         }

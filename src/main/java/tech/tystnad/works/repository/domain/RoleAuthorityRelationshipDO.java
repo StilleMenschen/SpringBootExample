@@ -28,7 +28,7 @@ public class RoleAuthorityRelationshipDO {
      *
      * @mbg.generated
      */
-    private Short authId;
+    private Integer authId;
 
     /**
      *
@@ -71,7 +71,7 @@ public class RoleAuthorityRelationshipDO {
      *
      * @mbg.generated
      */
-    public Short getAuthId() {
+    public Integer getAuthId() {
         return authId;
     }
 
@@ -83,7 +83,7 @@ public class RoleAuthorityRelationshipDO {
      *
      * @mbg.generated
      */
-    public void setAuthId(Short authId) {
+    public void setAuthId(Integer authId) {
         this.authId = authId;
     }
 

@@ -265,52 +265,52 @@ public class RoleAuthorityRelationshipDOExample {
             return (Criteria) this;
         }
 
-        public Criteria andAuthIdEqualTo(Short value) {
+        public Criteria andAuthIdEqualTo(Integer value) {
             addCriterion("auth_id =", value, "authId");
             return (Criteria) this;
         }
 
-        public Criteria andAuthIdNotEqualTo(Short value) {
+        public Criteria andAuthIdNotEqualTo(Integer value) {
             addCriterion("auth_id <>", value, "authId");
             return (Criteria) this;
         }
 
-        public Criteria andAuthIdGreaterThan(Short value) {
+        public Criteria andAuthIdGreaterThan(Integer value) {
             addCriterion("auth_id >", value, "authId");
             return (Criteria) this;
         }
 
-        public Criteria andAuthIdGreaterThanOrEqualTo(Short value) {
+        public Criteria andAuthIdGreaterThanOrEqualTo(Integer value) {
             addCriterion("auth_id >=", value, "authId");
             return (Criteria) this;
         }
 
-        public Criteria andAuthIdLessThan(Short value) {
+        public Criteria andAuthIdLessThan(Integer value) {
             addCriterion("auth_id <", value, "authId");
             return (Criteria) this;
         }
 
-        public Criteria andAuthIdLessThanOrEqualTo(Short value) {
+        public Criteria andAuthIdLessThanOrEqualTo(Integer value) {
             addCriterion("auth_id <=", value, "authId");
             return (Criteria) this;
         }
 
-        public Criteria andAuthIdIn(List<Short> values) {
+        public Criteria andAuthIdIn(List<Integer> values) {
             addCriterion("auth_id in", values, "authId");
             return (Criteria) this;
         }
 
-        public Criteria andAuthIdNotIn(List<Short> values) {
+        public Criteria andAuthIdNotIn(List<Integer> values) {
             addCriterion("auth_id not in", values, "authId");
             return (Criteria) this;
         }
 
-        public Criteria andAuthIdBetween(Short value1, Short value2) {
+        public Criteria andAuthIdBetween(Integer value1, Integer value2) {
             addCriterion("auth_id between", value1, value2, "authId");
             return (Criteria) this;
         }
 
-        public Criteria andAuthIdNotBetween(Short value1, Short value2) {
+        public Criteria andAuthIdNotBetween(Integer value1, Integer value2) {
             addCriterion("auth_id not between", value1, value2, "authId");
             return (Criteria) this;
         }

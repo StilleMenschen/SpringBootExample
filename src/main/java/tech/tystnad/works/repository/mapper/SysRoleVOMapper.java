@@ -12,5 +12,5 @@ public interface SysRoleVOMapper {
 
     Integer countByDTO(@Param("dto") SysRoleDTO sysRoleDTO);
 
-    List<Short> findRoleAuthorityByTopId(@Param("topId") Long topId);
+    List<Integer> findRoleAuthorityByTopId(@Param("topId") Long topId);
 }

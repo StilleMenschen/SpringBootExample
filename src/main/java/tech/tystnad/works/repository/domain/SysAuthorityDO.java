@@ -17,7 +17,7 @@ public class SysAuthorityDO {
      *
      * @mbg.generated
      */
-    private Short authId;
+    private Integer authId;
 
     /**
      * Database Column Remarks:
@@ -28,7 +28,7 @@ public class SysAuthorityDO {
      *
      * @mbg.generated
      */
-    private Short parentId;
+    private Integer parentId;
 
     /**
      * Database Column Remarks:
@@ -69,7 +69,7 @@ public class SysAuthorityDO {
      *
      * @mbg.generated
      */
-    public Short getAuthId() {
+    public Integer getAuthId() {
         return authId;
     }
 
@@ -81,7 +81,7 @@ public class SysAuthorityDO {
      *
      * @mbg.generated
      */
-    public void setAuthId(Short authId) {
+    public void setAuthId(Integer authId) {
         this.authId = authId;
     }
 
@@ -93,7 +93,7 @@ public class SysAuthorityDO {
      *
      * @mbg.generated
      */
-    public Short getParentId() {
+    public Integer getParentId() {
         return parentId;
     }
 
@@ -105,7 +105,7 @@ public class SysAuthorityDO {
      *
      * @mbg.generated
      */
-    public void setParentId(Short parentId) {
+    public void setParentId(Integer parentId) {
         this.parentId = parentId;
     }
 
