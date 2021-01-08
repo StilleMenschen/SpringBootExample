@@ -25,7 +25,7 @@ public class ExceptionHandlerController {
 
     private static final Logger logger = LoggerFactory.getLogger(ExceptionHandlerController.class);
     /**
-     * 若消息需要自定义业务状态码,使用`符合分隔消息和状态码
+     * 若消息需要自定义业务状态码,使用`符号分隔消息和状态码
      * 消息定义在ValidationMessages.properties配置文件
      */
     private static final String MESSAGE_SPLIT = "`";

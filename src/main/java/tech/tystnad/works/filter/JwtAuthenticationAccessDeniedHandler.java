@@ -14,11 +14,9 @@ import java.io.IOException;
 public class JwtAuthenticationAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
-    public void handle(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            AccessDeniedException exc) throws IOException {
-//        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied");
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException exc)
+            throws IOException {
+//      response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied");
         ObjectMapper mapper = new ObjectMapper();
         ResponseObjectEntity<Object> entity = new ResponseObjectEntity<>();
         entity.setCode(HttpServletResponse.SC_FORBIDDEN);

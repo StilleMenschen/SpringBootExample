@@ -17,11 +17,10 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
     private static final long serialVersionUID = -8970718410437077606L;
 
     @Override
-    public void commence(HttpServletRequest request,
-                         HttpServletResponse response,
+    public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
         // 这个异常在未授权用户访问安全资源时会触发，我们会发出一个401未授权的response
-//        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+//      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
         ObjectMapper mapper = new ObjectMapper();
         ResponseObjectEntity<Object> entity = new ResponseObjectEntity<>();
         entity.setCode(HttpServletResponse.SC_UNAUTHORIZED);

@@ -222,7 +222,7 @@ public class SysRoleServiceImpl extends BaseService implements SysRoleService {
         return ok(results);
     }
 
-    class AuthorityCollection<E> {
+    private class AuthorityCollection<E> {
         public List<E> parent;
         public List<E> children;
 
