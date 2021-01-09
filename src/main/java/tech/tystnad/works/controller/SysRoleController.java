@@ -63,7 +63,7 @@ public class SysRoleController {
     @PreAuthorize("hasAuthority('ROLE.READ') or hasAuthority('MANAGER')")
     @GetMapping
     public ResponseObjectEntity<SysRoleVO> search(
-            @RequestBody @Validated(queryGroup.class) SysRoleDTO sysRoleDTO,
+            @Validated(queryGroup.class) SysRoleDTO sysRoleDTO,
             @RequestParam("page") Integer current, @RequestParam("range") Integer range) {
         PageEntity pageEntity = new PageEntity(current, range);
         return sysRoleService.search(sysRoleDTO, pageEntity);

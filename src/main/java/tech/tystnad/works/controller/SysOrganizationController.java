@@ -63,7 +63,7 @@ public class SysOrganizationController {
     @PreAuthorize("hasAuthority('ORGANIZATION.READ') or hasAuthority('MANAGER')")
     @GetMapping
     public ResponseObjectEntity<SysOrganizationVO> search(
-            @RequestBody @Validated(queryGroup.class) SysOrganizationDTO sysOrganizationDTO,
+            @Validated(queryGroup.class) SysOrganizationDTO sysOrganizationDTO,
             @RequestParam("page") Integer current, @RequestParam("range") Integer range) {
         PageEntity pageEntity = new PageEntity(current, range);
         return sysOrganizationService.search(sysOrganizationDTO, pageEntity);
