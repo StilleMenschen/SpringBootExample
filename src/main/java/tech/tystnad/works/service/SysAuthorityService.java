@@ -10,6 +10,7 @@ public interface SysAuthorityService {
 
     ResponseObjectEntity<?> delete(List<Integer> sysAuthorityIds);
 
+    ResponseObjectEntity<SysAuthorityDO> search();
     ResponseObjectEntity<SysAuthorityDO> search(Integer sysAuthorityId);
 
     ResponseObjectEntity<SysAuthorityDO> search(List<Integer> sysAuthorityIds);

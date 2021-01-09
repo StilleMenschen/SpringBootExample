@@ -45,7 +45,6 @@ public class TestController {
         this.stringRedisTemplate = stringRedisTemplate;
         this.testRepository = testRepository;
         this.sysUserVOMapper = sysUserVOMapper;
-        logger.debug("Created TestController");
     }
 
     @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST})

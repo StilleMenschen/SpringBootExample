@@ -9,10 +9,13 @@ import org.springframework.stereotype.Service;
 import tech.tystnad.works.core.exception.BusinessException;
 import tech.tystnad.works.factory.JwtUserFactory;
 import tech.tystnad.works.model.SysUser;
-import tech.tystnad.works.repository.domain.*;
-import tech.tystnad.works.repository.mapper.RoleAuthorityRelationshipDOMapper;
-import tech.tystnad.works.repository.mapper.SysAuthorityDOMapper;
+import tech.tystnad.works.repository.domain.RoleAuthorityRelationshipDO;
+import tech.tystnad.works.repository.domain.SysAuthorityDO;
+import tech.tystnad.works.repository.domain.SysUserDO;
+import tech.tystnad.works.repository.domain.SysUserDOExample;
 import tech.tystnad.works.repository.mapper.SysUserDOMapper;
+import tech.tystnad.works.service.RoleAuthorityRelationshipService;
+import tech.tystnad.works.service.SysAuthorityService;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -29,10 +32,10 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
     private SysUserDOMapper sysUserDOMapper;
 
     @Resource
-    private RoleAuthorityRelationshipDOMapper roleAuthorityRelationshipDOMapper;
+    private RoleAuthorityRelationshipService roleAuthorityRelationshipService;
 
     @Resource
-    private SysAuthorityDOMapper sysAuthorityDOMapper;
+    private SysAuthorityService sysAuthorityService;
 
     /**
      * 查找角色的权限关联
@@ -42,14 +45,12 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
      */
     private List<String> getRoles(final Long roleId) {
         List<String> roles = new LinkedList<>();
-        RoleAuthorityRelationshipDOExample authorityDOExample = new RoleAuthorityRelationshipDOExample();
-        authorityDOExample.createCriteria().andRoleIdEqualTo(roleId);
-        List<RoleAuthorityRelationshipDO> roleAuthorityRelationshipList = roleAuthorityRelationshipDOMapper.selectByExample(authorityDOExample);
+        List<RoleAuthorityRelationshipDO> roleAuthorityRelationshipList = roleAuthorityRelationshipService.search(roleId).getValues();
         if (roleAuthorityRelationshipList == null || roleAuthorityRelationshipList.isEmpty()) {
             logger.warn("{}角色的权限为空", roleId);
         } else {
             Map<Integer, String> map = new HashMap<>();
-            List<SysAuthorityDO> sysAuthorityList = sysAuthorityDOMapper.selectByExample(new SysAuthorityDOExample());
+            List<SysAuthorityDO> sysAuthorityList = sysAuthorityService.search().getValues();
             sysAuthorityList.forEach(e -> map.put(e.getAuthId(), e.getAuthName()));
             roleAuthorityRelationshipList.forEach(e -> {
                 if (map.containsKey(e.getAuthId())) {
