@@ -17,7 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 @PreAuthorize("hasAuthority('ORGANIZATION') or hasAuthority('MANAGER')")
-@RestController("/organization")
+@RestController
+@RequestMapping("/organization")
 public class SysOrganizationController {
 
     private final SysOrganizationService sysOrganizationService;

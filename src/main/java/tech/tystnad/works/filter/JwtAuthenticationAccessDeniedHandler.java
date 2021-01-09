@@ -20,9 +20,10 @@ public class JwtAuthenticationAccessDeniedHandler implements AccessDeniedHandler
         ObjectMapper mapper = new ObjectMapper();
         ResponseObjectEntity<Object> entity = new ResponseObjectEntity<>();
         entity.setCode(HttpServletResponse.SC_FORBIDDEN);
-        entity.setMsg("Access denied");
+        entity.setMsg("无权限");
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         response.getWriter().append(mapper.writeValueAsString(entity)).flush();
     }
 }

@@ -17,7 +17,8 @@ import tech.tystnad.works.service.SysRoleService;
 import java.util.List;
 
 @PreAuthorize("hasAuthority('ROLE') or hasAuthority('MANAGER')")
-@RestController("/role")
+@RestController
+@RequestMapping("/role")
 public class SysRoleController {
 
     private final SysRoleService sysRoleService;
@@ -46,7 +47,6 @@ public class SysRoleController {
     public ResponseObjectEntity<?> delete(@PathVariable("id") Long sysRoleId) {
         return sysRoleService.delete(sysRoleId);
     }
-
 
     @PreAuthorize("hasAuthority('ROLE.DELETE') or hasAuthority('MANAGER')")
     @DeleteMapping

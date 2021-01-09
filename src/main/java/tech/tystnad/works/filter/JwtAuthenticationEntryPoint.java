@@ -24,9 +24,10 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
         ObjectMapper mapper = new ObjectMapper();
         ResponseObjectEntity<Object> entity = new ResponseObjectEntity<>();
         entity.setCode(HttpServletResponse.SC_UNAUTHORIZED);
-        entity.setMsg("Unauthorized");
+        entity.setMsg("未授权");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         response.getWriter().append(mapper.writeValueAsString(entity)).flush();
     }
 }
