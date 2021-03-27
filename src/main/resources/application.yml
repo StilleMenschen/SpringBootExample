@@ -2,6 +2,10 @@
 server:
   port: 8080
   max-http-header-size: 64KB
+  server:
+    servlet:
+      session:
+        timeout: 1800
   tomcat:
     max-http-form-post-size: 320MB
     max-swallow-size: 320MB
@@ -18,6 +22,11 @@ spring:
     host: localhost
     port: 6379
     database: 0
+  session:
+    redis:
+      flush-mode: on_save
+      namespace: spring:session
+    store-type: redis
   jackson:
     serialization:
       INDENT_OUTPUT: true

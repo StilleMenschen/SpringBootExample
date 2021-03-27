@@ -25,6 +25,7 @@ import tech.tystnad.works.model.vo.SysUserVO;
 import tech.tystnad.works.repository.mapper.SysUserVOMapper;
 import tech.tystnad.works.repository.mapper.TestRepository;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.groups.Default;
 import java.time.Duration;
 import java.util.*;
@@ -56,8 +57,9 @@ public class TestController {
     }
 
     @GetMapping("/city/{size}")
-    public List<City> findAllCity(@PathVariable("size") int size) {
+    public List<City> findAllCity(@PathVariable("size") int size, HttpServletRequest request) {
         logger.warn("findAllCity");
+        request.getSession().setAttribute("size", size);
         return testRepository.findAllCity(size);
     }
 
