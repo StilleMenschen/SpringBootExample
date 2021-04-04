@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Collections;
 
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Serializable {
@@ -25,6 +26,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
         ResponseObjectEntity<Object> entity = new ResponseObjectEntity<>();
         entity.setCode(HttpServletResponse.SC_UNAUTHORIZED);
         entity.setMsg("未授权");
+        entity.setValues(Collections.emptyList());
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

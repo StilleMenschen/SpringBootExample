@@ -9,9 +9,13 @@ import tech.tystnad.works.model.ResponseObjectEntity;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.Collections;
 
 @Component
-public class JwtAuthenticationAccessDeniedHandler implements AccessDeniedHandler {
+public class JwtAuthenticationAccessDeniedHandler implements AccessDeniedHandler, Serializable {
+
+    private static final long serialVersionUID = -8970718410437077616L;
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException exc)
@@ -21,6 +25,7 @@ public class JwtAuthenticationAccessDeniedHandler implements AccessDeniedHandler
         ResponseObjectEntity<Object> entity = new ResponseObjectEntity<>();
         entity.setCode(HttpServletResponse.SC_FORBIDDEN);
         entity.setMsg("无权限");
+        entity.setValues(Collections.emptyList());
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
