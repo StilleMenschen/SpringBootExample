@@ -12,7 +12,7 @@ import java.util.List;
  * Created by wangpeng on 2017/4/19.
  */
 @Configuration
-public class CorsConfig implements WebMvcConfigurer {
+public class CORSConfig implements WebMvcConfigurer {
 
     /*
     @Bean

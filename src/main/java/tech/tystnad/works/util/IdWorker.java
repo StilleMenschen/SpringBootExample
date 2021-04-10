@@ -7,8 +7,8 @@ public class IdWorker {
 
     private static final Logger logger = LoggerFactory.getLogger(IdWorker.class);
 
-    private long workerId;
-    private long dataCenterId;
+    private final long workerId;
+    private final long dataCenterId;
     private long sequence;
     private long lastTimestamp = -1L;
 
