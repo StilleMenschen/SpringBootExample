@@ -1,4 +1,4 @@
-package com.example.securitydemo.security;
+package com.example.demo.security;
 
 import com.google.common.collect.ImmutableSet;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,7 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.example.securitydemo.security.ApplicationUserPermission.*;
+import static com.example.demo.security.ApplicationUserPermission.*;
 
 public enum ApplicationUserRole {
 

@@ -1,4 +1,4 @@
-package com.example.securitydemo.core;
+package com.example.demo.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

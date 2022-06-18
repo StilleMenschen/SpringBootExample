@@ -1,4 +1,4 @@
-package com.example.securitydemo.student;
+package com.example.demo.student;
 
 import com.google.common.collect.ImmutableList;
 import org.springframework.boot.CommandLineRunner;

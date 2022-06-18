@@ -1,6 +1,6 @@
-package com.example.securitydemo.security;
+package com.example.demo.security;
 
-import com.example.securitydemo.student.Student;
+import com.example.demo.student.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +16,8 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
-import static com.example.securitydemo.security.ApplicationUserPermission.COURSE_WRITE;
-import static com.example.securitydemo.security.ApplicationUserRole.*;
+import static com.example.demo.security.ApplicationUserPermission.COURSE_WRITE;
+import static com.example.demo.security.ApplicationUserRole.*;
 
 @Configuration
 @EnableWebSecurity
