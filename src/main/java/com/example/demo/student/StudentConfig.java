@@ -25,7 +25,12 @@ public class StudentConfig {
                     "alex@foxmail.com",
                     LocalDate.of(2004, Month.MARCH, 15)
             );
-            repository.saveAll(ImmutableList.of(mariam, alex));
+            Student james = new Student(
+                    "James",
+                    "james.bond@outlook.com",
+                    LocalDate.of(1993, Month.APRIL, 21)
+            );
+            repository.saveAll(ImmutableList.of(mariam, alex, james));
         };
     }
 }
