@@ -1,26 +1,21 @@
 package com.example.demo.security;
 
-import com.example.demo.student.Student;
+import com.example.demo.auth.ApplicationUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.example.demo.security.ApplicationUserPermission.COURSE_WRITE;
-import static com.example.demo.security.ApplicationUserRole.*;
+import static com.example.demo.security.ApplicationUserRole.STUDENT;
 
 @Configuration
 @EnableWebSecurity
@@ -28,40 +23,24 @@ import static com.example.demo.security.ApplicationUserRole.*;
 public class ApplicationSecurityConfig {
 
     private final PasswordEncoder passwordEncoder;
+    private final ApplicationUserService applicationUserService;
 
     @Autowired
-    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder) {
+    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, ApplicationUserService applicationUserService) {
         this.passwordEncoder = passwordEncoder;
+        this.applicationUserService = applicationUserService;
     }
 
     @Bean
-    protected UserDetailsService userDetailsService() {
-        UserDetails annaSmithUser = User.builder()
-                .username("annasmith")
-                .password(passwordEncoder.encode("pwd123"))
-//                .roles(STUDENT.name()) // ROLE_STUDENT
-                .authorities(STUDENT.getGrantedAuthorities())
-                .build();
-
-        UserDetails lindaUser = User.builder()
-                .username("linda")
-                .password(passwordEncoder.encode("pwd1234"))
-//                .roles(ADMIN.name()) // ROLE_ADMIN
-                .authorities(ADMIN.getGrantedAuthorities())
-                .build();
-        UserDetails tomUser = User.builder()
-                .username("tom")
-                .password(passwordEncoder.encode("pwd1234"))
-//                .roles(ADMIN_TRAINEE.name()) // ROLE_ADMIN
-                .authorities(ADMIN_TRAINEE.getGrantedAuthorities())
-                .build();
-        return new InMemoryUserDetailsManager(
-                annaSmithUser, lindaUser, tomUser
-        );
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder);
+        provider.setUserDetailsService(applicationUserService);
+        return provider;
     }
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 // Cross-site Request Forgery 跨站请求伪造, 如果接口不是为浏览器提供的, 可以禁用此功能
 //                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
@@ -69,9 +48,7 @@ public class ApplicationSecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/", "/login", "/logout", "/index", "/css/*", "/js/*").permitAll()
                 .antMatchers("/api/**").hasAnyRole(STUDENT.name())
-//                .antMatchers(HttpMethod.DELETE, "/management/api/**").hasAnyAuthority(COURSE_WRITE.getPermission())
 //                .antMatchers(HttpMethod.POST, "/management/api/**").hasAnyAuthority(COURSE_WRITE.getPermission())
-//                .antMatchers(HttpMethod.PUT, "/management/api/**").hasAnyAuthority(COURSE_WRITE.getPermission())
 //                .antMatchers(HttpMethod.GET, "/management/api/**").hasAnyRole(ADMIN_TRAINEE.name(), ADMIN.name())
                 .anyRequest()
                 .authenticated()
@@ -89,7 +66,10 @@ public class ApplicationSecurityConfig {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
                 .clearAuthentication(Boolean.TRUE).invalidateHttpSession(Boolean.TRUE)
                 .deleteCookies("JSESSIONID").logoutSuccessUrl("/login")
-                .and().build();
+                .and()
+                // 设置用户信息加载提供者
+                .authenticationManager(new ProviderManager(daoAuthenticationProvider()))
+                .build();
     }
 //    @Bean
 //    public WebSecurityCustomizer webSecurityCustomizer() {
