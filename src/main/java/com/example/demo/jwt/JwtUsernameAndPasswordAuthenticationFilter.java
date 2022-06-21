@@ -21,8 +21,6 @@ import java.util.concurrent.TimeUnit;
 
 public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtUsernameAndPasswordAuthenticationFilter.class);
-
     private final AuthenticationManager authenticationManager;
     private final JwtConfig jwtConfig;
     private final SecretKey secretKey;
