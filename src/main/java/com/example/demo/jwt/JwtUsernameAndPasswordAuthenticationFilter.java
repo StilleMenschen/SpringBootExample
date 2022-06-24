@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,6 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.rmi.server.ExportException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -44,21 +48,37 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
         }
     }
 
-    private long getExpirationAtSeconds(final long currentTimeMillis) {
-        return currentTimeMillis + TimeUnit.SECONDS.toMillis(jwtConfig.getAuthenticationExpirationSeconds());
+    private long getExpirationAtSeconds(final long currentTimeMillis, long duration) {
+        return currentTimeMillis + TimeUnit.SECONDS.toMillis(duration);
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                             FilterChain chain, Authentication authResult) {
         final long currentTimeMillis = System.currentTimeMillis();
-        final String token = Jwts.builder()
+        String token = Jwts.builder()
                 .setSubject(authResult.getName())
                 .claim("authorities", authResult.getAuthorities())
                 .setIssuedAt(new Date(currentTimeMillis))
-                .setExpiration(new Date(getExpirationAtSeconds(currentTimeMillis)))
+                .setExpiration(new Date(getExpirationAtSeconds(currentTimeMillis, jwtConfig.getAuthenticationExpirationSeconds())))
                 .signWith(secretKey)
                 .compact();
-        response.addHeader(jwtConfig.getAuthenticationHeader(), String.format("%s%s", jwtConfig.getAuthenticationHeaderPrefix(), token));
+        String refreshToken = Jwts.builder()
+                .setSubject(authResult.getName())
+                .claim("authorities", authResult.getAuthorities())
+                .setIssuedAt(new Date(currentTimeMillis))
+                .setExpiration(new Date(getExpirationAtSeconds(currentTimeMillis, jwtConfig.getAuthenticationExpirationSeconds() * 2)))
+                .signWith(secretKey)
+                .compact();
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        try (OutputStream outputStream = response.getOutputStream()) {
+            outputStream.write(new ObjectMapper()
+                    .writeValueAsString(
+                            new JwtResponseObject(token, refreshToken, jwtConfig.getAuthenticationHeaderPrefix())
+                    ).getBytes());
+            outputStream.flush();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 }
