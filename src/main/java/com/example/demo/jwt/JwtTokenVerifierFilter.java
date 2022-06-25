@@ -23,11 +23,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-public class JwtTokenVerifier extends OncePerRequestFilter {
+public class JwtTokenVerifierFilter extends OncePerRequestFilter {
 
     private final JwtConfig jwtConfig;
 
-    public JwtTokenVerifier(JwtConfig jwtConfig) {
+    public JwtTokenVerifierFilter(JwtConfig jwtConfig) {
         this.jwtConfig = jwtConfig;
     }
 
