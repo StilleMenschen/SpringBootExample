@@ -5,6 +5,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,12 +21,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 public class JwtTokenVerifierFilter extends OncePerRequestFilter {
+
+    private static final Logger log = LoggerFactory.getLogger(JwtTokenVerifierFilter.class);
 
     private final JwtConfig jwtConfig;
     private final SecretKey secretKey;
@@ -36,34 +40,30 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authorizationHeader = request.getHeader(jwtConfig.getAuthenticationHeader());
+        final String authenticationHeaderPrefix = jwtConfig.getAuthenticationHeaderPrefix();
 
-        if (Strings.isNullOrEmpty(authorizationHeader) || !authorizationHeader.startsWith(jwtConfig.getAuthenticationHeaderPrefix())) {
+        if (Strings.isNullOrEmpty(authorizationHeader) || !authorizationHeader.startsWith(authenticationHeaderPrefix)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        final String token = authorizationHeader.substring(jwtConfig.getAuthenticationHeaderPrefix().length());
+        final String token = authorizationHeader.substring(authenticationHeaderPrefix.length());
         try {
-
+            log.info("Try to verify token...");
             final Jws<Claims> claimsJws = Jwts.parserBuilder()
                     .setSigningKey(secretKey).build().parseClaimsJws(token);
             final Claims body = claimsJws.getBody();
-            final String username = body.getSubject();
-            List<Map<String, String>> authorities = (List<Map<String, String>>) body.get("authorities");
-
-            Set<SimpleGrantedAuthority> simpleGrantedAuthoritySet =
-                    authorities.stream().map(authority -> new SimpleGrantedAuthority(authority.get("authority")))
-                            .collect(Collectors.toSet());
-
-            Authentication authentication = new UsernamePasswordAuthenticationToken(
-                    username, null, simpleGrantedAuthoritySet
-            );
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            final List<String> authorities = (List<String>) body.get("authorities");
+            Optional.ofNullable(authorities).ifPresent(e -> {
+                final String username = body.getSubject();
+                Authentication authentication = new UsernamePasswordAuthenticationToken(
+                        username, null, authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
+                );
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            });
         } catch (JwtException e) {
-            throw new IllegalStateException(String.format("Token %s cannot be truest", token));
+            log.error(e.getMessage(), e);
         }
         filterChain.doFilter(request, response);
     }
-
 }

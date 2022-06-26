@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackOn = Exception.class)
@@ -37,8 +39,8 @@ public class UserServiceImpl implements UserService {
         } else {
             log.info("found user {}", username);
         }
-        final ImmutableSet<SimpleGrantedAuthority> authorities = ImmutableSet.copyOf(user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName())).iterator());
+        final Set<SimpleGrantedAuthority> authorities = user.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toSet());
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(), user.getPassword(), authorities
         );
