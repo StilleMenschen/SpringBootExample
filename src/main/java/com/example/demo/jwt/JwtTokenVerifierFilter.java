@@ -43,6 +43,7 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
 
         if (request.getServletPath().startsWith("/api/token/refresh") || Strings.isNullOrEmpty(authorizationHeader)
                 || !authorizationHeader.startsWith(authenticationHeaderPrefix)) {
+            log.debug("skipping token verifier...");
             filterChain.doFilter(request, response);
             return;
         }
@@ -55,6 +56,7 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
             final Claims body = claimsJws.getBody();
             final List<String> authorities = (List<String>) body.get("authorities");
             Optional.ofNullable(authorities).ifPresent(e -> {
+                log.info("Is valid authorities...");
                 final String username = body.getSubject();
                 Authentication authentication = new UsernamePasswordAuthenticationToken(
                         username, null, authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())

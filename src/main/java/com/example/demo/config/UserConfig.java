@@ -16,6 +16,7 @@ public class UserConfig {
     public CommandLineRunner commandLineRunner(UserService userService) {
         return args -> {
             userService.saveRole(new Role(null, "ROLE_USER"));
+            userService.saveRole(new Role(null, "ROLE_STUDENT"));
             userService.saveRole(new Role(null, "ROLE_MANAGER"));
             userService.saveRole(new Role(null, "ROLE_ADMIN"));
             userService.saveRole(new Role(null, "ROLE_SUPER_ADMIN"));
@@ -26,6 +27,7 @@ public class UserConfig {
             userService.saveUser(new User(null, "Arnold Schwarzenegger", "arnold", "1234", Collections.emptyList()));
 
             userService.addRoleToUser("john", "ROLE_USER");
+            userService.addRoleToUser("john", "ROLE_STUDENT");
             userService.addRoleToUser("will", "ROLE_MANAGER");
             userService.addRoleToUser("jim", "ROLE_SUPER_ADMIN");
             userService.addRoleToUser("arnold", "ROLE_SUPER_ADMIN");
