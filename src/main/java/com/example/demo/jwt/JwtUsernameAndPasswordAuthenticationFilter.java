@@ -62,7 +62,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
         log.debug("successful valid username {}", authResult.getName());
         final long currentTimeMillis = System.currentTimeMillis();
         final List<String> authorities = authResult.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-        String token = Jwts.builder()
+        String accessToken = Jwts.builder()
                 .setSubject(authResult.getName())
                 .claim("authorities", authorities)
                 .setIssuedAt(new Date(currentTimeMillis))
@@ -78,7 +78,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         try {
             new ObjectMapper().writeValue(response.getOutputStream(),
-                    new JwtTokenResponse(token, refreshToken, jwtConfig.getAuthenticationHeaderPrefix()));
+                    new AccessTokenAndRefreshTokenResponse(accessToken, refreshToken, jwtConfig.getAuthenticationHeaderPrefix()));
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }

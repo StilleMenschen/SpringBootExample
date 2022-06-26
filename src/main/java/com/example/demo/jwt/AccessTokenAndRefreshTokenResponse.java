@@ -1,11 +1,11 @@
 package com.example.demo.jwt;
 
-public class JwtTokenResponse {
+public class AccessTokenAndRefreshTokenResponse {
     private String accessToken;
     private String refreshToken;
     private String type;
 
-    public JwtTokenResponse(String accessToken, String refreshToken, String type) {
+    public AccessTokenAndRefreshTokenResponse(String accessToken, String refreshToken, String type) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.type = type;

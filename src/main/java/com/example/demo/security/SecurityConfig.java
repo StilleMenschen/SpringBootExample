@@ -20,12 +20,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.crypto.SecretKey;
 
-import static com.example.demo.security.ApplicationUserRole.STUDENT;
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class ApplicationSecurityConfig {
+public class SecurityConfig {
 
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
@@ -33,7 +31,7 @@ public class ApplicationSecurityConfig {
     private final SecretKey secretKey;
 
     @Autowired
-    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, UserService userService, JwtConfig jwtConfig, SecretKey secretKey) {
+    public SecurityConfig(PasswordEncoder passwordEncoder, UserService userService, JwtConfig jwtConfig, SecretKey secretKey) {
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
         this.jwtConfig = jwtConfig;
@@ -63,8 +61,8 @@ public class ApplicationSecurityConfig {
                 .addFilterAfter(new JwtTokenVerifierFilter(jwtConfig, secretKey), UsernamePasswordAuthenticationFilter.class);
         // 根据路径鉴权
         http.authorizeRequests()
-                .antMatchers("/", "/api/login", "/login", "/logout", "/error", "/index", "/css/*", "/js/*").permitAll()
-                .antMatchers("/api/v1/**").hasAnyRole(STUDENT.name())
+                .antMatchers("/", "/api/login/**", "/api/token/refresh/**", "/error", "/index", "/css/*", "/js/*").permitAll()
+                .antMatchers("/api/v1/**").hasAnyRole("STUDENT")
                 .antMatchers(HttpMethod.GET, "/api/user/**").hasAnyAuthority("ROLE_USER")
                 .antMatchers(HttpMethod.POST, "/api/user/save/**").hasAnyAuthority("ROLE_ADMIN")
 //                .antMatchers(HttpMethod.POST, "/management/api/**").hasAnyAuthority(COURSE_WRITE.getPermission())
@@ -89,8 +87,4 @@ public class ApplicationSecurityConfig {
                 .authenticationManager(new ProviderManager(daoAuthenticationProvider()))*/
         return http.build();
     }
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        return (web) -> web.ignoring().antMatchers("/index*");
-//    }
 }

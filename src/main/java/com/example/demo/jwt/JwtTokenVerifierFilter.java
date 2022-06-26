@@ -7,7 +7,6 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -42,7 +41,8 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
         final String authorizationHeader = request.getHeader(jwtConfig.getAuthenticationHeader());
         final String authenticationHeaderPrefix = jwtConfig.getAuthenticationHeaderPrefix();
 
-        if (Strings.isNullOrEmpty(authorizationHeader) || !authorizationHeader.startsWith(authenticationHeaderPrefix)) {
+        if (request.getServletPath().startsWith("/api/token/refresh") || Strings.isNullOrEmpty(authorizationHeader)
+                || !authorizationHeader.startsWith(authenticationHeaderPrefix)) {
             filterChain.doFilter(request, response);
             return;
         }
