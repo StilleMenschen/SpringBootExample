@@ -5,13 +5,13 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -26,9 +26,11 @@ import java.util.stream.Collectors;
 public class JwtTokenVerifierFilter extends OncePerRequestFilter {
 
     private final JwtConfig jwtConfig;
+    private final SecretKey secretKey;
 
-    public JwtTokenVerifierFilter(JwtConfig jwtConfig) {
+    public JwtTokenVerifierFilter(JwtConfig jwtConfig, SecretKey secretKey) {
         this.jwtConfig = jwtConfig;
+        this.secretKey = secretKey;
     }
 
     @Override
@@ -44,7 +46,7 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
         try {
 
             final Jws<Claims> claimsJws = Jwts.parserBuilder()
-                    .setSigningKey(Keys.hmacShaKeyFor(jwtConfig.getSecretKey().getBytes())).build().parseClaimsJws(token);
+                    .setSigningKey(secretKey).build().parseClaimsJws(token);
             final Claims body = claimsJws.getBody();
             final String username = body.getSubject();
             List<Map<String, String>> authorities = (List<Map<String, String>>) body.get("authorities");
