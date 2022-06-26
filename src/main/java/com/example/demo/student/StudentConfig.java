@@ -12,7 +12,7 @@ import java.util.Arrays;
 @Configuration
 public class StudentConfig {
 
-    @Bean(name = "cmd1")
+    @Bean(name = "studentInitializeCommandLine")
     public CommandLineRunner commandLineRunner(StudentRepository repository) {
         return args -> {
             Student mariam = new Student(
