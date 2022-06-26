@@ -59,9 +59,9 @@ public class ApplicationSecurityConfig {
         // 启用 JWT 过滤器
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .addFilter(jwtUsernameAndPasswordAuthenticationFilter)
-                .addFilterAfter(new JwtTokenVerifierFilter(jwtConfig), JwtUsernameAndPasswordAuthenticationFilter.class);
-                // 根据路径鉴权
-                http.authorizeRequests()
+                .addFilterAfter(new JwtTokenVerifierFilter(jwtConfig, secretKey), JwtUsernameAndPasswordAuthenticationFilter.class);
+        // 根据路径鉴权
+        http.authorizeRequests()
                 .antMatchers("/", "/api/login", "/login", "/logout", "/index", "/css/*", "/js/*").permitAll()
                 .antMatchers("/api/v1/**").hasAnyRole(STUDENT.name())
                 .antMatchers(HttpMethod.GET, "/api/user/**").hasAnyAuthority("ROLE_USER")
